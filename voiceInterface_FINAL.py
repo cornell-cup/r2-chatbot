@@ -83,6 +83,8 @@ device_index = 1
 THE FUNCTIONS BELOW ARE USED SPECIFICALLY FOR 
 VOICE RECOGNITION (DIRECTION OF ARRIVAL AND PRECISION RECOGNITION)
 """
+#chunkify takes raw audio data from voice prompts and breaks it down into chunks to simulate pyaudi 
+#chunk size of 2048 samples, which translates to 8192 bytes 
 def chunkify(arr):
     acc_total = []
 
