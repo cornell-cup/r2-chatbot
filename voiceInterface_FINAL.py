@@ -17,7 +17,7 @@ spoken_text = spoken_text.lower()
 
 #for voice recognition
 import math
-from gcc_phat import gcc_phat
+from gcc_phat import gcc_phat   #generalized cross correlation phase transform
 import numpy as np
 import json
 import simpleaudio as sa
@@ -34,7 +34,6 @@ with f as open("api_keys/retina_sdk.txt"):
     liteClient = retinasdk.LiteClient(key)
 
 #for Watson sentiment analysis
-import retinasdk
 from watson_developer_cloud.natural_language_understanding_v1 \
     import Features, EntitiesOptions, KeywordsOptions, SentimentOptions
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
@@ -86,6 +85,8 @@ VOICE RECOGNITION (DIRECTION OF ARRIVAL AND PRECISION RECOGNITION)
 """
 def chunkify(arr):
     acc_total = []
+
+    #breaks arr into 8192 byte chunks
     acc_chunk = np.zeros(8192, dtype='int16')
     i = 0
     for byte in arr:
@@ -156,7 +157,7 @@ def remove_outliers(directions, avg_dir):
 
     return res
 
-
+#avg of elements in list
 def avg_list(lst):
     acc = 0
     i = 0
@@ -400,12 +401,30 @@ def main():
 	dispatcher = {'wave1':wave, 'greet1':greet, 'take_attendance1':take_attendance, 'grab_item1':grab_item}
 	
 	# test run to see if all r2 functionality working as expected
-	fndictGreetingsKeys = {"wave", "hello", "hi", "hey", "check", "attendance"}
-	fndictGetItemsKeys = {"water", "bottle", "stickers", "periscope", "nerf", "guns", "gun"} # NEED TO CHECK SPELLING OF PERISCOPE FOR VOICE RECOGNITION
+        # these are redundant, use dict.keys()
+	#fndictGreetingsKeys = {"wave", "hello", "hi", "hey", "check", "attendance"}
+	#fndictGetItemsKeys = {"water", "bottle", "stickers", "periscope", "nerf", "guns", "gun"} # NEED TO CHECK SPELLING OF PERISCOPE FOR VOICE RECOGNITION
 	
 	# in formation of dictionaries, all functions being called
-	fndictGreetings = {"wave":dispatcher['wave1'], "hello":dispatcher['greet1'], "hi":dispatcher['greet1'], "hey":dispatcher['greet1'], "check":dispatcher['take_attendance1'], "attendance":dispatcher['take_attendance1']}
-	fndictGetItems = {"water":dispatcher['grab_item1'], "bottle":dispatcher['grab_item1'], "stickers":dispatcher['grab_item1'], "periscope":dispatcher['grab_item1'], "nerf":dispatcher['grab_item1'], "guns":dispatcher['grab_item1'], "gun":dispatcher['grab_item1']}
+	fndictGreetings = {
+                "wave": dispatcher['wave1'],
+                "hello": dispatcher['greet1'],
+                "hi": dispatcher['greet1'],
+                "hey": dispatcher['greet1'],
+                "check": dispatcher['take_attendance1'],
+                "attendance": dispatcher['take_attendance1']
+        }
+        
+	fndictGetItems = {
+                "water": dispatcher['grab_item1'],
+                "bottle": dispatcher['grab_item1'],
+                "stickers": dispatcher['grab_item1'],
+                "periscope": dispatcher['grab_item1'],
+                "nerf": dispatcher['grab_item1'],
+                "guns": dispatcher['grab_item1'],
+                "gun": dispatcher['grab_item1']
+        }
+        
 	methodcnt = True
 	setup_bool = True
 	
@@ -486,12 +505,12 @@ def main():
 							
 						react_with_sound (confirmation_final)
 								
-						if (word in fndictGreetingsKeys):	
+						if (word in fndictGreetings.keys()):	
 							print(fndictGreetings[word](methodcnt))
 							print ("in fndictGreetingKeys")
 							break
 						
-						elif (word in fndictGetItemsKeys):
+						elif (word in fndictGetItems.keys()):
 							print(fndictGetItems[word](word, methodcnt))
 							print ("in fndictGetItemsKey")
 							break
