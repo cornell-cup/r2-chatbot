@@ -8,6 +8,8 @@ def parse(line, expression):
     @param line: The sentence to check
     @param expression: A raw string containing the regular expression
             chunk to match. This is utilizing nltk's regex parser
+
+    @return: The syntax tree representing the parsed sentence
     '''
     
     try:
@@ -23,11 +25,13 @@ def parse(line, expression):
         #look through the tagged tokens for the phrase
         parsed_text = parser.parse(pos_tagged)
         
-        print(parsed_text)
+        #print(parsed_text)
         #parsed_text.draw()
             
     except Exception as e:
         print(str(e))
+
+    return parsed_text
 
 def is_question(line):
     '''
@@ -37,9 +41,18 @@ def is_question(line):
 
     @return: Boolean saying whether the sentence is a question
     '''
-    parse(line, r"question: {<W..?>}")
+    tree = parse(line, r"question: {<W..?>}")
+    
+    '''
+    for subtree in tree.subtrees(
+            filter=lambda tree: tree.label() == "question"):
+        print(subtree)
+    '''
+    return len(
+            list(tree.subtrees(
+                filter=lambda tree: tree.label() == "question"))) > 0
 
-with open("keyword_tests.txt") as f:
+with open("../tests/keyword_tests.txt") as f:
     for line in f:
-        is_question(line)
+        print(is_question(line))
 
