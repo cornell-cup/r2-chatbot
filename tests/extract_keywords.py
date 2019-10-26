@@ -5,14 +5,14 @@ from rake_nltk import Rake
 r = Rake()
 
 # Extraction given the text.
-r.extract_keywords_from_text("keyword_tests.txt")
+#r.extract_keywords_from_text("keyword_tests.txt")
 
 x = []
 with open("keyword_tests.txt") as f:
-  for line in f:
-    x.append (line)
-    r.extract_keywords_from_text(line)
-    print(r.get_ranked_phrases_with_scores())
+    for line in f:
+        x.append (line)
+        r.extract_keywords_from_text(line)
+        print(r.get_ranked_phrases_with_scores())
 
 
 # Extraction given the list of strings where each string is a sentence.
