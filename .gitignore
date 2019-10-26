@@ -3,4 +3,5 @@ api_keys/*.txt
 *.swp
 *.pyc
 *.bak
+google_cloud_sdk/
 
