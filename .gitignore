@@ -1,6 +1,15 @@
+# temporary files
 *~
-api_keys/*.txt
 *.swp
-*.pyc
 *.bak
+.DS_Store
+
+# compiled code
+*.pyc
+
+# avoid api keys being public
+api_keys/*.*
+
+# binary files
+google_cloud_sdk/
 
