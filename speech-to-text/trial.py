@@ -9,7 +9,8 @@ from google.cloud.speech import types
 def convert_to_text(audio_file_name,sampling_rate):
     """
     Returns a tuple (string output,confidence)
-    Converts speech into text and RETURNS a string output
+    Converts speech into
+     and RETURNS a string output
 
     Parameter: audio_file_name - the name of the audio file_name
     Precondition: must be of the wav format
