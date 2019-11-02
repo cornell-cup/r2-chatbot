@@ -11,5 +11,5 @@
 api_keys/*.*
 
 # binary files
-google_cloud_sdk/
+google_cloud_sdk/*
 
