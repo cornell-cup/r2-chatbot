@@ -1,7 +1,7 @@
 import io
 import os
 
-credential_path = ""
+credential_path = "C:\\Users\\charu\r2-chatbot\\api_keys\\SpeechToTextCuCup-538350526ced.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 # Imports the Google Cloud client library
