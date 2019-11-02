@@ -2,6 +2,7 @@ from __future__ import division
 
 import re
 import sys
+import os
 
 from google.cloud import speech
 from google.cloud.speech import enums
@@ -9,10 +10,12 @@ from google.cloud.speech import types
 import pyaudio
 from six.moves import queue
 
+credential_path = "..\\api_keys\\SpeechToTextCuCup-538350526ced.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
+
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
-
 
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""

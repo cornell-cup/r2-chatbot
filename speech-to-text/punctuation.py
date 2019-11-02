@@ -27,7 +27,7 @@ def sample_recognize(local_file_path):
     config = {
         "enable_automatic_punctuation": enable_automatic_punctuation,
         "language_code": language_code,
-        "audio_channel_count":2,
+        "audio_channel_count": 2,
     }
     with io.open(local_file_path, "rb") as f:
         content = f.read()
