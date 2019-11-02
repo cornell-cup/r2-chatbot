@@ -6,10 +6,10 @@
 
 # compiled code
 *.pyc
+__pycache__/*
 
 # avoid api keys being public
 api_keys/*.*
 
 # binary files
-google_cloud_sdk/*
-
+google_cloud_sdk/* 
