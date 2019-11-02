@@ -1,4 +1,5 @@
 import trial
+import os
 
 
 #Tests the string and confidence levels for R2.wav
@@ -10,7 +11,7 @@ print(trial.get_string(trial.convert_to_text("r2stop.wav",44100)))
 print(trial.get_confidence(trial.convert_to_text("r2stop.wav",44100)))
 
 #Tests the string and confidence levels for thereTheirTesting.wav
-print(trial.get_string(trial.convert_to_text("thereTCache entry deserialization failed, entry ignoredheirTesting.wav",44100)))
+print(trial.get_string(trial.convert_to_text("thereTheirTesting.wav",44100)))
 print(trial.get_confidence(trial.convert_to_text("thereTheirTesting.wav",44100)))
 
 #Tests the string and confidence levels for uncertainStatement.wav

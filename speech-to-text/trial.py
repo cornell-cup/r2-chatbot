@@ -1,6 +1,9 @@
 import io
 import os
 
+credential_path = ""
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
+
 # Imports the Google Cloud client library
 from google.cloud import speech
 from google.cloud.speech import enums
