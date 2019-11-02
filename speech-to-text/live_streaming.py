@@ -14,7 +14,7 @@ credential_path = "..\\api_keys\\SpeechToTextCuCup-538350526ced.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 # Audio recording parameters
-RATE = 16000
+RATE = 24000
 CHUNK = int(RATE / 10)  # 100ms
 
 class MicrophoneStream(object):
@@ -150,8 +150,7 @@ def main():
         enable_automatic_punctuation=True)
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
-        interim_results=True,
-        single_utterance=True)
+        interim_results=True)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
