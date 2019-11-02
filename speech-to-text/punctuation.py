@@ -37,4 +37,5 @@ def sample_recognize(local_file_path):
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]
-        print(format(alternative.transcript))
+        output_string = '{}'.format(alternative.transcript)
+        return (output_string)
