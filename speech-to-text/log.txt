@@ -6,7 +6,11 @@
 ('White people. Hello.', 0.7387373447418213)
 ("How's it going?", 0.9600290060043335)
 ('Hello.', 0.9852584600448608)
+<<<<<<< HEAD
 ('How are you today?', 0.957522988319397)
 ('Hello.', 0.9387937784194946)
 ('Hello. Hello.', 0.9453508853912354)
 ('Woodchuck chuck if a woodchuck could chuck wood.', 0.9857819080352783)
+=======
+
+>>>>>>> 4631a3fbc09b3c2ce416c71f9fd714f82fa520f4
