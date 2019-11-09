@@ -1,9 +1,7 @@
 import live_streaming
 
-i = 0
-while i < 10 :
-    reponse = live_streaming.main()
-    confidence = live_streaming.get_confidence(response)
-    speech = live_streaing.get_string(response)
+def main():
+    answer = live_streaming.main()
+    speech = live_streaming.get_string(answer)
+    confidence = live_streaming.get_confidence(answer)
     print(speech)
-    i = i+1
