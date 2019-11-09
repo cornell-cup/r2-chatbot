@@ -24,8 +24,8 @@ def get_topic(phrase):
 
     @param phrase: the keyword phrase to test
 
-    @return: the name of the function that was matched (usually the
-        name of the topic)
+    @return: the data output of the matched function, including the
+            function's name
     '''
     
     '''
@@ -35,14 +35,21 @@ def get_topic(phrase):
     test_funcs = [x for x in getmembers(topic_tests) if isfunction(x[1])]
     #print(test_funcs)
 
+    result = None
     for test in test_funcs:
-        if test[1](phrase)["test_result"]:
+        result = test[1](phrase)
+        if result["test_result"]:
             print("matched %s"%(test[0]))
+            result["name"] = test[0]
+            return result
+
+    result["name"] = ""
+    return result
 
 if __name__ == "__main__":
     phrase = extract_keywords("what is the weather today")
     phrase2 = extract_keywords("what is a good restaurant nearby")
-    print(extract_keywords(phrase))
+    #print(extract_keywords(phrase))
     get_topic(phrase)
     get_topic(phrase2)
     #print(phrase)

@@ -1,3 +1,8 @@
+'''
+This file calls a weather API and a geocoding API (getting latitude and
+longitude coordinates)
+'''
+
 import requests
 import geocoder
 
@@ -6,6 +11,7 @@ BASE_FIVE_DAY = "http://api.openweathermap.org/data/2.5/forecast?"
 KEY = "APPID="
 LAT = "lat="
 LNG = "lon="
+UNITS = "units="
 
 GEONAMES_USERNAME = ""
 
@@ -20,7 +26,8 @@ def lookup_weather_today(lat, lng):
     @return: the full json data from the API call
     '''
     
-    r = requests.get(BASE_ONE_DAY+KEY+"&"+LAT+lat+"&"+LNG+lng)
+    r = requests.get(BASE_ONE_DAY+KEY+"&"+LAT+lat+"&"+LNG+lng+"&"
+            +UNITS+"imperial")
     return r.json()
 
 def lookup_weather_five_day(lat, lng):
@@ -46,11 +53,11 @@ def import_keys():
     global KEY, GEONAMES_USERNAME
 
     #geonames API
-    with open("../../api_keys/geonames_username.txt") as f:
+    with open("api_keys/geonames_username.txt") as f:
         GEONAMES_USERNAME = f.read().strip()
     
     #openweather API
-    with open("../../api_keys/open_weather.txt") as f:
+    with open("api_keys/open_weather.txt") as f:
         KEY = KEY + f.read().strip()
 
 def city_to_coord(city_string):

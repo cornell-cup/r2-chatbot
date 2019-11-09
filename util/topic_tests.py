@@ -1,4 +1,10 @@
 '''
+This file contains functions to test a sentence for certain topics
+'''
+
+import utils
+
+'''
 return format for all functions in this module
 
 {
@@ -8,30 +14,48 @@ return format for all functions in this module
     }
 }
 '''
-
 def weather(text):
     '''
-    Tests if the text contains the word weather and identifies any
-    time words
+    Tests if the text is about weather and identifies any time words
+
+    @param text: the text to analyze
+
+    @return: a dictionary, format is specified at the top of the file
     '''
     output = {
         "test_result": False,
         "info": {}
     }
     
-    target_words = ["weather", "temperature"]
+    target_words = utils.load_words("data/weather_topic_words.txt")
     split_text = text.split()
     
     for word in target_words:
         if word in split_text:
             output["test_result"] = True
 
-    if output["test_result"] == False
+    if output["test_result"] == False:
         return output
 
     #maybe factor out into text file
-    time_words = ["today", "tommorrow", "current"]
+    time_words = utils.load_words("data/weather_time_words.txt")
+
+    return output
 
 def restaurant(text):
-    return "restaurant" in text.split()
+    '''
+    Checks if the text is about restaurants
+
+    @param text: the text to analyze
+
+    @return: a dictionary, format is specified at the top of the file
+    '''
+
+    output = {
+        "test_result": False,
+        "info": {}
+    }
+    
+    output["test_result"] = "restaurant" in text.split()
+    return output
 
