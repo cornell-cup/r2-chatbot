@@ -1,9 +1,9 @@
 # temporary files
 *~
-speech-to-text/log.txt
 *.swp
 *.bak
 *.DS_Store*
+speech-to-text/log.txt
 
 # compiled code
 *.pyc
