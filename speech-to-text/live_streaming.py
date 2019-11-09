@@ -213,6 +213,7 @@ def main():
         # Now, put the transcription responses to use.
         solution = returnResponseString(responses) #solution is the result
         append_to_file("log.txt",str(solution))
+        return solution
 
 
 if __name__ == '__main__':
