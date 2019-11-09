@@ -145,6 +145,7 @@ def returnResponseString(responses):
         if not result.alternatives:
             continue
         transcript = result.alternatives[0].transcript
+        confidence = result.alternatives[0].confidence
         overwrite_chars = ' ' * (num_chars_printed - len(transcript))
 
         if not result.is_final:
@@ -154,7 +155,7 @@ def returnResponseString(responses):
             num_chars_printed = len(transcript)
 
         else:
-            return(transcript + overwrite_chars)
+            return(transcript + overwrite_chars, confidence)
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
