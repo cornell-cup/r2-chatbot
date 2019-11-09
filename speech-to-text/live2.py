@@ -136,52 +136,6 @@ def listen_print_loop(responses):
 
             num_chars_printed = 0
 
-def returnResponseString(responses):
-    num_chars_printed = 0
-    for response in responses:
-        if not response.results:
-            continue
-        result = response.results[0]
-        if not result.alternatives:
-            continue
-        transcript = result.alternatives[0].transcript
-        confidence = result.alternatives[0].confidence
-        overwrite_chars = ' ' * (num_chars_printed - len(transcript))
-
-        if not result.is_final:
-            sys.stdout.write(transcript + overwrite_chars + '\r')
-            sys.stdout.flush()
-
-            num_chars_printed = len(transcript)
-
-        else:
-            return(transcript + overwrite_chars, confidence)
-
-            # Exit recognition if any of the transcribed phrases could be
-            # one of our keywords.
-            # if re.search(r'\b(exit|quit)\b', transcript, re.I):
-            #     print('Exiting..')
-            #     break
-
-            #num_chars_printed = 0
-
-def get_string(t):
-    """
-    Returns the output string (1st element of the tuple)
-
-    Parameter: t is a tuple
-    Precondition: the first element is a string, second is a float
-    """
-    return t[0]
-
-def get_confidence(t):
-    """
-    Returns the confidence (2nd element of the tuple)
-
-    Parameter: t is a tuple
-    Precondition: the first element is a string, second is a float
-    """
-    return t[1]
 
 def main():
     # See http://g.co/cloud/speech/docs/languages
@@ -204,8 +158,9 @@ def main():
                     for content in audio_generator)
 
         responses = client.streaming_recognize(streaming_config, requests)
+
         # Now, put the transcription responses to use.
-        returnResponseString(responses)
+        listen_print_loop(responses)
 
 
 if __name__ == '__main__':

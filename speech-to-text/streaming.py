@@ -2,7 +2,6 @@ from __future__ import division
 
 import re
 import sys
-import os
 
 from google.cloud import speech
 from google.cloud.speech import enums
@@ -10,12 +9,10 @@ from google.cloud.speech import types
 import pyaudio
 from six.moves import queue
 
-credential_path = "../api_keys/SpeechToTextCuCup-538350526ced.json"
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
-
 # Audio recording parameters
-RATE = 24000
+RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
+
 
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
@@ -136,52 +133,6 @@ def listen_print_loop(responses):
 
             num_chars_printed = 0
 
-def returnResponseString(responses):
-    num_chars_printed = 0
-    for response in responses:
-        if not response.results:
-            continue
-        result = response.results[0]
-        if not result.alternatives:
-            continue
-        transcript = result.alternatives[0].transcript
-        confidence = result.alternatives[0].confidence
-        overwrite_chars = ' ' * (num_chars_printed - len(transcript))
-
-        if not result.is_final:
-            sys.stdout.write(transcript + overwrite_chars + '\r')
-            sys.stdout.flush()
-
-            num_chars_printed = len(transcript)
-
-        else:
-            return(transcript + overwrite_chars, confidence)
-
-            # Exit recognition if any of the transcribed phrases could be
-            # one of our keywords.
-            # if re.search(r'\b(exit|quit)\b', transcript, re.I):
-            #     print('Exiting..')
-            #     break
-
-            #num_chars_printed = 0
-
-def get_string(t):
-    """
-    Returns the output string (1st element of the tuple)
-
-    Parameter: t is a tuple
-    Precondition: the first element is a string, second is a float
-    """
-    return t[0]
-
-def get_confidence(t):
-    """
-    Returns the confidence (2nd element of the tuple)
-
-    Parameter: t is a tuple
-    Precondition: the first element is a string, second is a float
-    """
-    return t[1]
 
 def main():
     # See http://g.co/cloud/speech/docs/languages
@@ -192,8 +143,7 @@ def main():
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
-        language_code=language_code,
-        enable_automatic_punctuation=True)
+        language_code=language_code)
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
         interim_results=True)
@@ -204,8 +154,9 @@ def main():
                     for content in audio_generator)
 
         responses = client.streaming_recognize(streaming_config, requests)
+
         # Now, put the transcription responses to use.
-        returnResponseString(responses)
+        listen_print_loop(responses)
 
 
 if __name__ == '__main__':
