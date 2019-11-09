@@ -183,6 +183,12 @@ def get_confidence(t):
     """
     return t[1]
 
+
+def append_to_file(filePath,message):
+    f = open(filePath,"a")
+    f.write(message+"\n")
+
+
 def main():
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
@@ -205,7 +211,8 @@ def main():
 
         responses = client.streaming_recognize(streaming_config, requests)
         # Now, put the transcription responses to use.
-        returnResponseString(responses)
+        solution = returnResponseString(responses) #solution is the result
+        append_to_file("log.txt",str(solution))
 
 
 if __name__ == '__main__':

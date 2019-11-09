@@ -1,0 +1,5 @@
+("Let's go hiking with you again.", 0.6927480697631836)
+('Kick you out again.', 0.9478651285171509)
+('Are there any restaurants nearby?', 0.9653758406639099)
+("Let's try you out again.", 0.9876289963722229)
+('This is very very very interesting.', 0.9660106301307678)
