@@ -6,4 +6,4 @@
 ('White people. Hello.', 0.7387373447418213)
 ("How's it going?", 0.9600290060043335)
 ('Hello.', 0.9852584600448608)
-("Okay, let's check you out.", 0.9620032906532288)
+
