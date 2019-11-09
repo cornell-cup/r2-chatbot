@@ -3,3 +3,6 @@
 ('Are there any restaurants nearby?', 0.9653758406639099)
 ("Let's try you out again.", 0.9876289963722229)
 ('This is very very very interesting.', 0.9660106301307678)
+('White people. Hello.', 0.7387373447418213)
+("How's it going?", 0.9600290060043335)
+('Hello.', 0.9852584600448608)
