@@ -2,8 +2,17 @@ from util import live_streaming
 from util import detect_question
 from util import keywords
 from util import make_response
+from util.api import weather
+
+import re
+import sys
+import os
+
+credential_path = "api_keys/Speech to Text-bef030531cd1.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 def main():
+    weather.import_keys()
     while True:
         answer = live_streaming.main()
         speech = live_streaming.get_string(answer)
@@ -11,7 +20,7 @@ def main():
         if speech == "quit":
             break
         print(speech)
-        
+
         topic = keywords.get_topic(speech)
         if topic["name"] == "weather":
             weather_data = weather.lookup_weather_today_city(
@@ -22,4 +31,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
