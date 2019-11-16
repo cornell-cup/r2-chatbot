@@ -6,8 +6,8 @@ input
 import sys
 sys.path.insert(1, "util")
 
-from api import weather
-import keywords
+from util.api import weather
+from util import keywords
 
 def make_response_api(topic_data, api_data):
     response = ""
