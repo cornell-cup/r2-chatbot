@@ -52,7 +52,8 @@ def is_question(line):
             list(tree.subtrees(
                 filter=lambda tree: tree.label() == "question"))) > 0
 
-with open("../tests/not_questions.txt") as f:
-    for line in f:
-        print(is_question(line))
+if __name__ == "__main__":
+    with open("../tests/not_questions.txt") as f:
+        for line in f:
+            print(is_question(line))
 
