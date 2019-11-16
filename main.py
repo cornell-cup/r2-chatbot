@@ -17,7 +17,7 @@ def main():
             weather_data = weather.lookup_weather_today_city(
                     "ithaca new york")
             print(weather_data)
-            response = make_response_api(topic, weather_data)
+            response = make_response.make_response_api(topic, weather_data)
             print(response)
 
 if __name__ == '__main__':
