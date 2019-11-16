@@ -69,8 +69,15 @@ def match_regex_and_keywords(line, exp, keywords=None):
     '''
     tree = parse(line, exp)
 
+    for subtree in tree.subtrees():
+        #gets the first element of the chunk as a tuple
+        #i think the format is (<word>, <pos_tag>)
+        print(subtree[0])
+        print(subtree)
+
 if __name__ == "__main__":
-    with open("../tests/not_questions.txt") as f:
+    with open("tests/not_questions.txt") as f:
         for line in f:
             print(is_question(line))
+            #print(match_regex_and_keywords(line, ""))
 

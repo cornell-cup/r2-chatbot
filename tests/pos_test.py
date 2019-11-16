@@ -1,5 +1,12 @@
+import sys
+import os
+sys.path.insert(1, os.path.join(os.getcwd(), ""))
+print(sys.path)
+
 import re
 import nltk
+
+from util import detect_question
 
 lines = [
     #need to use a possesive determiner
@@ -44,3 +51,6 @@ for line in lines:
 
     #print(parsed_text)
     parsed_text.draw()
+
+    print(detect_question.match_regex_and_keywords(line, expression,
+        ["weather"]))
