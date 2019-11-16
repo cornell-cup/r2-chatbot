@@ -12,7 +12,7 @@ from six.moves import queue
 
 
 
-credential_path = "../api_keys/Speech_to_Text.json"
+credential_path = "../api_keys/Speech to Text-bef030531cd1.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 # Audio recording parameters

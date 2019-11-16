@@ -1,0 +1,3 @@
+('Check this out.', 0.8556740283966064)
+('Headed straight into you meet this time.', 0.750958263874054)
+("Let's try it out the second time.", 0.9358595013618469)
