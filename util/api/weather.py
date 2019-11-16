@@ -30,6 +30,18 @@ def lookup_weather_today(lat, lng):
             +UNITS+"imperial")
     return r.json()
 
+def lookup_weather_today_city(city):
+    '''
+    Convenience function that converts city name into lat, lng.
+    Calls lookup_weather_today() and returns output
+
+    @param city: city name. Should include more specific info as needed (country, state, etc.)
+
+    @return: the full json data from the API call
+    '''
+    lat, lng = city_to_coord(city)
+    return lookup_weather_today(lat, lng)
+
 def lookup_weather_five_day(lat, lng):
     '''
     Looks up the five day forcast for a certain coordinate

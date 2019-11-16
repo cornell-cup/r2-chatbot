@@ -22,6 +22,15 @@ def get_topic(phrase):
     '''
     Determines the topic of a keyword phrase
 
+    Output is in the following format:
+    {
+        "test_result": boolean,
+        "info": {
+            <specific info for each topic, only if test_result is True>
+        },
+        "name": <name of the matched function>
+    }
+
     @param phrase: the keyword phrase to test
 
     @return: the data output of the matched function, including the
