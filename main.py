@@ -1,4 +1,4 @@
-from speech-to-text import live_streaming
+from util import live_streaming
 from util import detect_question
 from util import keywords
 from util import make_response
