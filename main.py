@@ -11,7 +11,9 @@ import os
 credential_path = "api_keys/Speech to Text-bef030531cd1.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
+
 def main():
+    live_streaming.delete_file()
     weather.import_keys()
     while True:
         answer = live_streaming.main()
