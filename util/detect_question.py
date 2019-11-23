@@ -67,13 +67,34 @@ def match_regex_and_keywords(line, exp, keywords=None):
     @return: A list of matched chunks. If keywords was specified, will
             only return chunks where a keyword was contained in it
     '''
+    matched_chunks = []
     tree = parse(line, exp)
 
-    for subtree in tree.subtrees():
-        #gets the first element of the chunk as a tuple
-        #i think the format is (<word>, <pos_tag>)
-        print(subtree[0])
-        print(subtree)
+    #only loop over full trees, not subtrees or leaves
+    #only root node has the "S" label
+    for subtree in tree.subtrees(lambda t: t.label() == "S"):
+        #print("full sentence")
+        #print(subtree)
+        
+        #subtree is the whole sentence so we want to only look at
+
+        #now loop through subtrees, detected chunks have height 2
+        for chunk in subtree.subtrees(lambda t: t.height() == 2):
+            #print("detected chunk")
+            #print(chunk)
+            #print("end")
+            
+            if keywords == None:
+                matched_chunks.append(chunk)
+            else:
+                #the format is (<word>, <pos_tag>) for a single word
+                for word, tag in chunk.leaves():
+                    #print(word)
+                    if word in keywords:
+                        matched_chunks.append(chunk)
+                        break
+    
+    return matched_chunks
 
 if __name__ == "__main__":
     with open("tests/not_questions.txt") as f:

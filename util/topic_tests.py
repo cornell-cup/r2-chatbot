@@ -3,6 +3,7 @@ This file contains functions to test a sentence for certain topics
 '''
 
 from util import utils
+from util import detect_question
 
 '''
 return format for all functions in this module
@@ -27,7 +28,16 @@ def weather(text):
         "info": {}
     }
     
+    #posessive determiner and noun phrase
+    expression = r"""
+    POS_DT: {<NN.*><POS><NN.*>*}
+    NP: {<DT|JJ|NN.*>+}
+    """
+    
     target_words = utils.load_words("data/weather_topic_words.txt")
+    chunks = detect_question.match_regex_and_keywords(
+            text, expression, target_words)
+    '''
     split_text = text.split()
     
     for word in target_words:
@@ -41,6 +51,7 @@ def weather(text):
     time_words = utils.load_words("data/weather_time_words.txt")
 
     return output
+    '''
 
 def restaurant(text):
     '''
