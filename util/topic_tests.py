@@ -55,7 +55,16 @@ def restaurant(text):
         "test_result": False,
         "info": {}
     }
+
+    target_words = utils.load_words("data/restaurant_topic_words.txt")
+    split_text = text.split()
     
-    output["test_result"] = "restaurant" in text.split()
+    for word in target_words:
+        if word in split_text:
+            output["test_result"] = True
+
+    if output["test_result"] == False:
+        return output
+        
     return output
 

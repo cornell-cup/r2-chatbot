@@ -188,6 +188,9 @@ def append_to_file(filePath,message):
     f = open(filePath,"a")
     f.write(message+"\n")
 
+def delete_file():
+    os.remove("log.txt")
+
 
 def sub_main(profanityFilterBool):
     # See http://g.co/cloud/speech/docs/languages

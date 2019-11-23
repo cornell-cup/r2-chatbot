@@ -7,6 +7,7 @@ import sys
 sys.path.insert(1, "util")
 
 from util.api import weather
+from util.api import restaurant
 from util import keywords
 
 def make_response_api(topic_data, api_data):
@@ -16,6 +17,12 @@ def make_response_api(topic_data, api_data):
             
             pass
         response = "There is %s"%(api_data["weather"][0]["description"])
+
+    elif topic_data["name"] == "restaurant":
+        list_of_restaurants = ""
+        for restaurant in api_data['nearby_restaurants']:
+            list_of_restaurants+restaurant['restaurant']["name"] + " "
+        response = "There are soem options, such as %s"%(api_data["weather"][0]["description"])
 
     return response
 
@@ -30,5 +37,11 @@ if __name__ == "__main__":
                         "xian shaanxi")
                 print(weather_data)
                 response = make_response_api(topic, weather_data)
+                print(response)
+            if topic["name"] == "restaurant":
+                restaurant_data = restaurant.lookup_restaurant_city(
+                        "xian shaanxi")
+                print(restaurant_data)
+                response = make_response_api(topic, restaurant_data)
                 print(response)
 
