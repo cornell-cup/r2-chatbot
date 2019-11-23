@@ -2,8 +2,8 @@
 This file contains functions to test a sentence for certain topics
 '''
 
-from util import utils
-from util import detect_question
+import utils
+import detect_question
 
 '''
 return format for all functions in this module
@@ -66,7 +66,16 @@ def restaurant(text):
         "test_result": False,
         "info": {}
     }
+
+    target_words = utils.load_words("data/restaurant_topic_words.txt")
+    split_text = text.split()
     
-    output["test_result"] = "restaurant" in text.split()
+    for word in target_words:
+        if word in split_text:
+            output["test_result"] = True
+
+    if output["test_result"] == False:
+        return output
+        
     return output
 

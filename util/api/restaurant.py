@@ -6,11 +6,6 @@ longitude coordinates)
 import requests
 import geocoder
 
-
-# r = requests.get(
-#   "https://developers.zomato.com/api/v2.1/geocode?lat=41.10867962215988&lon=29.01834726333618", 
-#   headers={"user_key": "MY_API_KEY_HERE", "Accept": "application/json"});
-
 KEY = ""
 UNITS = "units="
 
@@ -32,6 +27,18 @@ def lookup_restaurant(lat, lng):
 
 
     return response.json()
+
+def lookup_restaurant_city(city):
+    '''
+    Convenience function that converts city name into lat, lng.
+    Calls lookup_restaurant() and returns output
+
+    @param city: city name. Should include more specific info as needed (country, state, etc.)
+
+    @return: the full json data from the API call
+    '''
+    lat, lng = city_to_coord(city)
+    return lookup_restaurant(lat, lng)
 
 def import_keys():
     '''
