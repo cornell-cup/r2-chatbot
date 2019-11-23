@@ -17,3 +17,4 @@ google_cloud_sdk/*
  
 #for nltk.download
 punkt.zip
+averaged_perceptron_tagger.zip
