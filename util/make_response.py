@@ -6,9 +6,12 @@ input
 import sys
 sys.path.insert(1, "util")
 
-from util.api import weather
-from util.api import restaurant
-from util import keywords
+# util.
+from api import weather
+from api import restaurant
+
+# util
+import keywords
 
 def make_response_api(topic_data, api_data):
     response = ""
@@ -21,8 +24,9 @@ def make_response_api(topic_data, api_data):
     elif topic_data["name"] == "restaurant":
         list_of_restaurants = ""
         for restaurant in api_data['nearby_restaurants']:
-            list_of_restaurants+restaurant['restaurant']["name"] + " "
-        response = "There are soem options, such as %s"%(api_data["weather"][0]["description"])
+            r = restaurant['restaurant']["name"] + ", "
+            list_of_restaurants = list_of_restaurants+r
+        response = list_of_restaurants
 
     return response
 

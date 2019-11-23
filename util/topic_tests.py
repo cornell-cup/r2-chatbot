@@ -1,8 +1,8 @@
 '''
 This file contains functions to test a sentence for certain topics
 '''
-
-from util import utils
+# from util 
+import utils
 
 '''
 return format for all functions in this module
