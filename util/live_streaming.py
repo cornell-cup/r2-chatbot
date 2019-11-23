@@ -189,17 +189,22 @@ def append_to_file(filePath,message):
     f.write(message+"\n")
 
 
-def main():
+def sub_main(profanityFilterBool):
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
     language_code = 'en-US'  # a BCP-47 language tag
-
+    sp_c_cico = {"phrases": ["cico"],"boost": 20} #speech_contexts_cico
+    #sp_c_kiko = {"phrases": ["Kiko"],"boost": 0}#speech_contexts_kiko
+    speech_contexts = [sp_c_cico]
     client = speech.SpeechClient()
+    #print(help(types.RecognitionConfig))
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
         language_code=language_code,
-        enable_automatic_punctuation=True)
+        enable_automatic_punctuation=True,
+        speech_contexts=speech_contexts)
+
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
         interim_results=True)
@@ -212,9 +217,11 @@ def main():
         responses = client.streaming_recognize(streaming_config, requests)
         # Now, put the transcription responses to use.
         solution = returnResponseString(responses) #solution is the result
+        print(solution)
         append_to_file("log.txt",str(solution))
         return solution
 
-
+def main():
+    sub_main(True)
 if __name__ == '__main__':
     main()
