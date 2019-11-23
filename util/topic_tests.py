@@ -38,7 +38,7 @@ def weather(text):
     target_words = utils.load_words("data/weather_topic_words.txt")
     time_words = utils.load_words("data/weather_time_words.txt")
     
-    chunks, keywords = detect_question.match_regex_and_keywords(
+    chunks, keywords = nlp_util.match_regex_and_keywords(
             text, expression, target_words)
     print(chunks)
 

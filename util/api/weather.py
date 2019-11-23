@@ -85,9 +85,10 @@ def city_to_coord(city_string):
     return (g.lat, g.lng)
 
 if __name__ == "__main__":
+    import json
     import_keys()
 
     coords = city_to_coord("ithaca new york")
 
     forecast = lookup_weather_today(coords[0], coords[1])
-    print(forecast)
+    print(json.dumps(forecast))

@@ -16,10 +16,10 @@ import keywords
 def make_response_api(topic_data, api_data):
     response = ""
     if topic_data["name"] == "weather":
-        if "temperature" in topic_data["info"]:
-            
-            pass
-        response = "There is %s"%(api_data["weather"][0]["description"])
+        if "temperature" in topic_data["info"]["keywords"]:
+            response = "It is %s degrees"%(round(api_data["main"]["temp"]))
+        else:
+            response = "There is %s"%(api_data["weather"][0]["description"])
 
     elif topic_data["name"] == "restaurant":
         list_of_restaurants = ""
@@ -33,19 +33,26 @@ def make_response_api(topic_data, api_data):
 if __name__ == "__main__":
     weather.import_keys()
     
-    with open("./tests/question_keyword_tests.txt") as f:
+    with open("./tests/weather_question_tests.txt") as f:
+        total = 0
+        passed = 0
         for line in f:
+            total += 1
+            print(line)
             topic = keywords.get_topic(line)
             if topic["name"] == "weather":
                 weather_data = weather.lookup_weather_today_city(
                         "xian shaanxi")
-                print(weather_data)
+                #print(weather_data)
                 response = make_response_api(topic, weather_data)
                 print(response)
+                passed += 1
             if topic["name"] == "restaurant":
                 restaurant_data = restaurant.lookup_restaurant_city(
                         "xian shaanxi")
                 print(restaurant_data)
                 response = make_response_api(topic, restaurant_data)
                 print(response)
+
+    print("passed %d/%d"%(passed, total))
 
