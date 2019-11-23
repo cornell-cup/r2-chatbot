@@ -47,19 +47,24 @@ def get_topic(phrase):
     result = None
     for test in test_funcs:
         result = test[1](phrase)
+
+        #if topic was matched
         if result["test_result"]:
             print("matched %s"%(test[0]))
             result["name"] = test[0]
             return result
 
+    #may need for another function
     result["name"] = ""
     return result
 
 if __name__ == "__main__":
-    phrase = extract_keywords("what is the weather today")
-    phrase2 = extract_keywords("what is a good restaurant nearby")
+    #phrase = extract_keywords("what is the weather today")
+    #phrase2 = extract_keywords("what is a good restaurant nearby")
     #print(extract_keywords(phrase))
+    phrase = "what is the weather today"
+    #phrase2 = "what is a good restaurant nearby"
     get_topic(phrase)
-    get_topic(phrase2)
+    #get_topic(phrase2)
     #print(phrase)
 

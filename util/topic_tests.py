@@ -3,7 +3,7 @@ This file contains functions to test a sentence for certain topics
 '''
 
 import utils
-import detect_question
+import nlp_util
 
 '''
 return format for all functions in this module
@@ -34,24 +34,20 @@ def weather(text):
     NP: {<DT|JJ|NN.*>+}
     """
     
+    #the keywords we want to detect
     target_words = utils.load_words("data/weather_topic_words.txt")
-    chunks = detect_question.match_regex_and_keywords(
-            text, expression, target_words)
-    '''
-    split_text = text.split()
-    
-    for word in target_words:
-        if word in split_text:
-            output["test_result"] = True
-
-    if output["test_result"] == False:
-        return output
-
-    #maybe factor out into text file
     time_words = utils.load_words("data/weather_time_words.txt")
+    
+    chunks, keywords = detect_question.match_regex_and_keywords(
+            text, expression, target_words)
+    print(chunks)
 
+    #if we found a weather related phrase
+    if len(chunks) > 0:
+        output["test_result"] = True
+        output["info"]["keywords"] = keywords
+    
     return output
-    '''
 
 def restaurant(text):
     '''
