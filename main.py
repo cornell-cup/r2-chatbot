@@ -1,5 +1,5 @@
 from util import live_streaming
-from util import detect_question
+from util import nlp_util
 from util import keywords
 from util import make_response
 from util import playtrack
@@ -31,6 +31,13 @@ def main():
             print(weather_data)
             response = make_response.make_response_api(topic, weather_data)
             print(response)
+        elif topic["name"] == "restaurant":
+            restaurant_data = restaurant.lookup_weather_today_city(
+                "ithaca new york")
+            print(restaurant_data)
+            response = make_response.make_response_api(topic, weather_data)
+            print(response)
+
 
 if __name__ == '__main__':
     print('ok')

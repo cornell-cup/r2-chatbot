@@ -64,16 +64,34 @@ def match_regex_and_keywords(line, exp, keywords=None):
     @param keywords: Optional. An array containing keywords to match.
             Can also require keywords to appear only in certain chunks.
 
-    @return: A list of matched chunks. If keywords was specified, will
-            only return chunks where a keyword was contained in it
+    @return: A tuple. First element is a list of matched chunks. If
+            keywords was specified, will only return chunks where a
+            keyword was contained in it
+            Second element is a list of matched keywords. Only use if
+            keywords was specified
     '''
+    matched_chunks = []
+    matched_keywords = []
     tree = parse(line, exp)
 
-    for subtree in tree.subtrees():
-        #gets the first element of the chunk as a tuple
-        #i think the format is (<word>, <pos_tag>)
-        print(subtree[0])
-        print(subtree)
+    #only loop over full trees, not subtrees or leaves
+    #only root node has the "S" label
+    for subtree in tree.subtrees(lambda t: t.label() == "S"):
+        
+        #now loop through subtrees, detected chunks have height 2
+        for chunk in subtree.subtrees(lambda t: t.height() == 2):
+            if keywords == None:
+                #no keyword detection needed
+                matched_chunks.append(chunk)
+            else:
+                #the format is (<word>, <pos_tag>) for a single word
+                for word, tag in chunk.leaves():
+                    if word in keywords:
+                        matched_chunks.append(chunk)
+                        matched_keywords.append(word)
+                        break
+    
+    return (matched_chunks, matched_keywords)
 
 if __name__ == "__main__":
     with open("tests/not_questions.txt") as f:

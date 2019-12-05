@@ -2,7 +2,13 @@
 This file contains functions to test a sentence for certain topics
 '''
 
-from util import utils
+import utils
+<<<<<<< HEAD
+import nlp_util
+import re
+=======
+from util import nlp_util
+>>>>>>> 311bbb0d70fc73bb99d70f8d8855f9c8c2985ee9
 
 '''
 return format for all functions in this module
@@ -26,19 +32,25 @@ def weather(text):
         "test_result": False,
         "info": {}
     }
-    
+
+    #posessive determiner and noun phrase
+    expression = r"""
+    POS_DT: {<NN.*><POS><NN.*>*}
+    NP: {<DT|JJ|NN.*>+}
+    """
+
+    #the keywords we want to detect
     target_words = utils.load_words("data/weather_topic_words.txt")
-    split_text = text.split()
-    
-    for word in target_words:
-        if word in split_text:
-            output["test_result"] = True
-
-    if output["test_result"] == False:
-        return output
-
-    #maybe factor out into text file
     time_words = utils.load_words("data/weather_time_words.txt")
+
+    chunks, keywords = nlp_util.match_regex_and_keywords(
+            text, expression, target_words)
+    print(chunks)
+
+    #if we found a weather related phrase
+    if len(chunks) > 0:
+        output["test_result"] = True
+        output["info"]["keywords"] = keywords
 
     return output
 
@@ -55,16 +67,24 @@ def restaurant(text):
         "test_result": False,
         "info": {}
     }
+    
+    # trying to remove all the non-alphabet characters in the string
+    regex = re.compile('([^\s\w]|_)+')
+    text = regex.sub('', text)
 
     target_words = utils.load_words("data/restaurant_topic_words.txt")
-    split_text = text.split()
+<<<<<<< HEAD
     
+=======
+    split_text = text.split()
+
+>>>>>>> 311bbb0d70fc73bb99d70f8d8855f9c8c2985ee9
     for word in target_words:
-        if word in split_text:
+      
+        if word in text:
             output["test_result"] = True
 
     if output["test_result"] == False:
         return output
-        
-    return output
 
+    return output

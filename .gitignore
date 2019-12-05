@@ -13,4 +13,8 @@ __pycache__/*
 api_keys/*.*
 
 # binary files
-google_cloud_sdk/* 
+google_cloud_sdk/*
+ 
+#for nltk.download
+punkt.zip
+averaged_perceptron_tagger.zip

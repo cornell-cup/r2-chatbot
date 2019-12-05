@@ -1,6 +1,5 @@
 from inspect import getmembers, isfunction
 from rake_nltk import Rake
-
 from util import topic_tests
 
 r = Rake()
@@ -13,7 +12,7 @@ def extract_keywords(text):
 
     @return: the top ranked keyword phrase that was detected
     '''
-    
+
     r = Rake()
     r.extract_keywords_from_text(text)
     return r.get_ranked_phrases()[0]
@@ -36,7 +35,7 @@ def get_topic(phrase):
     @return: the data output of the matched function, including the
             function's name
     '''
-    
+
     '''
     getmembers() gives you the name of variables/functions and the
     corresponding value of it in the tuple: (name, value)
@@ -47,19 +46,23 @@ def get_topic(phrase):
     result = None
     for test in test_funcs:
         result = test[1](phrase)
+
+        #if topic was matched
         if result["test_result"]:
             print("matched %s"%(test[0]))
             result["name"] = test[0]
             return result
 
+    #may need for another function
     result["name"] = ""
     return result
 
 if __name__ == "__main__":
-    phrase = extract_keywords("what is the weather today")
-    phrase2 = extract_keywords("what is a good restaurant nearby")
+    #phrase = extract_keywords("what is the weather today")
+    #phrase2 = extract_keywords("what is a good restaurant nearby")
     #print(extract_keywords(phrase))
+    phrase = "what is the weather today"
+    #phrase2 = "what is a good restaurant nearby"
     get_topic(phrase)
-    get_topic(phrase2)
+    #get_topic(phrase2)
     #print(phrase)
-
