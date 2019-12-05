@@ -23,7 +23,6 @@ def main():
         if speech == "quit":
             break
         print(answer)
-        playsound('/sounds/cicoremix.mp3')
         topic = keywords.get_topic(speech)
         if topic["name"] == "weather":
             weather_data = weather.lookup_weather_today_city(
@@ -40,7 +39,5 @@ def main():
 
 
 if __name__ == '__main__':
-    print('ok')
     playsound('sounds/cicoremix.mp3')
-    print('ok')
-    #main()
+    main()
