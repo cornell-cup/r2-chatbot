@@ -3,7 +3,7 @@ This file contains functions to test a sentence for certain topics
 '''
 
 import utils
-import nlp_util
+from util import nlp_util
 
 '''
 return format for all functions in this module
@@ -27,17 +27,17 @@ def weather(text):
         "test_result": False,
         "info": {}
     }
-    
+
     #posessive determiner and noun phrase
     expression = r"""
     POS_DT: {<NN.*><POS><NN.*>*}
     NP: {<DT|JJ|NN.*>+}
     """
-    
+
     #the keywords we want to detect
     target_words = utils.load_words("data/weather_topic_words.txt")
     time_words = utils.load_words("data/weather_time_words.txt")
-    
+
     chunks, keywords = nlp_util.match_regex_and_keywords(
             text, expression, target_words)
     print(chunks)
@@ -46,7 +46,7 @@ def weather(text):
     if len(chunks) > 0:
         output["test_result"] = True
         output["info"]["keywords"] = keywords
-    
+
     return output
 
 def restaurant(text):
@@ -65,13 +65,12 @@ def restaurant(text):
 
     target_words = utils.load_words("data/restaurant_topic_words.txt")
     split_text = text.split()
-    
+
     for word in target_words:
         if word in split_text:
             output["test_result"] = True
 
     if output["test_result"] == False:
         return output
-        
-    return output
 
+    return output
