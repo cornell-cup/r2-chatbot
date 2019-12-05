@@ -4,6 +4,7 @@ This file contains functions to test a sentence for certain topics
 
 import utils
 import nlp_util
+import re
 
 '''
 return format for all functions in this module
@@ -62,12 +63,16 @@ def restaurant(text):
         "test_result": False,
         "info": {}
     }
+    
+    # trying to remove all the non-alphabet characters in the string
+    regex = re.compile('([^\s\w]|_)+')
+    text = regex.sub('', text)
 
     target_words = utils.load_words("data/restaurant_topic_words.txt")
-    split_text = text.split()
     
     for word in target_words:
-        if word in split_text:
+      
+        if word in text:
             output["test_result"] = True
 
     if output["test_result"] == False:
