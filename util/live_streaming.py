@@ -213,6 +213,7 @@ def sub_main(profanityFilterBool):
         interim_results=True)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
+
         audio_generator = stream.generator()
         requests = (types.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator)
@@ -220,11 +221,44 @@ def sub_main(profanityFilterBool):
         responses = client.streaming_recognize(streaming_config, requests)
         # Now, put the transcription responses to use.
         solution = returnResponseString(responses) #solution is the result
-        print(solution)
+
         append_to_file("log.txt",str(solution))
-        return solution
+
+    return solution
+
+def filter(t,switches):
+    """
+    Takes a string and filters out and replaces certain words
+
+    This includes kiko to cico.
+
+    Parameter t: Tuple containing string to edit and confidence level
+    Precondition: t is a tuple - (s,f) s is a string and f is int or float
+    """
+    assert type(t) == tuple
+    assert type(t[0]) == str and type(t[1]) in [float,int]
+    s = get_string(t)
+    result_string = s #the variable to retur
+    result_conf = get_confidence(t)
+    for k in switches:
+        num_occ = s.count(k) #number of occurences
+        for i in range(num_occ):
+            pos = result.find(k)
+            if pos != -1: #if key found
+                value = switches[k]
+                result_string = result_string[:pos] + value\
+                 + result_string[pos+len(value):]
+
+    return (result_string,result_conf)
+
 
 def main():
-    sub_main(True)
+     response = sub_main(True)
+     switches = {'kiko':'cico'} #the words to replace
+
+     result = filter(response,switches)
+     return result
+
+
 if __name__ == '__main__':
     main()

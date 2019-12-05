@@ -79,3 +79,6 @@
 ('Kiko Kiko Kiko Kiko, how are you?', 0.9580169916152954)
 ('cico', 0.9624451994895935)
 ('How are you doing Kiko?', 0.9310843348503113)
+('Hey, how are you?', 0.981280505657196)
+('How are you doing today?', 0.8387196660041809)
+("What's your name?", 0.9757195115089417)
