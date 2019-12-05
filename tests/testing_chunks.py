@@ -16,7 +16,7 @@ lines = [
 
 r_expr = r"""
 KEYWORDS: {<NN.*><WP>*}
-DESCRIPTION: {<RB.*|IN|VBG><PRP INN.*>}   
+DESCRIPTION: {<RB.*|IN|VBG><PRP|INN.*>}   
 NP: {(<V\w+>|<NN\w?>)+.*<NN\w?>}  
 """
 

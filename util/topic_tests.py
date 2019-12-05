@@ -2,8 +2,10 @@
 This file contains functions to test a sentence for certain topics
 '''
 
-import utils
-import nlp_util
+#import utils
+# import nlp_util
+import re
+from util import nlp_util
 
 '''
 return format for all functions in this module
@@ -27,7 +29,7 @@ def weather(text):
         "test_result": False,
         "info": {}
     }
-    
+
     #posessive determiner and noun phrase
     #how to detect longer city names (san francisco)
     #how to detect city, state format or city, country format
@@ -40,7 +42,7 @@ def weather(text):
     #the keywords we want to detect
     target_words = utils.load_words("data/weather_topic_words.txt")
     time_words = utils.load_words("data/weather_time_words.txt")
-    
+
     chunks, keywords = nlp_util.match_regex_and_keywords(
             text, expression, target_words)
     print(chunks)
@@ -49,7 +51,7 @@ def weather(text):
     if len(chunks) > 0:
         output["test_result"] = True
         output["info"]["keywords"] = keywords
-    
+
     return output
 
 def restaurant(text):
@@ -66,15 +68,20 @@ def restaurant(text):
         "info": {}
     }
 
+    # trying to remove all the non-alphabet characters in the string
+    regex = re.compile('([^\s\w]|_)+')
+    text = regex.sub('', text)
+
     target_words = utils.load_words("data/restaurant_topic_words.txt")
+
     split_text = text.split()
-    
+
     for word in target_words:
-        if word in split_text:
+
+        if word in text:
             output["test_result"] = True
 
     if output["test_result"] == False:
         return output
-        
-    return output
 
+    return output

@@ -6,6 +6,7 @@ food
 grab a bite
 eatery
 eating place
+eating places
 eating house
 eat
 dinner
