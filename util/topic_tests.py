@@ -29,10 +29,13 @@ def weather(text):
     }
     
     #posessive determiner and noun phrase
+    #how to detect longer city names (san francisco)
+    #how to detect city, state format or city, country format
     expression = r"""
+    NP: {<DT|JJ|NN.*>*<NN.*>}
     POS_DT: {<NN.*><POS><NN.*>*}
-    NP: {<DT|JJ|NN.*>+}
     """
+    #NP: {<DT|JJ|NN.*>+}
     
     #the keywords we want to detect
     target_words = utils.load_words("data/weather_topic_words.txt")
