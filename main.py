@@ -18,12 +18,12 @@ def main():
     #live_streaming.delete_file()
     weather.import_keys()
     while True:
+        #gets a tuple of phrase and confidence
         answer = live_streaming.main()
         speech = live_streaming.get_string(answer)
         confidence = live_streaming.get_confidence(answer)
         if speech == "quit":
             break
-        #print(answer)
         topic = keywords.get_topic(speech)
         print(topic)
         if topic["name"] == "weather":

@@ -10,6 +10,7 @@ from google.cloud.speech import types
 import pyaudio
 from six.moves import queue
 
+"""sets the credential path for Speech to Text api key """
 credential_path = "../api_keys/Speech to Text-bef030531cd1.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
@@ -18,7 +19,9 @@ RATE = 24000
 CHUNK = int(RATE / 10)  # 100ms
 
 class MicrophoneStream(object):
-    """Opens a recording stream as a generator yielding the audio chunks."""
+    """ **Code from Google cloud speech to text documentation**
+    Opens a recording stream as a generator yielding the audio chunks."""
+
     def __init__(self, rate, chunk):
         self._rate = rate
         self._chunk = chunk
@@ -81,10 +84,9 @@ class MicrophoneStream(object):
 
             yield b''.join(data)
 
-
 def listen_print_loop(responses):
-    """Iterates through server responses and prints them.
-
+    """ ***Code from Google Speech to text documentation ***
+    Iterates through server responses and prints them.
     The responses passed is a generator that will block until a response
     is provided by the server.
 
@@ -97,6 +99,7 @@ def listen_print_loop(responses):
     the next result to overwrite it, until the response is a final one. For the
     final one, print a newline to preserve the finalized transcription.
     """
+
     num_chars_printed = 0
     for response in responses:
         if not response.results:
@@ -137,6 +140,11 @@ def listen_print_loop(responses):
             num_chars_printed = 0
 
 def returnResponseString(responses):
+    """
+    Returns a tuple of the most likely response and its confidence
+
+    Parameters: response is an array
+    """
     num_chars_printed = 0
     for response in responses:
         if not response.results:
@@ -185,14 +193,25 @@ def get_confidence(t):
 
 
 def append_to_file(filePath,message):
+    """
+    Adds a message [message] to the file specified in the file path [filePath]
+    Used to keep track of the history of what has been said and the confidence
+    """
     f = open(filePath,"a")
     f.write(message+"\n")
 
 def delete_file():
+    """
+    Clears the log.txt file
+    """
     os.remove("log.txt")
 
 
 def sub_main(profanityFilterBool):
+    """
+    *** Code taken from Google Cloud Speech to text documentation ***
+    Turns on the profanity filter so bad words are censored and not printed
+    """
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
     language_code = 'en-US'  # a BCP-47 language tag
@@ -230,7 +249,7 @@ def filter(t,switches):
     """
     Takes a string and filters out and replaces certain words
 
-    This includes kiko to cico.
+    This includes kiko to c1c0.
 
     Parameter t: Tuple containing string to edit and confidence level
     Precondition: t is a tuple - (s,f) s is a string and f is int or float
@@ -253,8 +272,14 @@ def filter(t,switches):
 
 
 def main():
+    """
+    Returns a tuple of the spoken phrase as a string and the confidence
+    
+    Runs the full speech to text program with the profanity filter and specific
+    words boosted
+    """
      response = sub_main(True)
-     switches = {'kiko':'cico'} #the words to replace
+     switches = {'kiko':'c1c0'} #the words to replace
 
      result = filter(response,switches)
      return result
