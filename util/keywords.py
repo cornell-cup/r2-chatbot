@@ -40,8 +40,12 @@ def get_topic(phrase):
     getmembers() gives you the name of variables/functions and the
     corresponding value of it in the tuple: (name, value)
     '''
-    test_funcs = [x for x in getmembers(topic_tests) if isfunction(x[1])]
-    #print(test_funcs)
+    test_funcs = []
+    for x in getmembers(topic_tests):
+        if(isfunction(x[1])):
+            test_funcs.append(x)
+        #if (isfunction(x))
+    #test_funcs = [x for x in getmembers(topic_tests) if isfunction(x[1])]
 
     result = None
     for test in test_funcs:

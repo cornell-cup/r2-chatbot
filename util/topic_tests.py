@@ -2,7 +2,7 @@
 This file contains functions to test a sentence for certain topics
 '''
 
-#import utils
+from util import utils
 # import nlp_util
 import re
 from util import nlp_util
@@ -18,6 +18,7 @@ return format for all functions in this module
 }
 '''
 def weather(text):
+    print("weather")
     '''
     Tests if the text is about weather and identifies any time words
 
@@ -38,7 +39,7 @@ def weather(text):
     POS_DT: {<NN.*><POS><NN.*>*}
     """
     #NP: {<DT|JJ|NN.*>+}
-    
+
     #the keywords we want to detect
     target_words = utils.load_words("data/weather_topic_words.txt")
     time_words = utils.load_words("data/weather_time_words.txt")
@@ -74,10 +75,9 @@ def restaurant(text):
 
     target_words = utils.load_words("data/restaurant_topic_words.txt")
 
-    split_text = text.split()
-
     for word in target_words:
-
+        if word =="eat":
+            word = " eat"
         if word in text:
             output["test_result"] = True
 

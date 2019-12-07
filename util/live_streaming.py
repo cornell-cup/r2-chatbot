@@ -205,8 +205,8 @@ def sub_main(profanityFilterBool):
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
         language_code=language_code,
-        enable_automatic_punctuation=True,
-        speech_contexts=speech_contexts)
+        enable_automatic_punctuation=True)
+        #speech_contexts=speech_contexts)
 
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
