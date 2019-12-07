@@ -5,6 +5,8 @@ This repository contains code for the chatbot project for Cornell Cup Robotics w
 
 ## Installation
 
+Make sure you have python 3. Also make sure you have `pip`.
+
 The following modules are needed: `nltk rake_nltk playsound pyaudio google-cloud-speech geocoder`
 
 If you encounter difficulties, try checking the Installation Issues section.
@@ -24,6 +26,9 @@ site.getusersitepackages()
 Now, do the following:
 * Go to the `google/cloud` directory.
 * Copy the file `speech_v1p1beta1/proto/cloud_speech_pb2.py` to `speech_v1/proto/` and overwrite the file
+
+## Running the project
+Run `python main.py`
 
 ## Installation Issues
 
