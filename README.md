@@ -37,7 +37,7 @@ You may be missing a library called portaudio. Instead of installing through `pi
 
 On your system's package manager, first try searching for pyaudio. If it exists, there's a good chance that it will also install portaudio for you, so install it. If not, search for a package containing the word "portaudio". If there is, install it.
 
-### `playaudio` Not Installing on Mac
+### `playaudio` Not Running on Mac
 * First run `pip uninstall AppKit`
 * Now install `gobject-introspection libffi` using the system package manager (ex: Homebrew)
 * Also set the environment variable `PKG_CONFIG_PATH=/usr/local/Cellar/libffi/<version number>/lib/pkgconfig/`
