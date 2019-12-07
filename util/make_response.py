@@ -26,13 +26,18 @@ def make_response_api(topic_data, api_data):
         for restaurant in api_data['nearby_restaurants']:
             r = restaurant['restaurant']["name"] + ", "
             list_of_restaurants = list_of_restaurants+r
-        response = list_of_restaurants
+        top_choices = api_data['popularity']['top_cuisines']
+        top_cuisines = "This place is famous place for "
+        for t_c in top_choices:
+            top_cuisines+=t_c+", "
+        top_cuisines+="."
+        response= top_cuisines +"The recommended restaurants are "+ list_of_restaurants
 
     return response
 
 if __name__ == "__main__":
     weather.import_keys()
-    
+
     with open("./tests/weather_question_tests.txt") as f:
         total = 0
         passed = 0
@@ -55,4 +60,3 @@ if __name__ == "__main__":
                 print(response)
 
     print("passed %d/%d"%(passed, total))
-
