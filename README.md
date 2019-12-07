@@ -7,7 +7,7 @@ This repository contains code for the chatbot project for Cornell Cup Robotics w
 
 Make sure you have python 3. Also make sure you have `pip`.
 
-The following modules are needed: `nltk rake_nltk playsound pyaudio google-cloud-speech geocoder`
+The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech geocoder`
 
 If you encounter difficulties, try checking the Installation Issues section.
 
