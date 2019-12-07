@@ -4,6 +4,7 @@ from util import keywords
 from util import make_response
 from util import playtrack
 from util.api import weather
+from util.api import restaurant
 from playsound import playsound
 import re
 import sys
@@ -22,19 +23,21 @@ def main():
         confidence = live_streaming.get_confidence(answer)
         if speech == "quit":
             break
-        print(answer)
+        #print(answer)
         topic = keywords.get_topic(speech)
+        print(topic)
         if topic["name"] == "weather":
+            print("weather is called")
             weather_data = weather.lookup_weather_today_city(
                     "ithaca new york")
-            print(weather_data)
+        #    print(weather_data)
             response = make_response.make_response_api(topic, weather_data)
             print(response)
         elif topic["name"] == "restaurant":
-            restaurant_data = restaurant.lookup_weather_today_city(
+            print("restaurant is called")
+            restaurant_data = restaurant.lookup_restaurant_city(
                 "ithaca new york")
-            print(restaurant_data)
-            response = make_response.make_response_api(topic, weather_data)
+            response = make_response.make_response_api(topic, restaurant_data)
             print(response)
 
 
