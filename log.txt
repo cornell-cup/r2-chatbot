@@ -94,3 +94,5 @@
 ("It's not quitting quit.", 0.8463886380195618)
 ('But that should be the only thing you say quit.', 0.9355771541595459)
 ('quit', 0.8687818646430969)
+('Hello, okay.', 0.9409988522529602)
+('list restaurants nearby', 0.9519333839416504)

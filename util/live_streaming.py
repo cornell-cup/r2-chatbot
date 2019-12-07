@@ -278,11 +278,11 @@ def main():
     Runs the full speech to text program with the profanity filter and specific
     words boosted
     """
-     response = sub_main(True)
-     switches = {'kiko':'c1c0'} #the words to replace
+    response = sub_main(True)
+    switches = {'kiko':'c1c0'} #the words to replace
 
-     result = filter(response,switches)
-     return result
+    result = filter(response,switches)
+    return result
 
 
 if __name__ == '__main__':
