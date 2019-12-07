@@ -48,6 +48,7 @@ def is_question(line):
             filter=lambda tree: tree.label() == "question"):
         print(subtree)
     '''
+    #checks if any question chunks were found
     return len(
             list(tree.subtrees(
                 filter=lambda tree: tree.label() == "question"))) > 0

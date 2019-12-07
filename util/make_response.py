@@ -14,6 +14,17 @@ from api import restaurant
 import keywords
 
 def make_response_api(topic_data, api_data):
+    '''
+    Generate a response based on the topic and various other information
+
+    @param topic_data: Information about the topic. Use the return value
+            of the functions in the topic_tests module
+    @param api_data: The full data returned from an api call. Format
+            depends on the desired topic and api use. Consult the
+            corresponding module in the api/ directory for more info
+
+    @return: The string response
+    '''
     response = ""
     if topic_data["name"] == "weather":
         if "temperature" in topic_data["info"]["keywords"]:
