@@ -61,8 +61,8 @@ if __name__ == "__main__":
     #phrase = extract_keywords("what is the weather today")
     #phrase2 = extract_keywords("what is a good restaurant nearby")
     #print(extract_keywords(phrase))
-    phrase = "what is the weather today"
-    #phrase2 = "what is a good restaurant nearby"
+    phrase = "weather in san francisco"
+    phrase2 = "how's ithaca new york's weather"
     get_topic(phrase)
-    #get_topic(phrase2)
+    get_topic(phrase2)
     #print(phrase)

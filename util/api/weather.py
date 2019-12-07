@@ -88,7 +88,9 @@ if __name__ == "__main__":
     import json
     import_keys()
 
-    coords = city_to_coord("ithaca new york")
+    #coords = city_to_coord("ithaca new york")
+    coords = city_to_coord("weather today")
+    print(coords)
 
-    forecast = lookup_weather_today(coords[0], coords[1])
-    print(json.dumps(forecast))
+    #forecast = lookup_weather_today(coords[0], coords[1])
+    #print(json.dumps(forecast))
