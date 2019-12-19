@@ -30,6 +30,29 @@ Now, do the following:
 ## Running the project
 Run `python main.py`
 
+## Project Structure
+* `api_keys`: all api key files go here (txt, json, etc.). DO NOT PUSH THE KEYS TO THIS REPO. All the necessary keys are pinned on slack.
+* `data`: contains miscellaneous data needed in the execution of the program
+* `misc`: miscellaneous files
+* `sounds`: contains sound files to be outputted through the speaker
+* `tests`: contains scripts to test components of the system
+* `util`: where all the modules in the project go. See the Modules section for more information
+* `main.py`: the entrypoint of the program
+
+## Modules
+Our project contains the following modules, all contained within the `util` directory:
+* `keywords`: get keywords from a phrase, also implements code to utilize functions in `topic_tests`
+* `live_streaming`: code for speech to text system
+* `make_response`: generates a phrase based on various pieces of data
+* `nlp_util`: convenience functions to accomplish various Natural Language Processing (NLP) tasks
+* `playtrack`: contains code to play audio files
+* `topic_tests`: all functions in this module test for a specific topic in a phrase. Should be used with `keywords.get_topic()`.
+* `utils`: contains miscellaneous funtionality
+
+Within `util/api`, we also have modules to handle API interactions:
+* `weather`: interfaces with the OpenWeatherMap API
+* `restaurant`: interfaces with the Zomato API
+
 ## Installation Issues
 
 ### `pyaudio` Not Installing
