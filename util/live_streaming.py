@@ -200,11 +200,11 @@ def append_to_file(filePath,message):
     f = open(filePath,"a")
     f.write(message+"\n")
 
-def delete_file():
-    """
-    Clears the log.txt file
-    """
-    os.remove("log.txt")
+# def delete_file():
+#     """
+#     Clears the log.txt file
+#     """
+#     os.remove("log.txt")
 
 
 def sub_main(profanityFilterBool):
