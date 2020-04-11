@@ -14,13 +14,14 @@ def pathPlanning(text):
     verbPhrase, keywords = nlp_util.match_regex_and_keywords(text, r_expr, target_verbs)
     #print(verbPhrase)
 
-    #if we found a path related phrase
+    #if we find a path related phrase
     if len(verbPhrase) > 0:
         ammountE = r"""
         RB: {<CD>}
         """
-        #grabs the number from the phrase
+        #grabs the number of steps from the phrase
         moveAmmount, keyword = nlp_util.match_regex_and_keywords(text, ammountE)
+
         #based on the direction, returns the corresponding degrees
         if "left" in text:
             direction = -90
