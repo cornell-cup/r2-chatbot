@@ -14,7 +14,12 @@ api_keys/*.*
 
 # binary files
 google_cloud_sdk/*
+*.pickle
  
 #for nltk.download
 punkt.zip
 averaged_perceptron_tagger.zip
+
+#db files
+db.sqlite3
+
