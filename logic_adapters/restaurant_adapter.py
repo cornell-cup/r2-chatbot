@@ -2,19 +2,19 @@ from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from util import keywords
 from util import make_response
-from util.api import weather
+from util.api import restaurant
 
-class WeatherAdapter(LogicAdapter):
+class RestaurantAdapter(LogicAdapter):
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
-        weather.import_keys()
+        restaurant.import_keys()
 
     def can_process(self, statement):
         output = keywords.get_topic(statement.text)
         print(output)
 
         if "name" in output.keys():
-            return output["name"] == "weather"
+            return output["name"] == "restaurant"
         
         return False
 
