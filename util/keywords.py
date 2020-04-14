@@ -53,7 +53,7 @@ def get_topic(phrase):
 
         #if topic was matched
         if result["test_result"]:
-            print("matched %s"%(test[0]))
+            #print("matched %s"%(test[0]))
             result["name"] = test[0]
             return result
 
