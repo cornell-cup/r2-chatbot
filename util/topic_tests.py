@@ -2,10 +2,10 @@
 This file contains functions to test a sentence for certain topics
 '''
 
-import utils
+from util import utils
 # import nlp_util
 import re
-import nlp_util
+from util import nlp_util
 
 '''
 return format for all functions in this module

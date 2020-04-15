@@ -3,6 +3,7 @@ from util import nlp_util
 from util import keywords
 from util import make_response
 from util import playtrack
+from util import path_planning
 from util.api import weather
 from util.api import restaurant
 from playsound import playsound
@@ -20,9 +21,13 @@ def main():
         answer = live_streaming.main()
         speech = live_streaming.get_string(answer)
         confidence = live_streaming.get_confidence(answer)
+        topic = keywords.get_topic(speech)
+        print(speech)
+
         if "quit" in speech:
             break
-        topic = keywords.get_topic(speech)
+        if path_planning.isLocCommand(speech.lower()):
+            print(path_planning.pathPlanning(speech))
         if topic["name"] == "weather":
             weather_data = weather.lookup_weather_today_city(
                     "ithaca new york")
@@ -33,8 +38,6 @@ def main():
                 "ithaca new york")
             response = make_response.make_response_api(topic, restaurant_data)
             print(response)
-        else:
-            print(speech)
 
 
 if __name__ == '__main__':
