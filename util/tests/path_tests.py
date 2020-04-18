@@ -9,7 +9,7 @@ lines = []
 #         lines.append(line)
 
 lines = [
-    "Move 10 steps backwards"
+    "Turn right 30 degrees."
 ]
 
 # <JJ.*>|<VB.*>|<INRB.*>|
