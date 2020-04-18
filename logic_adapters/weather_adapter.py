@@ -25,10 +25,14 @@ class WeatherAdapter(LogicAdapter):
 
     def process(self, statement, additional_response_selection, selection_parameters=None):
         topic_data = keywords.get_topic(statement.text)
-        api_data = weather.lookup_weather_today_city("ithaca, ny")
+        
+        api_data = None
+        if "location" in topic_data["info"]:
+            api_data = weather.lookup_weather_today_city(topic_data["info"]["location"])
+        else:
+            api_data = weather.lookup_weather_today_city("ithaca, ny")
 
         response = make_response.make_response_api(topic_data, api_data)
-
         statement = Statement(text=response, confidence=1)
         
         return statement
