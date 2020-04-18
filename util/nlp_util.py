@@ -1,7 +1,8 @@
 import re   #regex module
 import nltk
 
-import utils
+#import utils
+from util import utils
 
 def parse(line, expression):
     '''
@@ -28,7 +29,7 @@ def parse(line, expression):
         parsed_text = parser.parse(pos_tagged)
         
         #print(parsed_text)
-        parsed_text.draw()
+        #parsed_text.draw()
             
     except Exception as e:
         print(str(e))
@@ -55,7 +56,7 @@ def is_question(line):
             list(tree.subtrees(
                 filter=lambda tree: tree.label() == "question"))) > 0
 
-def search_for_location(chunks):
+def search_for_location(line):
     """
     Verifies if passed in chunks are names of cities/locations
 
@@ -63,33 +64,41 @@ def search_for_location(chunks):
     If the statement is about weather, then all named entities are treated
     as a location (this includes ORGANIZATION, PERSON tags)
 
-    @param chunks: a list of nltk chunks
+    This function has been observed to fail on the case:
+    "weather in San Francisco"
 
-    @return: a list of strings containing found locations
+    @param line: the text to search through
+
+    @return: a string of the found location, if none found, empty string
     """
-    print("all chunks: ")
-    print(chunks)
-    for chunk in chunks:
-        if isinstance(chunk, str):
-            continue
-        line = ""
-        print("cur chunk: ") == type("")
-        print(chunk)
-        for word, tag in chunk.leaves():
-            line += word + " "
-        print("line from chunk: " + line)
-        
-        cap = utils.capitalize_all(line)
-        
-        #nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize()))
-        tokenized_line = nltk.word_tokenize(cap)
-        pos_tagged = nltk.pos_tag(tokenized_line)
+    loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
 
-        thing = nltk.ne_chunk(pos_tagged)
-        thing.draw()
-        for t in thing.subtrees():
-            if t.label() == 'GPE':
-                print(t)
+    tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
+    #tree.draw()
+    
+    location = ""
+    for subtree in tree.subtrees(lambda t: t.label() == "S"):
+        for chunk in subtree.subtrees(lambda t: t.height() == 2):
+            if isinstance(chunk, str):
+                continue
+            '''
+            print("cur chunk: ") == type("")
+            print(chunk)
+            '''
+
+            if chunk.label() in loc_labels:
+                location_elem = ""
+                for word, pos in chunk:
+                    location_elem += word + " "
+                #print("cur elem: ")
+                #print(location_elem)
+                location_elem = location_elem.strip()
+        
+                location += location_elem + ", "
+        
+    location = location.strip(" ,")
+    print("found location %s"%(location))
+    return location
 
 def match_regex_and_keywords(line, exp, keywords=None):
     '''
@@ -119,8 +128,6 @@ def match_regex_and_keywords(line, exp, keywords=None):
         
         #now loop through subtrees, detected chunks have height 2
         for chunk in subtree.subtrees(lambda t: t.height() == 2):
-            print("nlp_util chunk: ")
-            print(chunk)
             if keywords == None:
                 #no keyword detection needed
                 matched_chunks.append(chunk)
