@@ -9,6 +9,9 @@ chatbot = ChatBot(
         {
             "import_path": "logic_adapters.weather_adapter.WeatherAdapter",
             "package": "`"
+        },
+        {
+            "import_path": "logic_adapters.restaurant_adapter.RestaurantAdapter"
         }
     ]
 )

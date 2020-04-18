@@ -2,10 +2,10 @@
 This file contains functions to test a sentence for certain topics
 '''
 
-import utils
+from util import utils
 # import nlp_util
 import re
-import nlp_util
+from util import nlp_util
 
 '''
 return format for all functions in this module
@@ -52,6 +52,12 @@ def weather(text):
     if len(chunks) > 0:
         output["test_result"] = True
         output["info"]["keywords"] = keywords
+
+    loc_chunks, _ = nlp_util.match_regex_and_keywords(
+            text, expression)
+    
+    #can call search_for_location here
+    nlp_util.search_for_location(loc_chunks)
 
     return output
 

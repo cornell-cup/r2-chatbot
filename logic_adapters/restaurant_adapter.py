@@ -25,7 +25,7 @@ class RestaurantAdapter(LogicAdapter):
 
     def process(self, statement, additional_response_selection, selection_parameters=None):
         topic_data = keywords.get_topic(statement.text)
-        api_data = weather.lookup_weather_today_city("ithaca, ny")
+        api_data = restaurant.lookup_restaurant_city("ithaca, ny")
 
         response = make_response.make_response_api(topic_data, api_data)
 
