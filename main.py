@@ -4,6 +4,7 @@ from util import keywords
 from util import make_response
 from util import playtrack
 from util import path_planning
+from util import object_detection
 from util.api import weather
 from util.api import restaurant
 from playsound import playsound
@@ -28,6 +29,8 @@ def main():
             break
         if path_planning.isLocCommand(speech.lower()):
             print(path_planning.pathPlanning(speech.lower()))
+        if object_detection.isObjCommand(speech.lower()):
+            print(object_detection.object_parse(speech.lower()))
         if topic["name"] == "weather":
             weather_data = weather.lookup_weather_today_city(
                     "ithaca new york")
