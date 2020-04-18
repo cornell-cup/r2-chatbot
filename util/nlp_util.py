@@ -7,30 +7,30 @@ from util import utils
 def parse(line, expression):
     '''
     Looks for a certain type of phrase for all the sentences in a file
-    
+
     @param line: The sentence to check
     @param expression: A raw string containing the regular expression
             chunk to match. This is utilizing nltk's regex parser
 
     @return: The syntax tree representing the parsed sentence
     '''
-    
+
     try:
         #break sentence into tokens (ex: words)
         tokenized_line = nltk.word_tokenize(line)
 
         #mark tokens with part of speech
         pos_tagged = nltk.pos_tag(tokenized_line)
-        
+
         #the type of phrase we want to detect in a sentence
         parser = nltk.RegexpParser(expression)
 
         #look through the tagged tokens for the phrase
         parsed_text = parser.parse(pos_tagged)
-        
+
         #print(parsed_text)
         #parsed_text.draw()
-            
+
     except Exception as e:
         print(str(e))
 
@@ -45,7 +45,7 @@ def is_question(line):
     @return: Boolean saying whether the sentence is a question
     '''
     tree = parse(line, r"question: {<W..?>}")
-    
+
     '''
     for subtree in tree.subtrees(
             filter=lambda tree: tree.label() == "question"):
@@ -125,7 +125,7 @@ def match_regex_and_keywords(line, exp, keywords=None):
     #only loop over full trees, not subtrees or leaves
     #only root node has the "S" label
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
-        
+
         #now loop through subtrees, detected chunks have height 2
         for chunk in subtree.subtrees(lambda t: t.height() == 2):
             if keywords == None:
@@ -138,7 +138,7 @@ def match_regex_and_keywords(line, exp, keywords=None):
                         matched_chunks.append(chunk)
                         matched_keywords.append(word)
                         break
-    
+
     return (matched_chunks, matched_keywords)
 
 if __name__ == "__main__":
@@ -146,4 +146,3 @@ if __name__ == "__main__":
         for line in f:
             print(is_question(line))
             #print(match_regex_and_keywords(line, ""))
-

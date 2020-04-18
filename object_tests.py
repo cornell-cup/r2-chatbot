@@ -9,14 +9,14 @@ lines = []
 #         lines.append(line)
 
 lines = [
-    "Move 10 steps backwards"
+    "please grab the pencil"
 ]
 
 # <JJ.*>|<VB.*>|<INRB.*>|
 
 r_expr = r"""
 KEYWORDS: {}
-DESCRIPTION: {<NNP|VB.*|NN><CD|RB|NNS|VBD|JJ><CD|RB|NNS|VBD>(<NNS|RB|VBD>)?}
+DESCRIPTION: {}
 """
 
 
