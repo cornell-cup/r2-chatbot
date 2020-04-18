@@ -1,10 +1,9 @@
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
-from chatterbot.response_selection import get_most_frequent_response
 
 # Uncomment the following lines to enable verbose logging
-#import logging
-#logging.basicConfig(level=logging.INFO)
+import logging
+logging.basicConfig(level=logging.INFO)
 
 # Create a new instance of a ChatBot
 bot = ChatBot(
@@ -16,7 +15,7 @@ bot = ChatBot(
         'chatterbot.logic.BestMatch'
     ],
     database_uri='sqlite:///database.db',
-    response_selection_method=get_most_frequent_response
+    read_only = True
 )
 
 corpus_trainer = ChatterBotCorpusTrainer(bot)
