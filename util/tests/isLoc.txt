@@ -1,0 +1,7 @@
+move forward 10 steps
+turn right 30 degrees
+turn left 30 degrees
+move backwards by 30
+C1C0, can you please go forward 10 steps
+please turn right 360 degrees
+turn right 90 degrees

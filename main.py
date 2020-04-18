@@ -27,7 +27,7 @@ def main():
         if "quit" in speech:
             break
         if path_planning.isLocCommand(speech.lower()):
-            print(path_planning.pathPlanning(speech))
+            print(path_planning.pathPlanning(speech.lower()))
         if topic["name"] == "weather":
             weather_data = weather.lookup_weather_today_city(
                     "ithaca new york")
