@@ -46,13 +46,19 @@ def weather(text):
 
     chunks, keywords = nlp_util.match_regex_and_keywords(
             text, expression, target_words)
-    print(chunks)
+    #print(chunks)
 
     #if we found a weather related phrase
     if len(chunks) > 0:
         output["test_result"] = True
         output["info"]["keywords"] = keywords
 
+        #attempt to find a location
+        location = nlp_util.search_for_location(text)
+        if len(location) > 0:
+            output["info"]["location"] = location
+
+    print(output)
     return output
 
 def restaurant(text):

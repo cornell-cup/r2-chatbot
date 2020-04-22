@@ -14,3 +14,11 @@ def load_words(filename):
 
     return out
 
+def capitalize_all(s):
+    words = s.strip().split()
+
+    res = ""
+    for w in words:
+        res += w.capitalize() + " "
+    return res
+

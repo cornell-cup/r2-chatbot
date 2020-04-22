@@ -1,6 +1,9 @@
 import re   #regex module
 import nltk
 
+#import utils
+from util import utils
+
 def parse(line, expression):
     '''
     Looks for a certain type of phrase for all the sentences in a file
@@ -52,6 +55,50 @@ def is_question(line):
     return len(
             list(tree.subtrees(
                 filter=lambda tree: tree.label() == "question"))) > 0
+
+def search_for_location(line):
+    """
+    Verifies if passed in chunks are names of cities/locations
+
+    Assumptions made:
+    If the statement is about weather, then all named entities are treated
+    as a location (this includes ORGANIZATION, PERSON tags)
+
+    This function has been observed to fail on the case:
+    "weather in San Francisco"
+
+    @param line: the text to search through
+
+    @return: a string of the found location, if none found, empty string
+    """
+    loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
+
+    tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
+    #tree.draw()
+    
+    location = ""
+    for subtree in tree.subtrees(lambda t: t.label() == "S"):
+        for chunk in subtree.subtrees(lambda t: t.height() == 2):
+            if isinstance(chunk, str):
+                continue
+            '''
+            print("cur chunk: ") == type("")
+            print(chunk)
+            '''
+
+            if chunk.label() in loc_labels:
+                location_elem = ""
+                for word, pos in chunk:
+                    location_elem += word + " "
+                #print("cur elem: ")
+                #print(location_elem)
+                location_elem = location_elem.strip()
+        
+                location += location_elem + ", "
+        
+    location = location.strip(" ,")
+    print("found location %s"%(location))
+    return location
 
 def match_regex_and_keywords(line, exp, keywords=None):
     '''
