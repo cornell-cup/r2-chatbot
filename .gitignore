@@ -15,6 +15,7 @@ api_keys/*.*
 # binary files
 google_cloud_sdk/*
 *.pickle
+dep/*
  
 #for nltk.download
 punkt.zip
