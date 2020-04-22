@@ -1,3 +1,4 @@
+import os
 import re   #regex module
 import nltk
 
@@ -71,10 +72,20 @@ def search_for_location(line):
 
     @return: a string of the found location, if none found, empty string
     """
+    '''
+    NER_TAGGER = nltk.StanfordNERTagger(
+        "%s/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz"%(os.getcwd()))
+    '''
     loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
 
     tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
     tree.draw()
+
+    '''
+    tags = NER_TAGGER.tag(line.split())
+    print(tags)
+    '''
+
     
     location = ""
     for subtree in tree.subtrees(lambda t: t.label() == "S"):

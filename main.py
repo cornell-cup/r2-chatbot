@@ -12,8 +12,14 @@ import re
 import sys
 import os
 
+print(os.getcwd())
 credential_path = "api_keys/Speech to Text-bef030531cd1.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
+
+if "CLASSPATH" not in os.environ:
+    os.environ["CLASSPATH"] = ""
+os.environ["CLASSPATH"] += (":%s/dep/stanford-ner/stanford-ner.jar"%(os.getcwd()))
+print(os.environ["CLASSPATH"])
 
 def main():
     while True:
