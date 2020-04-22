@@ -9,7 +9,7 @@ lines = []
 #         lines.append(line)
 
 lines = [
-    "pick up the watter bottle please"
+    "pick up the potato"
 ]
 
 # <JJ.*>|<VB.*>|<INRB.*>|

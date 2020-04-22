@@ -20,7 +20,7 @@ Who is Darth Vader?
 Who is Luke's father? 
 Where is Cornell located? 
 Who is the president of Cornell?
-What is Cornell’s acceptance rate?
+What is Cornell's acceptance rate?
 When was Cornell founded?
 greetings!
 I am 19 years old. 

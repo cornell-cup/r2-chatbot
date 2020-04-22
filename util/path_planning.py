@@ -3,13 +3,13 @@ import re
 import nlp_util
 
 def isLocCommand(text):
-        '''
-        Determines whether a string is a locomation command or not based on the
-        sentence structure
+    '''
+    Determines whether a string is a locomation command or not based on the
+    sentence structure
+    @param text: The sentence to check (must be in lowercase)
+    @return: A boolean. True indicates that the input is a locomotion command
+    '''
 
-        @param text: The sentence to check (must be in lowercase)
-        @return: A boolean. True indicates that the input is a locomotion command
-        '''
     r_expr = r"""
     VP: {<NNP|VB.*|NN><CD|RB|NNS|VBD|JJ><CD|RB|NNS|VBD>(<NNS|RB|VBD>)?}
     """
@@ -24,18 +24,18 @@ def isLocCommand(text):
 
 
 def pathPlanning(text):
-        '''
-        This function uses regular expressions to determine whether the input is
-        a locomotion command and uses regular expressions to parse the necessary
-        data from the inputed text.
+    '''
+    This function uses regular expressions to determine whether the input is
+    a locomotion command and uses regular expressions to parse the necessary
+    data from the inputed text.
 
-        @param text: The sentence to check if it is a locomotion command and
-        parse the direction and distance from it. ***MUST BE IN LOWERCASE***
-        @return: A tuple. First element is the direction (i.e. 90 if right, 0
-        if forward, -90 if left, or 180 of backwards). The second element is the
-        distance. If the input text is not a locomation command, the function returns
-        (-500, -500) by default.
-        '''
+    @param text: The sentence to check if it is a locomotion command and
+    parse the direction and distance from it. ***MUST BE IN LOWERCASE***
+    @return: A tuple. First element is the direction (i.e. 90 if right, 0
+    if forward, -90 if left, or 180 of backwards). The second element is the
+    distance. If the input text is not a locomation command, the function returns
+    (-500, -500) by default.
+    '''
     #return variables
     direction = 0
     moveAmmount = 0
