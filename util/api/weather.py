@@ -58,8 +58,7 @@ def lookup_weather_five_day(lat, lng):
 
 def import_keys():
     '''
-    Imports all of the necessary API keys. Call this before using
-    other functionality of this module
+    Imports all of the necessary API keys
     '''
 
     global KEY, GEONAMES_USERNAME
@@ -84,9 +83,10 @@ def city_to_coord(city_string):
     g = geocoder.geonames(city_string, key=GEONAMES_USERNAME)
     return (g.lat, g.lng)
 
+import_keys()
+
 if __name__ == "__main__":
     import json
-    import_keys()
 
     #coords = city_to_coord("ithaca new york")
     coords = city_to_coord("weather today")

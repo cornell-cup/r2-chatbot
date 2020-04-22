@@ -74,7 +74,7 @@ def search_for_location(line):
     loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
 
     tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
-    #tree.draw()
+    tree.draw()
     
     location = ""
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
@@ -97,7 +97,10 @@ def search_for_location(line):
                 location += location_elem + ", "
         
     location = location.strip(" ,")
-    print("found location %s"%(location))
+    if location != "":
+        print("found location %s"%(location))
+    else:
+        print("No location found")
     return location
 
 def match_regex_and_keywords(line, exp, keywords=None):

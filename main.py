@@ -16,7 +16,6 @@ credential_path = "api_keys/Speech to Text-bef030531cd1.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 def main():
-    weather.import_keys()
     while True:
         #gets a tuple of phrase and confidence
         answer = live_streaming.main()
@@ -32,13 +31,19 @@ def main():
         if object_detection.isObjCommand(speech.lower()):
             print(object_detection.object_parse(speech.lower()))
         if topic["name"] == "weather":
+            '''
             weather_data = weather.lookup_weather_today_city(
                     "ithaca new york")
+            '''
+            location = nlp_util.search_for_location(speech)
+            location = location if location != "" else "Ithaca, New York"
+            weather_data = weather.lookup_weather_today_city(location)
             response = make_response.make_response_api(topic, weather_data)
             print(response)
         elif topic["name"] == "restaurant":
-            restaurant_data = restaurant.lookup_restaurant_city(
-                "ithaca new york")
+            location = nlp_util.search_for_location(speech)
+            location = location if location != "" else "Ithaca, New York"
+            restaurant_data = restaurant.lookup_restaurant_city(location)
             response = make_response.make_response_api(topic, restaurant_data)
             print(response)
 

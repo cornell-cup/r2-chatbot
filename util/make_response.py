@@ -26,6 +26,7 @@ def make_response_api(topic_data, api_data):
     @return: The string response
     '''
     response = ""
+    #print(api_data)
     if topic_data["name"] == "weather":
         if "temperature" in topic_data["info"]["keywords"]:
             response = "It is %s degrees"%(round(api_data["main"]["temp"]))

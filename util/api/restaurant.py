@@ -37,14 +37,12 @@ def lookup_restaurant_city(city):
 
     @return: the full json data from the API call
     '''
-    import_keys()
     lat, lng = city_to_coord(city)
     return lookup_restaurant(lat, lng)
 
 def import_keys():
     '''
-    Imports all of the necessary API keys. Call this before using
-    other functionality of this module
+    Imports all of the necessary API keys
     '''
 
     global KEY, GEONAMES_USERNAME
@@ -69,8 +67,9 @@ def city_to_coord(city_string):
     g = geocoder.geonames(city_string, key=GEONAMES_USERNAME)
     return (g.lat, g.lng)
 
+import_keys()
+
 if __name__ == "__main__":
-    import_keys()
     coords = city_to_coord("ithaca new york")
     nearby_restaurants = lookup_restaurant(coords[0], coords[1])
     print(nearby_restaurants)
