@@ -1,9 +1,11 @@
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
+import chatterbot.comparisons
+import chatterbot.response_selection
 
 # Uncomment the following lines to enable verbose logging
-import logging
-logging.basicConfig(level=logging.INFO)
+#import logging
+#logging.basicConfig(level=logging.INFO)
 
 # Create a new instance of a ChatBot
 bot = ChatBot(
@@ -12,7 +14,12 @@ bot = ChatBot(
     logic_adapters=[
         'chatterbot.logic.MathematicalEvaluation',
         'logic_adapters.weather_adapter.WeatherAdapter',
-        'chatterbot.logic.BestMatch'
+        'logic_adapters.restaurant_adapter.RestaurantAdapter',
+        {
+            "import_path": 'logic_adapters.bestmatch_2.BestMatch2',
+            "statement_comparison_function": chatterbot.comparisons.levenshtein_distance,
+            "response_selection_method": chatterbot.response_selection.get_most_frequent_response
+        }
     ],
     database_uri='sqlite:///database.db',
     read_only = True
