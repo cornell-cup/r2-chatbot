@@ -70,7 +70,7 @@ def search_for_location(line):
 
     @param line: the text to search through
 
-    @return: a string of the found location, if none found, empty string
+    @return: a string of the found location, if none found, returns None
     """
     '''
     NER_TAGGER = nltk.StanfordNERTagger(
@@ -85,8 +85,12 @@ def search_for_location(line):
     tags = NER_TAGGER.tag(line.split())
     print(tags)
     '''
+<<<<<<< HEAD
 
 
+=======
+    
+>>>>>>> 2dca8712ffe8a8b1ce9e63bea72a18597c4438b2
     location = ""
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
         for chunk in subtree.subtrees(lambda t: t.height() == 2):

@@ -41,15 +41,11 @@ def main():
             weather_data = weather.lookup_weather_today_city(
                     "ithaca new york")
             '''
-            location = nlp_util.search_for_location(speech)
-            location = location if location != "" else "Ithaca, New York"
-            weather_data = weather.lookup_weather_today_city(location)
+            weather_data = weather.lookup_weather_today_city(topic["info"]["location"]["name"])
             response = make_response.make_response_api(topic, weather_data)
             print(response)
         elif topic["name"] == "restaurant":
-            location = nlp_util.search_for_location(speech)
-            location = location if location != "" else "Ithaca, New York"
-            restaurant_data = restaurant.lookup_restaurant_city(location)
+            restaurant_data = restaurant.lookup_restaurant_city(topic["info"]["location"]["name"])
             response = make_response.make_response_api(topic, restaurant_data)
             print(response)
 
