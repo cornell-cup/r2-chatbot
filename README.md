@@ -9,17 +9,20 @@ Make sure you have Python 3 and at least Java 8. Also make sure you have `pip`.
 
 The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech geocoder chatterbot chatterbot-corpus`
 
-Additionally, you will need to download the Stanford Named Entity Recognizer (NER) from [here](https://nlp.stanford.edu/software/CRF-NER.shtml). Unzip the resulting file and rename the folder to `stanford-ner` and move it into the `dep/` directory. The `dep/` directory should look like
+If you encounter difficulties, try checking the Installation Issues section.
+
+### Setting Up Named Entity Recognition
+You will need to download the Stanford Named Entity Recognizer (NER) from [here](https://nlp.stanford.edu/software/CRF-NER.shtml). Unzip the resulting file and rename the folder to `stanford-ner` and move it into the `dep/` directory. The `dep/` directory should look like
 ```
 dep/
 	stanford-ner/
 		...
+	...
 ```
 
 ##### Additional instructions for Windows
-It may be necessary to set the `JAVAHOME` environment variable. Make sure to point this at where your JDK is located
+It may be necessary to set the `JAVAHOME` environment variable. Make sure to point this at where your JDK is located.
 
-If you encounter difficulties, try checking the Installation Issues section.
 
 ### Setting Up Boost for Speech to Text
 Navigate to the directory where your `pip` packages are installed.
