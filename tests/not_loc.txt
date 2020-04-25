@@ -24,3 +24,5 @@ What is Cornell's acceptance rate?
 When was Cornell founded?
 greetings!
 I am 19 years old. 
+C1C0 left ten degrees
+move 5 steps forward

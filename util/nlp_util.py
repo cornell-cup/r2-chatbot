@@ -2,8 +2,8 @@ import os
 import re   #regex module
 import nltk
 
-#import utils
-from util import utils
+import utils
+#from util import utils
 
 def parse(line, expression):
     '''
@@ -86,7 +86,7 @@ def search_for_location(line):
     print(tags)
     '''
 
-    
+
     location = ""
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
         for chunk in subtree.subtrees(lambda t: t.height() == 2):
@@ -104,9 +104,9 @@ def search_for_location(line):
                 #print("cur elem: ")
                 #print(location_elem)
                 location_elem = location_elem.strip()
-        
+
                 location += location_elem + ", "
-        
+
     location = location.strip(" ,")
     if location != "":
         print("found location %s"%(location))
