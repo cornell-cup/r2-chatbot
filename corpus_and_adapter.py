@@ -1,6 +1,12 @@
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 
+import os
+if "CLASSPATH" not in os.environ:
+    os.environ["CLASSPATH"] = ""
+os.environ["CLASSPATH"] += (":%s/dep/stanford-ner/stanford-ner.jar"%(os.getcwd()))
+print(os.environ["CLASSPATH"])
+
 # Uncomment the following lines to enable verbose logging
 import logging
 logging.basicConfig(level=logging.INFO)
