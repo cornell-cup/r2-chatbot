@@ -30,7 +30,7 @@ def main():
         topic = keywords.get_topic(speech)
         print(speech)
 
-        if "quit" in speech:
+        if "quit" in speech or "stop" in speech:
             break
         if path_planning.isLocCommand(speech.lower()):
             print(path_planning.pathPlanning(speech.lower()))
