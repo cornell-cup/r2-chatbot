@@ -14,6 +14,14 @@ return format for all functions in this module
     "test_result": boolean,
     "info": {
         <specific info for each topic, only if test_result is True>
+        "keywords": [
+            <string>,
+            ...
+        ],
+        "location": {
+            "exists": <boolean>,
+            "name": <string>
+        }
     }
 }
 '''
@@ -55,8 +63,13 @@ def weather(text):
 
         #attempt to find a location
         location = nlp_util.search_for_location(text)
+        output["info"]["location"] = {}
         if len(location) > 0:
-            output["info"]["location"] = location
+            output["info"]["location"]["exists"] = True
+            output["info"]["location"]["name"] = location
+        else:
+            output["info"]["location"]["exists"] = False
+            output["info"]["location"]["name"] = ""
 
     print(output)
     return output
@@ -89,5 +102,15 @@ def restaurant(text):
 
     if output["test_result"] == False:
         return output
+    
+    #attempt to find a location
+    location = nlp_util.search_for_location(text)
+    output["info"]["location"] = {}
+    if len(location) > 0:
+        output["info"]["location"]["exists"] = True
+        output["info"]["location"]["name"] = location
+    else:
+        output["info"]["location"]["exists"] = False
+        output["info"]["location"]["name"] = ""
 
     return output

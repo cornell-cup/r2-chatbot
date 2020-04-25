@@ -34,9 +34,13 @@ def lookup_restaurant_city(city):
     Calls lookup_restaurant() and returns output
 
     @param city: city name. Should include more specific info as needed (country, state, etc.)
+    If empty string, returns empty string
 
-    @return: the full json data from the API call
+    @return: if city is specified, the full json data from the API call. Otherwise empty string
     '''
+    if city == "":
+        return ""
+    
     lat, lng = city_to_coord(city)
     return lookup_restaurant(lat, lng)
 

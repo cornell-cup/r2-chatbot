@@ -28,22 +28,27 @@ def make_response_api(topic_data, api_data):
     response = ""
     #print(api_data)
     if topic_data["name"] == "weather":
-        if "temperature" in topic_data["info"]["keywords"]:
+        if not topic_data["info"]["location"]["exists"]:
+            response = "Sorry, I couldn't find the location you were asking for"
+        elif "temperature" in topic_data["info"]["keywords"]:
             response = "It is %s degrees"%(round(api_data["main"]["temp"]))
         else:
             response = "There is %s"%(api_data["weather"][0]["description"])
 
     elif topic_data["name"] == "restaurant":
         list_of_restaurants = ""
-        for restaurant in api_data['nearby_restaurants']:
-            r = restaurant['restaurant']["name"] + ", "
-            list_of_restaurants = list_of_restaurants+r
-        top_choices = api_data['popularity']['top_cuisines']
-        top_cuisines = "This place is famous place for "
-        for t_c in top_choices:
-            top_cuisines+=t_c+", "
-        top_cuisines+="."
-        response= top_cuisines +"The recommended restaurants are "+ list_of_restaurants
+        if not topic_data["info"]["location"]["exists"] or api_data["code"] == 400:
+            response = "Sorry, I couldn't find the location you were asking for"
+        else:
+            for restaurant in api_data['nearby_restaurants']:
+                r = restaurant['restaurant']["name"] + ", "
+                list_of_restaurants = list_of_restaurants+r
+            top_choices = api_data['popularity']['top_cuisines']
+            top_cuisines = "This place is famous place for "
+            for t_c in top_choices:
+                top_cuisines+=t_c+", "
+            top_cuisines+="."
+            response= top_cuisines +"The recommended restaurants are "+ list_of_restaurants
 
     return response
 
