@@ -9,14 +9,14 @@ lines = []
 #         lines.append(line)
 
 lines = [
-    "Turn right 30 degrees."
+    "turn the strong arm left 40 degrees"
 ]
 
 # <JJ.*>|<VB.*>|<INRB.*>|
 
 r_expr = r"""
 KEYWORDS: {}
-DESCRIPTION: {<NNP|VB.*|NN><CD|RB|NNS|VBD|JJ><CD|RB|NNS|VBD>(<NNS|RB|VBD>)?}
+DESCRIPTION: {(<JJ>)?<NN.*>+(<VB.*>)?<RB|VBD|JJ|CD>(<CD|JJ>)?}
 """
 
 

@@ -4,6 +4,7 @@
 *.bak
 *.DS_Store*
 speech-to-text/log.txt
+log.txt
 
 # compiled code
 *.pyc
