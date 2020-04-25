@@ -13,7 +13,7 @@ def isLocCommand(text):
     r_expr = r"""
     VP: {(<JJ>)?<NN.*>+(<VB.*>)?<RB|VBD|JJ|CD>(<CD|JJ>)?}
     """
-    target_movements = ["arm", "body", "C1C0", "head", "strongarm", "precisionarm", "cico", "c1c0", "kiko"]
+    target_movements = ["arm", "body", "C1C0", "head", "strongarm", "precisionarm", "cico", "c1c0", "kiko", "strong-arm", "precision-arm"]
     target_verbs = ["move", "spin", "rotate", "turn", "go", "drive"]
     locPhrase, keywords = nlp_util.match_regex_and_keywords(text, r_expr, target_movements)
     for verb in target_verbs:
@@ -41,7 +41,7 @@ def pathPlanning(text):
     moveAmmount = -500
     itemMove = ""
     target_directions = ["forward", "backward", "left", "right", "up", "down", "forwards", "backwards"]
-    target_movements = ["strong arm", "precision arm", "body", "C1C0", "head", "cico", "c1c0", "kiko", "strongarm", "precisionarm" ]
+    target_movements = ["strong arm", "precision arm", "body", "C1C0", "head", "cico", "c1c0", "kiko", "strongarm", "precisionarm","strong-arm", "precision-arm" ]
     #if we find a path related phrase
     if isLocCommand(text):
         ammountE = r"""
