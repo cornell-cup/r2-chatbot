@@ -2,8 +2,8 @@ import os
 import re   #regex module
 import nltk
 
-import utils
-#from util import utils
+#import utils
+from util import utils
 
 def parse(line, expression):
     '''
@@ -72,41 +72,35 @@ def search_for_location(line):
 
     @return: a string of the found location, if none found, returns None
     """
-    '''
-    NER_TAGGER = nltk.StanfordNERTagger(
+    ner_tagger = nltk.StanfordNERTagger(
         "%s/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz"%(os.getcwd()))
-    '''
     
     loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
 
     tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
     #tree.draw()
-    '''
-    tags = NER_TAGGER.tag(line.split())
+    tags = ner_tagger.tag(line.split())
     print(tags)
     ner_location = ""
     for tag in tags:
         if tag[1] == "LOCATION":
-            pass
-    '''
+            ner_location += (tag[0] + " ")
 
+    ner_location = ner_location.strip(", ")
+    print("ner loc: %s"%(ner_location))
     
     location = ""
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
         for chunk in subtree.subtrees(lambda t: t.height() == 2):
             if isinstance(chunk, str):
                 continue
-            '''
-            print("cur chunk: ") == type("")
-            print(chunk)
-            '''
 
             if chunk.label() in loc_labels:
                 location_elem = ""
+                
                 for word, pos in chunk:
                     location_elem += word + " "
-                #print("cur elem: ")
-                #print(location_elem)
+                
                 location_elem = location_elem.strip()
 
                 location += location_elem + ", "
@@ -116,7 +110,8 @@ def search_for_location(line):
         print("found location %s"%(location))
     else:
         print("No location found")
-    return location
+    #return location
+    return location if len(location) > len(ner_location) else ner_location
 
 def match_regex_and_keywords(line, exp, keywords=None):
     '''
