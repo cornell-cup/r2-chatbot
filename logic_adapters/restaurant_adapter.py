@@ -28,9 +28,9 @@ class RestaurantAdapter(LogicAdapter):
 
         api_data = None
         if "location" in topic_data["info"]:
-            api_data = weather.lookup_weather_today_city(topic_data["info"]["location"])
+            api_data = restaurant.lookup_restaurant_city(topic_data["info"]["location"])
         else:
-            api_data = weather.lookup_weather_today_city("ithaca, ny")
+            api_data = restaurant.lookup_restaurant_city("ithaca, ny")
         
         response = make_response.make_response_api(topic_data, api_data)
         statement = Statement(text=response, confidence=1)
