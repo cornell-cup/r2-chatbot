@@ -6,8 +6,11 @@ import chatterbot.response_selection
 import os
 if "CLASSPATH" not in os.environ:
     os.environ["CLASSPATH"] = ""
-os.environ["CLASSPATH"] += (":%s/dep/stanford-ner/stanford-ner.jar"%(os.getcwd()))
+os.environ["CLASSPATH"] += (";%s\\dep\\stanford-ner\\stanford-ner.jar"%(os.getcwd()))
 print(os.environ["CLASSPATH"])
+
+java_path = "C:\\Program Files\\Java\\jdk-12.0.2\\bin"
+os.environ['JAVAHOME'] = java_path
 
 # Uncomment the following lines to enable verbose logging
 #import logging
