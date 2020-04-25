@@ -1,21 +1,23 @@
 # c1c0-chatbot
-### Stanley Lin, Haomiao Liu, Charu Murugesan, Rishi Malhotra
+### Stanley Lin, Haomiao Liu, Charu Murugesan, Rishi Malhotra, Sahar Sami, Jerry Guo, Matt Bean
 
 This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2020.
 
 ## Installation
 
-Make sure you have python 3. Also make sure you have `pip`.
+Make sure you have Python 3 and at least Java 8. Also make sure you have `pip`.
 
 The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech geocoder chatterbot chatterbot-corpus`
 
-Additionally, you will need to download the Stanford Named Entity Recognizer (NER) from ![here](https://nlp.stanford.edu/software/CRF-NER.shtml). Unzip the resulting file and rename the folder to `stanford-ner` and move it into the `dep/` directory. The `dep/` directory should look like
-
+Additionally, you will need to download the Stanford Named Entity Recognizer (NER) from [here](https://nlp.stanford.edu/software/CRF-NER.shtml). Unzip the resulting file and rename the folder to `stanford-ner` and move it into the `dep/` directory. The `dep/` directory should look like
 ```
 dep/
 	stanford-ner/
 		...
 ```
+
+##### Additional instructions for Windows
+It may be necessary to set the `JAVAHOME` environment variable. Make sure to point this at where your JDK is located
 
 If you encounter difficulties, try checking the Installation Issues section.
 
@@ -39,7 +41,7 @@ Now, do the following:
 Run `python main.py`
 
 ## Project Structure
-* `api_keys`: all api key files go here (txt, json, etc.). DO NOT PUSH THE KEYS TO THIS REPO. All the necessary keys are pinned on slack.
+* `api_keys`: all api key files go here (txt, json, etc.). DO NOT PUSH THE KEYS TO THIS REPO. All the necessary keys are on Google Drive
 * `data`: contains miscellaneous data needed in the execution of the program
 * `misc`: miscellaneous files
 * `sounds`: contains sound files to be outputted through the speaker
@@ -60,6 +62,13 @@ Our project contains the following modules, all contained within the `util` dire
 Within `util/api`, we also have modules to handle API interactions:
 * `weather`: interfaces with the OpenWeatherMap API
 * `restaurant`: interfaces with the Zomato API
+
+## API keys
+The following files are necessary under the `api_keys/` directory:
+* `geonames_username.txt`: a user name on the [geonames](http://www.geonames.org/) site
+* `open_weather.txt`: an api key from [OpenWeatherMap](https://openweathermap.org/api)
+* `restaurant_api.txt`: an api key from [Zomato](https://developers.zomato.com/api)
+* `Speech to Text-bef030531cd1.json`: a Google Cloud Platform [service account](https://cloud.google.com/compute/docs/access/service-accounts) private key
 
 ## Installation Issues
 

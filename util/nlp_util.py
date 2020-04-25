@@ -86,7 +86,8 @@ def search_for_location(line):
         if tag[1] == "LOCATION":
             ner_location += (tag[0] + " ")
 
-    ner_location = ner_location.strip(", ")
+    ner_location = ner_location.strip()
+    ner_location = ner_location.strip("?!., ")
     print("ner loc: %s"%(ner_location))
     
     location = ""
@@ -105,6 +106,7 @@ def search_for_location(line):
 
                 location += location_elem + ", "
 
+    location = location.strip()
     location = location.strip(" ,")
     if location != "":
         print("found location %s"%(location))

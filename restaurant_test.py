@@ -6,14 +6,12 @@ import json
 import keywords
 import make_response
 from api import restaurant
+from util import utils
 
 
 
 if __name__ == "__main__":
-    if "CLASSPATH" not in os.environ:
-        os.environ["CLASSPATH"] = ""
-    os.environ["CLASSPATH"] += (":%s/dep/stanford-ner/stanford-ner.jar"%(os.getcwd()))
-    print(os.environ["CLASSPATH"])
+    utils.set_classpath()
 
     #with open("tests/restaurant_question_test.txt") as f:
     with open("tests/restaurant_and_places.txt") as f:

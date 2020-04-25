@@ -1,3 +1,5 @@
+import os
+
 def load_words(filename):
     '''
     Loads words from a text file. The text file must have words on seperate
@@ -21,4 +23,11 @@ def capitalize_all(s):
     for w in words:
         res += w.capitalize() + " "
     return res
+
+def set_classpath():
+    if "CLASSPATH" not in os.environ:
+        os.environ["CLASSPATH"] = ""
+    os.environ["CLASSPATH"] += (":%s"%(os.path.join(os.getcwd(), "dep",
+        "stanford-ner", "stanford-ner.jar")))
+    print(os.environ["CLASSPATH"])
 
