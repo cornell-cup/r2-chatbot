@@ -28,7 +28,7 @@ def make_response_api(topic_data, api_data):
     response = ""
     #print(api_data)
     if topic_data["name"] == "weather":
-        if not topic_data["info"]["location"]["exists"]:
+        if not topic_data["info"]["location"]["exists"] or api_data["cod"] != 200:
             response = "Sorry, I couldn't find the location you were asking for"
         elif "temperature" in topic_data["info"]["keywords"]:
             response = "It is %s degrees"%(round(api_data["main"]["temp"]))
@@ -37,7 +37,8 @@ def make_response_api(topic_data, api_data):
 
     elif topic_data["name"] == "restaurant":
         list_of_restaurants = ""
-        if not topic_data["info"]["location"]["exists"] or api_data["code"] == 400:
+        if not topic_data["info"]["location"]["exists"] or (
+                "code" in api_data and api_data["code"] == 400):
             response = "Sorry, I couldn't find the location you were asking for"
         else:
             for restaurant in api_data['nearby_restaurants']:

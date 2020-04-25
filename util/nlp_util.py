@@ -76,15 +76,20 @@ def search_for_location(line):
     NER_TAGGER = nltk.StanfordNERTagger(
         "%s/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz"%(os.getcwd()))
     '''
+    
     loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
 
     tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
-    tree.draw()
-
+    #tree.draw()
     '''
     tags = NER_TAGGER.tag(line.split())
     print(tags)
+    ner_location = ""
+    for tag in tags:
+        if tag[1] == "LOCATION":
+            pass
     '''
+
     
     location = ""
     for subtree in tree.subtrees(lambda t: t.label() == "S"):

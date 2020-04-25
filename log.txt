@@ -144,3 +144,4 @@
 ('weather in Williamsburg, Brooklyn', 0.9472346305847168)
 ('restaurants in Williamsburg, Brooklyn', 0.9876290559768677)
 ('weather in this table', 0.9695907831192017)
+('weather in New York City', 0.9441280961036682)
