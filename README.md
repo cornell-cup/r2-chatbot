@@ -7,7 +7,15 @@ This repository contains code for the chatbot project for Cornell Cup Robotics w
 
 Make sure you have python 3. Also make sure you have `pip`.
 
-The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech geocoder`
+The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech geocoder chatterbot chatterbot-corpus`
+
+Additionally, you will need to download the Stanford Named Entity Recognizer (NER) from ![here](https://nlp.stanford.edu/software/CRF-NER.shtml). Unzip the resulting file and rename the folder to `stanford-ner` and move it into the `dep/` directory. The `dep/` directory should look like
+
+```
+dep/
+	stanford-ner/
+		...
+```
 
 If you encounter difficulties, try checking the Installation Issues section.
 

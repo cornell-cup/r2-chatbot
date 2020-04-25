@@ -154,3 +154,6 @@
 ('quit', 0.9749975204467773)
 ('What is Cornell cup?', 0.9020715951919556)
 ('stop', 0.9274625778198242)
+('weather in New York City', 0.8951368927955627)
+('weather in San Francisco', 0.9872768521308899)
+('weather in San Francisco, California', 0.9875096678733826)
