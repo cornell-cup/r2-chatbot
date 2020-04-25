@@ -9,7 +9,7 @@ lines = []
 #         lines.append(line)
 
 lines = [
-    "pick up the potato"
+    "Call me Charu Murugesan"
 ]
 
 # <JJ.*>|<VB.*>|<INRB.*>|
