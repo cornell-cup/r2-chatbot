@@ -1,31 +1,4 @@
-# temporary files
-*~
-*.swp
-*.bak
-*.DS_Store*
-speech-to-text/log.txt
-log.txt
-
-# compiled code
-*.pyc
-__pycache__/*
-
-# avoid api keys being public
-api_keys/*.*
-
-# binary files
-google_cloud_sdk/*
-*.pickle
-dep/*
- 
-#for nltk.download
-punkt.zip
-averaged_perceptron_tagger.zip
-
-#db files
-db.sqlite3
-database.db
-
 #dist
 dist/
 *.egg-info/
+
