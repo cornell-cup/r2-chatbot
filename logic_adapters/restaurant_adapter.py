@@ -10,7 +10,8 @@ class RestaurantAdapter(LogicAdapter):
         self.data = None
 
     def can_process(self, statement):
-        self.data = keywords.get_topic(statement.text)
+        self.data = keywords.get_topic(statement.text,
+                parse_location=False)
 
         if "name" in self.data.keys():
             return self.data["name"] == "restaurant"
@@ -23,6 +24,7 @@ class RestaurantAdapter(LogicAdapter):
         return statement
 
     def process(self, statement, additional_response_selection, selection_parameters=None):
+        keywords.modify_topic_data(self.data, parse_location=True)
         api_data = restaurant.lookup_restaurant_city(self.data["info"]["location"]["name"])
         response = make_response.make_response_api(self.data, api_data)
         statement = Statement(text=response, confidence=1)

@@ -1,6 +1,7 @@
 from inspect import getmembers, isfunction
 from rake_nltk import Rake
 from util import topic_tests
+from util import nlp_util
 
 r = Rake()
 
@@ -17,7 +18,7 @@ def extract_keywords(text):
     r.extract_keywords_from_text(text)
     return r.get_ranked_phrases()[0]
 
-def get_topic(phrase):
+def get_topic(phrase, parse_location=True):
     '''
     Determines the topic of a keyword phrase
 
@@ -31,6 +32,10 @@ def get_topic(phrase):
     }
 
     @param phrase: the keyword phrase to test
+    @param parse_location: whether to set the location in the info field
+        of the dictionary. This should be set to False when using
+        chatterbot logic adapters since location would otherwise be parsed
+        twice.
 
     @return: the data output of the matched function, including the
             function's name
@@ -49,7 +54,7 @@ def get_topic(phrase):
 
     result = None
     for test in test_funcs:
-        result = test[1](phrase)
+        result = test[1](phrase, parse_location)
 
         #if topic was matched
         if result["test_result"]:
@@ -60,6 +65,28 @@ def get_topic(phrase):
     #may need for another function
     result["name"] = ""
     return result
+
+def modify_topic_data(data, parse_location=False):
+    '''
+    Modifies topic data to include more information. Can be used
+    if different pieces of info in topic data were excluded in other
+    function calls (such as keywords.get_topic() with parse_location
+    set to False) and need to be acquired.
+
+    @param data: the return result from get_topic() that needs
+        to be modified
+    @param parse_location: whether to parse location
+    '''
+    if parse_location:
+        #attempt to find a location
+        location = nlp_util.search_for_location(data["text"])
+        data["info"]["location"] = {}
+        if len(location) > 0:
+            data["info"]["location"]["exists"] = True
+            data["info"]["location"]["name"] = location
+        else:
+            data["info"]["location"]["exists"] = False
+            data["info"]["location"]["name"] = ""
 
 if __name__ == "__main__":
     #phrase = extract_keywords("what is the weather today")
