@@ -23,29 +23,19 @@ dep/
 ##### Additional instructions for Windows
 It may be necessary to set the `JAVAHOME` environment variable. Make sure to point this at where your JDK is located.
 
-
-### Setting Up Boost for Speech to Text
-Navigate to the directory where your `pip` packages are installed.
-
-You can find where packages are installed with
-```python
-import site
-
-# in one of these two locations
-site.getsitepackages()
-site.getusersitepackages()
-```
-
-Now, do the following:
-* Go to the `google/cloud` directory.
-* Copy the file `speech_v1p1beta1/proto/cloud_speech_pb2.py` to `speech_v1/proto/` and overwrite the file
-
 ## Running the project
 Run `python main.py`
+
+You may get prompts from NLTK to install additional packages/dependencies. If this is the case, you can just start a python interpreter on your terminal and run the commands that it specifies. 
+
+## Running test scripts
+Inside the `test` directory, there are several scripts used for testing components of the system. If you are unable to run them within the test directory due to import errors, you can move them into the root of the project and run them from there.
 
 ## Project Structure
 * `api_keys`: all api key files go here (txt, json, etc.). DO NOT PUSH THE KEYS TO THIS REPO. All the necessary keys are on Google Drive
 * `data`: contains miscellaneous data needed in the execution of the program
+* `dep`: contains external dependencies
+* `logic_adapters`: contains logic adapters for use with Chatterbot
 * `misc`: miscellaneous files
 * `sounds`: contains sound files to be outputted through the speaker
 * `tests`: contains scripts to test components of the system
@@ -54,10 +44,13 @@ Run `python main.py`
 
 ## Modules
 Our project contains the following modules, all contained within the `util` directory:
+* `face_recognition`: parses text commands related to facial recognition
 * `keywords`: get keywords from a phrase, also implements code to utilize functions in `topic_tests`
 * `live_streaming`: code for speech to text system
 * `make_response`: generates a phrase based on various pieces of data
 * `nlp_util`: convenience functions to accomplish various Natural Language Processing (NLP) tasks
+* `object_detection`: parses text commands related to object detection
+* `path_planning`: parses text commands related to locomotion/path planning
 * `playtrack`: contains code to play audio files
 * `topic_tests`: all functions in this module test for a specific topic in a phrase. Should be used with `keywords.get_topic()`.
 * `utils`: contains miscellaneous funtionality
