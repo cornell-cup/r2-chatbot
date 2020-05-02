@@ -2,7 +2,7 @@ import os
 import re   #regex module
 import nltk
 
-#import utils
+# import utils
 from util import utils
 
 def parse(line, expression):
@@ -74,7 +74,7 @@ def search_for_location(line):
     """
     ner_tagger = nltk.StanfordNERTagger(
         "%s/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz"%(os.getcwd()))
-    
+
     loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
 
     tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
@@ -89,7 +89,7 @@ def search_for_location(line):
     ner_location = ner_location.strip()
     ner_location = ner_location.strip("?!., ")
     print("ner loc: %s"%(ner_location))
-    
+
     location = ""
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
         for chunk in subtree.subtrees(lambda t: t.height() == 2):
@@ -98,10 +98,10 @@ def search_for_location(line):
 
             if chunk.label() in loc_labels:
                 location_elem = ""
-                
+
                 for word, pos in chunk:
                     location_elem += word + " "
-                
+
                 location_elem = location_elem.strip()
 
                 location += location_elem + ", "
