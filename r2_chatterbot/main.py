@@ -12,6 +12,7 @@ from playsound import playsound
 import re
 import sys
 import os
+import corpus_and_adapter
 
 print(os.getcwd())
 credential_path = "api_keys/Speech to Text-bef030531cd1.json"
@@ -30,22 +31,12 @@ def main():
 
         if "quit" in speech or "stop" in speech:
             break
-        if path_planning.isLocCommand(speech.lower()):
+        elif path_planning.isLocCommand(speech.lower()):
             print(path_planning.pathPlanning(speech.lower()))
-        if object_detection.isObjCommand(speech.lower()):
+        elif object_detection.isObjCommand(speech.lower()):
             print(object_detection.object_parse(speech.lower()))
-        if topic["name"] == "weather":
-            '''
-            weather_data = weather.lookup_weather_today_city(
-                    "ithaca new york")
-            '''
-            weather_data = weather.lookup_weather_today_city(topic["info"]["location"]["name"])
-            response = make_response.make_response_api(topic, weather_data)
-            print(response)
-        elif topic["name"] == "restaurant":
-            restaurant_data = restaurant.lookup_restaurant_city(topic["info"]["location"]["name"])
-            response = make_response.make_response_api(topic, restaurant_data)
-            print(response)
+        else:
+            print(corpus_and_adapter.response_from_chatbot(speech))
 
 
 if __name__ == '__main__':

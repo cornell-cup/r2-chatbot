@@ -4,9 +4,9 @@ import re
 import sys
 import os
 
-from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
+from google.cloud import speech_v1p1beta1
+from google.cloud.speech_v1p1beta1 import enums
+from google.cloud.speech_v1p1beta1 import types
 import pyaudio
 from six.moves import queue
 
@@ -215,10 +215,16 @@ def sub_main(profanityFilterBool):
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
     language_code = 'en-US'  # a BCP-47 language tag
-    sp_c_cico = {"phrases": ["cico"],"boost": 20} #speech_contexts_cico
-    #sp_c_kiko = {"phrases": ["Kiko"],"boost": 0}#speech_contexts_kiko
-    speech_contexts = [sp_c_cico]
-    client = speech.SpeechClient()
+    sp_c_cico = {
+        "phrases": ["cico", "Hey cico"],
+        "boost": 20.0
+    } #speech_contexts_cico
+    sp_c_kiko = {
+        "phrases": ["Hey Kiko", "kiko", "Kiko", "kygo", "Kitty, girl"],
+        "boost": 0
+    }
+    speech_contexts = [sp_c_cico, sp_c_kiko]
+    client = speech_v1p1beta1.SpeechClient()
     #print(help(types.RecognitionConfig))
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -262,7 +268,8 @@ def filter(t,switches):
     for k in switches:
         num_occ = s.count(k) #number of occurences
         for i in range(num_occ):
-            pos = result.find(k)
+            #pos = result.find(k)
+            pos = s.find(k)
             if pos != -1: #if key found
                 value = switches[k]
                 result_string = result_string[:pos] + value\
