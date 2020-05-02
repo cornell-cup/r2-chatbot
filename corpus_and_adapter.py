@@ -34,12 +34,17 @@ corpus_trainer.train('chatterbot.corpus.english.greetings', "./custom_corpus.yam
 print('Type something to begin...')
 
 # The following loop will execute each time the user enters input
-while True:
-    try:
-        user_input = input()
-        bot_response = bot.get_response(user_input)
-        print(bot_response)
+# while True:
+#     try:
+#         user_input = input()
+#         bot_response = bot.get_response(user_input)
+#         print(bot_response)
+#
+#     # Press ctrl-c or ctrl-d on the keyboard to exit
+#     except (KeyboardInterrupt, EOFError, SystemExit):
+#         break
 
-    # Press ctrl-c or ctrl-d on the keyboard to exit
-    except (KeyboardInterrupt, EOFError, SystemExit):
-        break
+def response_from_chatbot(question):
+    user_input = question
+    bot_response = bot.get_response(question)
+    return bot_response
