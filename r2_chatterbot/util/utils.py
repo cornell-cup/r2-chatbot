@@ -27,7 +27,9 @@ def capitalize_all(s):
 def set_classpath():
     if "CLASSPATH" not in os.environ:
         os.environ["CLASSPATH"] = ""
-    os.environ["CLASSPATH"] += (":%s"%(os.path.join(os.getcwd(), "dep",
-        "stanford-ner", "stanford-ner.jar")))
+    os.environ["CLASSPATH"] += ("%s%s"%(
+        os.pathsep,
+        os.path.join(
+            os.getcwd(), "dep", "stanford-ner", "stanford-ner.jar")))
     print(os.environ["CLASSPATH"])
 

@@ -1,7 +1,10 @@
 from chatterbot import ChatBot
+from util import utils
 
 import os
 print(os.getcwd())
+
+utils.set_classpath()
 
 chatbot = ChatBot(
     "test",

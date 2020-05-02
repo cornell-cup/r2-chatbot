@@ -12,6 +12,7 @@ return format for all functions in this module
 
 {
     "test_result": boolean,
+    "text": string,
     "info": {
         <specific info for each topic, only if test_result is True>
         "keywords": [
@@ -25,17 +26,22 @@ return format for all functions in this module
     }
 }
 '''
-def weather(text):
+def weather(text, parse_location=True):
     print("weather")
     '''
     Tests if the text is about weather and identifies any time words
 
     @param text: the text to analyze
+    @param parse_location: whether to set the location in the info field
+        of the dictionary. This should be set to False when using
+        chatterbot logic adapters since location would otherwise be parsed
+        twice.
 
     @return: a dictionary, format is specified at the top of the file
     '''
     output = {
         "test_result": False,
+        "text": text,
         "info": {}
     }
 
@@ -61,30 +67,36 @@ def weather(text):
         output["test_result"] = True
         output["info"]["keywords"] = keywords
 
-        #attempt to find a location
-        location = nlp_util.search_for_location(text)
-        output["info"]["location"] = {}
-        if len(location) > 0:
-            output["info"]["location"]["exists"] = True
-            output["info"]["location"]["name"] = location
-        else:
-            output["info"]["location"]["exists"] = False
-            output["info"]["location"]["name"] = ""
+        if parse_location:
+            #attempt to find a location
+            location = nlp_util.search_for_location(text)
+            output["info"]["location"] = {}
+            if len(location) > 0:
+                output["info"]["location"]["exists"] = True
+                output["info"]["location"]["name"] = location
+            else:
+                output["info"]["location"]["exists"] = False
+                output["info"]["location"]["name"] = ""
 
     print(output)
     return output
 
-def restaurant(text):
+def restaurant(text, parse_location=True):
     '''
     Checks if the text is about restaurants
 
     @param text: the text to analyze
+    @param parse_location: whether to set the location in the info field
+        of the dictionary. This should be set to False when using
+        chatterbot logic adapters since location would otherwise be parsed
+        twice.
 
     @return: a dictionary, format is specified at the top of the file
     '''
 
     output = {
         "test_result": False,
+        "text": text,
         "info": {}
     }
 
@@ -103,14 +115,15 @@ def restaurant(text):
     if output["test_result"] == False:
         return output
     
-    #attempt to find a location
-    location = nlp_util.search_for_location(text)
-    output["info"]["location"] = {}
-    if len(location) > 0:
-        output["info"]["location"]["exists"] = True
-        output["info"]["location"]["name"] = location
-    else:
-        output["info"]["location"]["exists"] = False
-        output["info"]["location"]["name"] = ""
+    if parse_location:
+        #attempt to find a location
+        location = nlp_util.search_for_location(text)
+        output["info"]["location"] = {}
+        if len(location) > 0:
+            output["info"]["location"]["exists"] = True
+            output["info"]["location"]["name"] = location
+        else:
+            output["info"]["location"]["exists"] = False
+            output["info"]["location"]["name"] = ""
 
     return output
