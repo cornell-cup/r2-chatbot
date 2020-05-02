@@ -26,3 +26,6 @@ averaged_perceptron_tagger.zip
 db.sqlite3
 database.db
 
+#dist
+dist/
+*.egg-info/
