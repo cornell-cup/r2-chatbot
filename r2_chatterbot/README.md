@@ -32,7 +32,7 @@ You may get prompts from NLTK to install additional packages/dependencies. If th
 Inside the `test` directory, there are several scripts used for testing components of the system. If you are unable to run them within the test directory due to import errors, you can move them into the root of the project and run them from there.
 
 ## Project Structure
-* `api_keys`: all api key files go here (txt, json, etc.). DO NOT PUSH THE KEYS TO THIS REPO. All the necessary keys are on Google Drive
+* `api_keys`: all api key files go here (txt, json, etc.). DO NOT PUSH THE KEYS TO THIS REPO. All the necessary keys are on Google Drive (check the API keys section for more info)
 * `data`: contains miscellaneous data needed in the execution of the program
 * `dep`: contains external dependencies
 * `logic_adapters`: contains logic adapters for use with Chatterbot
@@ -60,7 +60,7 @@ Within `util/api`, we also have modules to handle API interactions:
 * `restaurant`: interfaces with the Zomato API
 
 ## API keys
-You can either acquire your own version of these, or download the ones in the Cornell Cup drive (under (under "Cornell Cup 19-20/C1C0/Chatbot/api keys")
+You can either acquire your own version of these, or download the ones in the Cornell Cup drive (under (under "Cornell Cup 19-20/C1C0/Chatbot/api keys"). DO NOT PUSH KEYS TO THIS REPO.
 
 The following files are necessary under the `api_keys/` directory:
 * `geonames_username.txt`: a user name on the [geonames](http://www.geonames.org/) site

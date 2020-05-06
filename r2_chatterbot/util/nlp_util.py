@@ -65,8 +65,9 @@ def search_for_location(line):
     If the statement is about weather, then all named entities are treated
     as a location (this includes ORGANIZATION, PERSON tags)
 
-    This function has been observed to fail on the case:
-    "weather in San Francisco"
+    This function utilizes a combination of nltk's built in pos_tag() function and
+    the Stanford NER Tagger. The function will choose the option that gives a longer
+    location string.
 
     @param line: the text to search through
 
@@ -75,12 +76,15 @@ def search_for_location(line):
     ner_tagger = nltk.StanfordNERTagger(
         "%s/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz"%(os.getcwd()))
 
+    #tags to identify for nltk
     loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
 
     tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
     #tree.draw()
     tags = ner_tagger.tag(line.split())
     print(tags)
+
+    #figure out the location from the Stanford tagger
     ner_location = ""
     for tag in tags:
         if tag[1] == "LOCATION":
@@ -90,12 +94,18 @@ def search_for_location(line):
     ner_location = ner_location.strip("?!., ")
     print("ner loc: %s"%(ner_location))
 
+    #figure out the location from the nltk tagger
     location = ""
+
+    #only the top level has the "S" label
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
         for chunk in subtree.subtrees(lambda t: t.height() == 2):
+
+            #some "chunks" are just strings apparently
             if isinstance(chunk, str):
                 continue
 
+            #each seperate detected word will be seperated with a comma
             if chunk.label() in loc_labels:
                 location_elem = ""
 
@@ -108,11 +118,15 @@ def search_for_location(line):
 
     location = location.strip()
     location = location.strip(" ,")
+    print("nltk loc: %s"%(location))
+    
+    '''
     if location != "":
         print("found location %s"%(location))
     else:
         print("No location found")
-    #return location
+    '''
+    
     return location if len(location) > len(ner_location) else ner_location
 
 def match_regex_and_keywords(line, exp, keywords=None):
