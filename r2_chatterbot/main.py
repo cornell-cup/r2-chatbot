@@ -17,7 +17,7 @@ import corpus_and_adapter
 import re
 
 print(os.getcwd())
-credential_path = "api_keys/Speech to Text-bef030531cd1.json"
+credential_path = "api_keys/speech_to_text.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 utils.set_classpath()

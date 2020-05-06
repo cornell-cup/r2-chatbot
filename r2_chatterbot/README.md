@@ -60,11 +60,13 @@ Within `util/api`, we also have modules to handle API interactions:
 * `restaurant`: interfaces with the Zomato API
 
 ## API keys
+You can either acquire your own version of these, or download the ones in the Cornell Cup drive (under (under "Cornell Cup 19-20/C1C0/Chatbot/api keys")
+
 The following files are necessary under the `api_keys/` directory:
 * `geonames_username.txt`: a user name on the [geonames](http://www.geonames.org/) site
 * `open_weather.txt`: an api key from [OpenWeatherMap](https://openweathermap.org/api)
 * `restaurant_api.txt`: an api key from [Zomato](https://developers.zomato.com/api)
-* `Speech to Text-bef030531cd1.json`: a Google Cloud Platform [service account](https://cloud.google.com/compute/docs/access/service-accounts) private key
+* `speech_to_text.json`: a Google Cloud Platform [service account](https://cloud.google.com/compute/docs/access/service-accounts) private key
 
 ## Installation Issues
 
