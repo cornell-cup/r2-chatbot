@@ -36,7 +36,7 @@ def main():
             for s in [r"((k|K)((i|1)k(o|0))|((c|C)(i|1)c(o|0)))", r"(h|H)ey"]:
                 speech = re.sub(s, "", speech)
             speech = speech.strip(".,?! ")
-            
+
             if face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech))
             elif path_planning.isLocCommand(speech.lower()):

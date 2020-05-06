@@ -5,7 +5,10 @@ import nlp_util
 def isLocCommand(text):
     '''
     Determines whether a string is a locomation command or not based on the
-    sentence structure
+    sentence structure. A proper locomotion command includes what part to move,
+    how much to move it, and the direction to move it. Without these three, the
+    command will not be parsed. Some examples are "Move the body forward 10 steps"
+    or "Rotate the precision arm left by 10 degrees"
 
     @param text: The sentence to check (must be in lowercase)
     @return: A boolean. True indicates that the input is a locomotion command
@@ -31,10 +34,11 @@ def pathPlanning(text):
 
     @param text: The sentence to check if it is a locomotion command and
     parse the direction and distance from it. ***MUST BE IN LOWERCASE***
-    @return: A tuple. First element is the direction (i.e. 90 if right, 0
-    if forward, -90 if left, or 180 of backwards). The second element is the
+    @return: A triple. The first element is the body part to move.  Second
+    element is the direction (i.e. 90 if right, 0 if forward, -90 if left, or
+    180 of backwards). The Third element is the
     distance. If the input text is not a locomation command, the function returns
-    (-500, -500) by default.
+    ("", -500, -500) by default.
     '''
     #return variables
     direction = -500

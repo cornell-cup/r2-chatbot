@@ -5,9 +5,13 @@ import live_streaming
 
 def isFaceRecognition(text):
     """
-    C1C0, take attendence -> output a new file with attendence
-    C1C0, call me [name] -> output a new file with person's named
-    C1C0, greetings
+    Determines whether a string is a facial recongnition command. The different
+    types of facial recognition commands include greetings, such as "hi," "hello,"
+    or "wave," the make new friends command in the form of "call me [name]," or
+    attendance command, such as "take attendance."
+
+    @param text: The sentence to check
+    @return: A boolean. True indicates that the input a facial recognition command
     """
     keywords_greetings = {"wave", "hello", "hi", "check", "attendance", "call me", "greetings", "what's up" }
     for item in keywords_greetings:
@@ -16,6 +20,15 @@ def isFaceRecognition(text):
     return False
 
 def faceRecog(text):
+    """
+    This function takes a text input and determines which facial recognition
+    command it is. It also appends the name of the command to a new file. If it
+    is a make friends command, it will append the name of the new friend to a
+    file.
+
+    @param text: The sentence to check
+    @return: A new file with the command name listed.
+    """
     greetings_keywords = {"wave", "hello", "hi", "greetings", "what's up","Wave", "Hello", "Hi", "Greetings", "What's up"}
     if isFaceRecognition(text):
         if "attendance" in text:

@@ -7,7 +7,8 @@ def isObjCommand(text):
     Determines whether a string is an object detection command or not based on the
     sentence structure
 
-    @param text: The sentence to check (must be in lowercase)
+    @param text: The sentence to check (must be in lowercase) Some examples of phrases
+    include "grab the watter bottle" or "pick up the pen"
     @return: A boolean. True indicates that the input is an object detection command
     '''
 
