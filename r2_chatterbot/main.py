@@ -32,6 +32,11 @@ def main():
         if "quit" in speech or "stop" in speech:
             break
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()):
+            # filter out cico since it messes with location detection
+            for s in [r"((k|K)((i|1)k(o|0))|((c|C)(i|1)c(o|0)))", r"(h|H)ey"]:
+                speech = re.sub(s, "", speech)
+            speech = speech.strip(".,?! ")
+            
             if face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech))
             elif path_planning.isLocCommand(speech.lower()):
@@ -40,12 +45,6 @@ def main():
             elif object_detection.isObjCommand(speech.lower()):
                 print("Object to pick up: " + object_detection.object_parse(speech.lower()))
             else:
-                # filter out cico since it messes with location detection
-                for s in [r"((k|K)((i|1)k(o|0))|((c|C)(i|1)c(o|0)))", r"(h|H)ey"]:
-                    speech = re.sub(s, "", speech)
-                
-                speech = speech.strip(".,?! ")
-                
                 print(corpus_and_adapter.response_from_chatbot(speech))
 
 if __name__ == '__main__':
