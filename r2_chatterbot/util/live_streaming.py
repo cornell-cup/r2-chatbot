@@ -11,7 +11,7 @@ import pyaudio
 from six.moves import queue
 
 """sets the credential path for Speech to Text api key """
-credential_path = "../api_keys/Speech to Text-bef030531cd1.json"
+credential_path = "../api_keys/speech_to_text.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 # Audio recording parameters
