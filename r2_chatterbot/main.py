@@ -37,13 +37,15 @@ def main():
         speech = live_streaming.get_string(answer)
         confidence = live_streaming.get_confidence(answer)
         print(speech)
+
         if "quit" in speech or "stop" in speech:
             break
         
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()):
             # filter out cico since it messes with location detection
             speech = utils.filter_cico(speech)
-            
+
+            """
             if face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech)) 
                 # task is to transfer over to facial recognition client program
@@ -55,11 +57,18 @@ def main():
                 print("Object to pick up: " + object_detection.object_parse(speech.lower()))
                 # task is to transfer over to object detection on the system
             else:
-                # we don't want the text to be lowercase since it messes with location detection
-                print(corpus_and_adapter.response_from_chatbot(speech))
-                # send this element to AWS for response generation
+            """    
+            # we don't want the text to be lowercase since it messes with location detection
+            # print(corpus_and_adapter.response_from_chatbot(speech))
+            # send this element to AWS for response generation
+            print ("in else statement")
+            #begin the flask transfer now
+            speech = speech.lower()
+            response = requests.post(url, data={'input': speech})
+            print ("response from server: " + response.text)
+            speech_file.close()
+            #json = response.json()
 
-                #begin the flask transfer now
 
 if __name__ == '__main__':
     #playsound('sounds/cicoremix.mp3')
