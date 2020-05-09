@@ -59,6 +59,8 @@ def main():
                 print(corpus_and_adapter.response_from_chatbot(speech))
                 # send this element to AWS for response generation
 
+                #begin the flask transfer now
+
 if __name__ == '__main__':
     #playsound('sounds/cicoremix.mp3')
     main()
