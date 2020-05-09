@@ -28,6 +28,11 @@ Run `python main.py`
 
 You may get prompts from NLTK to install additional packages/dependencies. If this is the case, you can just start a python interpreter on your terminal and run the commands that it specifies. 
 
+### Instructions for running the locomotion, facial recognition, and object detection
+* For running locomotion commnads, the command must contain the object to move, distance to move it, and direction to move it. Otherwise it will not be detected as a locomotion command. This function will return a triple with that information.
+* For running the facial recognition command, the command must contain one of the following words: `{"wave", "hello", "hi", "check", "attendance", "call me", "greetings", "what's up" }`. Then it will determine what type of facial recognition command this is.
+* For running the object detection command, the command must include the object to pick up. The object can be multiple words, such as "watter bottle" or "graphing calculator." 
+
 ## Running test scripts
 Inside the `test` directory, there are several scripts used for testing components of the system. If you are unable to run them within the test directory due to import errors, you can move them into the root of the project and run them from there.
 
@@ -81,7 +86,3 @@ On your system's package manager, first try searching for pyaudio. If it exists,
 * Also set the environment variable `PKG_CONFIG_PATH=/usr/local/Cellar/libffi/<version number>/lib/pkgconfig/`
 * Run `pip install --upgrade --force-reinstall PyObjC PyObjC-core`
 
-##Instructions for running the locomotion, facial recognition, and object detection
-* For running locomotion commnads, the command must contain the object to move, distance to move it, and direction to move it. Otherwise it will not be detected as a locomotion command. This function will return a triple with that information 
-* For running the facial recognition command, the command must contain one of the following words: {"wave", "hello", "hi", "check", "attendance", "call me", "greetings", "what's up" }. Then it will determine what type of facial recognition command this is.
-* For running the object detection command, the commnad must include the object to pick up. The object can be multiple words, such as "watter bottle" or "graphing calculator" 
