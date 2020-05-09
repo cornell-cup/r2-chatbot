@@ -81,3 +81,7 @@ On your system's package manager, first try searching for pyaudio. If it exists,
 * Also set the environment variable `PKG_CONFIG_PATH=/usr/local/Cellar/libffi/<version number>/lib/pkgconfig/`
 * Run `pip install --upgrade --force-reinstall PyObjC PyObjC-core`
 
+##Instructions for running the locomotion, facial recognition, and object detection
+* For running locomotion commnads, the command must contain the object to move, distance to move it, and direction to move it. Otherwise it will not be detected as a locomotion command. This function will return a triple with that information 
+* For running the facial recognition command, the command must contain one of the following words: {"wave", "hello", "hi", "check", "attendance", "call me", "greetings", "what's up" }. Then it will determine what type of facial recognition command this is.
+* For running the object detection command, the commnad must include the object to pick up. The object can be multiple words, such as "watter bottle" or "graphing calculator" 
