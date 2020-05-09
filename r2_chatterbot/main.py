@@ -43,7 +43,7 @@ def main():
             elif object_detection.isObjCommand(speech.lower()):
                 print("Object to pick up: " + object_detection.object_parse(speech.lower()))
             else:
-                print(corpus_and_adapter.response_from_chatbot(speech.lower()))
+                print(corpus_and_adapter.response_from_chatbot(speech))
 
 if __name__ == '__main__':
     #playsound('sounds/cicoremix.mp3')
