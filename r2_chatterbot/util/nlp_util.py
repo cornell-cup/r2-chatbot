@@ -119,14 +119,14 @@ def search_for_location(line):
     location = location.strip()
     location = location.strip(" ,")
     print("nltk loc: %s"%(location))
-    
+
     '''
     if location != "":
         print("found location %s"%(location))
     else:
         print("No location found")
     '''
-    
+
     return location if len(location) > len(ner_location) else ner_location
 
 def match_regex_and_keywords(line, exp, keywords=None):

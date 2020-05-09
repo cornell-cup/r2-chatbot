@@ -2,6 +2,7 @@ import utils
 import re
 import nlp_util
 import live_streaming
+import os
 
 def isFaceRecognition(text):
     """
@@ -31,6 +32,7 @@ def faceRecog(text):
     """
     greetings_keywords = {"wave", "hello", "hi", "greetings", "what's up","Wave", "Hello", "Hi", "Greetings", "What's up"}
     if isFaceRecognition(text):
+        deleteFiles()
         if "attendance" in text:
             live_streaming.append_to_file("attendance.txt", "attendance")
             print("created new attendance file");
@@ -50,10 +52,16 @@ def faceRecog(text):
                 name = name + noun[0] + " "
             live_streaming.append_to_file("friends.txt", name)
             print("created new attendance file with " + name);
-
+def deleteFiles():
+    if os.path.exists("friends.txt"):
+      os.remove("friends.txt")
+    elif os.path.exists("greeting.txt"):
+      os.remove("greeting.txt")
+    elif os.path.exists("attendance.txt"):
+      os.remove("attendance.txt")
 
 if __name__ == "__main__":
-    phrase = "take attendance"
+    phrase = "call me Bob"
     phrase2 = "robot go vroom"
     print(isFaceRecognition(phrase))
     faceRecog(phrase);
