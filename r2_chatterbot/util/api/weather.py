@@ -38,12 +38,16 @@ def lookup_weather_today_city(city):
     @param city: city name. Should include more specific info as needed (country, state, etc.).
     If empty string, returns empty string
 
-    @return: if city is specified, the full json data from the API call. Otherwise empty string
+    @return: if valid city is specified, the full json data from the API call.
+        Otherwise empty string
     '''
     if city == "":
         return ""
     
     lat, lng = city_to_coord(city)
+    
+    if lat == None and lng == None:
+        return ""
     return lookup_weather_today(lat, lng)
 
 def lookup_weather_five_day(lat, lng):
@@ -81,10 +85,14 @@ def city_to_coord(city_string):
 
     @param city_string: the name of the city
 
-    @return: A tuple with (latitude, longitude)
+    @return: A tuple with (latitude, longitude). If the city name
+        is not valid, then (None, None)
     '''
 
     g = geocoder.geonames(city_string, key=GEONAMES_USERNAME)
+    
+    if g.code == None:
+        return (None, None)
     return (g.lat, g.lng)
 
 import_keys()

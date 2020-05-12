@@ -22,7 +22,9 @@ chatbot = ChatBot(
 
 while True:
     try:
-        response = chatbot.get_response(input())
+        line = input()
+        line = utils.filter_cico(line)
+        response = chatbot.get_response(line)
         print(response)
     except (KeyboardInterrupt, EOFError, SystemExit):
         break
