@@ -69,9 +69,11 @@ def main():
                                     # while those spawned as a child process have typical values
                                     # in the hundreds
                     cmd = path_planning.pathPlanning(speech.lower())
-                    locomotion_cmd.chatbot_move(cmd) # actuate motors                    
+                    # locomotion_cmd.chatbot_move(cmd)                     
                     print("Move command (itemMove, direction, moveAmmount): ")
                     print(path_planning.pathPlanning(speech.lower()))
+                    return cmd # don't worry, this only returns/exits the loop in the process handling locomotion
+                               # chatbot main will get re-scheduled as soon as locomotion is handled
                 # task is to transfer over to path planning on the system
             elif object_detection.isObjCommand(speech.lower()):
                 #print("Object to pick up: " + object_detection.object_parse(speech.lower()))
