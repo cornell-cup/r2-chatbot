@@ -40,7 +40,8 @@ def main():
         if "quit" in speech or "stop" in speech:
             break
         
-        if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()):
+        if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
+                ("hey" in speech.lower()):
             # filter out cico since it messes with location detection
             speech = utils.filter_cico(speech)
             
