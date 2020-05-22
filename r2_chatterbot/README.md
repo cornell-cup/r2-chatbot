@@ -86,7 +86,7 @@ The following files are necessary under the `api_keys/` directory:
 ### `pyaudio` Not Installing
 You may be missing a library called portaudio. Instead of installing through `pip`, you can try to installing through your system's package manager.
 
-On your system's package manager, first try searching for pyaudio. If it exists, there's a good chance that it will also install portaudio for you, so install it. If not, search for a package containing the word "portaudio". If there is, install it.
+On your system's package manager, first try searching for `pyaudio`. If it exists, there's a good chance that it will also install portaudio for you, so install it. If not, search for a package containing the word "portaudio". If there is, install it.
 
 ### `playaudio` Not Running on Mac
 * First run `pip uninstall AppKit`
@@ -96,4 +96,10 @@ On your system's package manager, first try searching for pyaudio. If it exists,
 
 ### `AttributeError: module 'chatterbot.comparisons' has no attribute 'levenshtein_distance'`
 See [this](https://github.com/gunthercox/ChatterBot/issues/1712) link
+
+### `OSError: Can't find model 'en'`
+Run `python -m spacy download en_core_web_sm`. If you tried that and it still doesn't work, that may mean that the model was installed for the wrong python version. In that case, try:
+* not running the program with `sudo`
+* deactivating your virtual environment, if you are using one
+* this [thread](https://stackoverflow.com/questions/49964028/spacy-oserror-cant-find-model-en)
 
