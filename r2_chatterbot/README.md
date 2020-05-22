@@ -1,7 +1,13 @@
 # c1c0-chatbot
-### Stanley Lin, Haomiao Liu, Charu Murugesan, Rishi Malhotra, Sahar Sami, Jerry Guo, Matt Bean
 
 This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2020.
+
+### Fall 2019 Team:
+Stanley Lin, Haomiao Liu, Charu Murugesan, Rishi Malhotra
+
+### Spring 2020 Team:
+Stanley Lin, Charu Murugesan, Sahar Sami, Jerry Guo, Matt Bean
+
 
 ## Installation
 
@@ -27,6 +33,8 @@ It may be necessary to set the `JAVAHOME` environment variable. Make sure to poi
 Run `python main.py`
 
 You may get prompts from NLTK to install additional packages/dependencies. If this is the case, you can just start a python interpreter on your terminal and run the commands that it specifies. 
+
+All interactions with the chatbot require you to begin by saying "Hey C1C0," followed by the query. This was intended to avoid false positive interactions.
 
 ### Instructions for running the locomotion, facial recognition, and object detection
 * For running locomotion commnads, the command must contain the object to move, distance to move it, and direction to move it. Otherwise it will not be detected as a locomotion command. This function will return a triple with that information.
