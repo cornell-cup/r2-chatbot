@@ -39,13 +39,13 @@ All interactions with the chatbot require you to begin by saying "Hey C1C0," fol
 ### Instructions for running the locomotion, facial recognition, and object detection
 * For running locomotion commnads, the command must contain the object to move, distance to move it, and direction to move it. Otherwise it will not be detected as a locomotion command. This function will return a triple with that information.
 * For running the facial recognition command, the command must contain one of the following words: `{"wave", "hello", "hi", "check", "attendance", "call me", "greetings", "what's up" }`. Then it will determine what type of facial recognition command this is.
-* For running the object detection command, the command must include the object to pick up. The object can be multiple words, such as "watter bottle" or "graphing calculator." 
+* For running the object detection command, the command must include the object to pick up. The object can be multiple words, such as "water bottle" or "graphing calculator." 
 
 ## Running test scripts
 Inside the `test` directory, there are several scripts used for testing components of the system. If you are unable to run them within the test directory due to import errors, you can move them into the root of the project and run them from there.
 
 ## Project Structure
-* `api_keys`: all api key files go here (txt, json, etc.). DO NOT PUSH THE KEYS TO THIS REPO. All the necessary keys are on Google Drive (check the API keys section for more info)
+* `api_keys`: all api key files go here (txt, json, etc.). **DO NOT PUSH THE KEYS TO THIS REPO**. All the necessary keys are on Google Drive (check the API keys section for more info)
 * `data`: contains miscellaneous data needed in the execution of the program
 * `dep`: contains external dependencies
 * `logic_adapters`: contains logic adapters for use with Chatterbot
@@ -73,7 +73,7 @@ Within `util/api`, we also have modules to handle API interactions:
 * `restaurant`: interfaces with the Zomato API
 
 ## API keys
-You can either acquire your own version of these, or download the ones in the Cornell Cup drive (under (under "Cornell Cup 19-20/C1C0/Chatbot/api keys"). DO NOT PUSH KEYS TO THIS REPO.
+You can either acquire your own version of these, or download the ones in the Cornell Cup drive (under "Cornell Cup 19-20/C1C0/Chatbot/api keys"). **DO NOT PUSH KEYS TO THIS REPO**.
 
 The following files are necessary under the `api_keys/` directory:
 * `geonames_username.txt`: a user name on the [geonames](http://www.geonames.org/) site
@@ -93,4 +93,7 @@ On your system's package manager, first try searching for pyaudio. If it exists,
 * Now install `gobject-introspection libffi` using the system package manager (ex: Homebrew)
 * Also set the environment variable `PKG_CONFIG_PATH=/usr/local/Cellar/libffi/<version number>/lib/pkgconfig/`
 * Run `pip install --upgrade --force-reinstall PyObjC PyObjC-core`
+
+### `AttributeError: module 'chatterbot.comparisons' has no attribute 'levenshtein_distance'`
+See [this](https://github.com/gunthercox/ChatterBot/issues/1712) link
 
