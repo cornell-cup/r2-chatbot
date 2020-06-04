@@ -73,7 +73,11 @@ Within `util/api`, we also have modules to handle API interactions:
 * `restaurant`: interfaces with the Zomato API
 
 ## API keys
-You can either acquire your own version of these, or download the ones in the Cornell Cup drive (under "Cornell Cup 19-20/C1C0/Chatbot/api keys"). **DO NOT PUSH KEYS TO THIS REPO**.
+Some of these keys can be downloaded from the Cornell Cup drive (under "Cornell Cup 19-20/C1C0/Chatbot/api keys").
+
+It is *highly* advised that you find your own versions of these keys, as the ones in the drive may no longer be valid
+
+**DO NOT PUSH KEYS TO THIS REPO**.
 
 The following files are necessary under the `api_keys/` directory:
 * `geonames_username.txt`: a user name on the [geonames](http://www.geonames.org/) site
