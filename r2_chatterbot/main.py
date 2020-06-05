@@ -38,7 +38,7 @@ url = "http://18.216.143.187/"
 
 utils.set_classpath()
 
-def main():
+def main(isloc=False):
     while True:
         #gets a tuple of phrase and confidence
         answer = live_streaming.main()
@@ -53,7 +53,7 @@ def main():
             speech = utils.filter_cico(speech)
             
             if face_recognition.isFaceRecognition(speech):
-                if os.getppid() > 50: # only run if this process is a child process (see description below)
+                if !isloc: # only run if given the argument that this is not a locomotion command
                     face_cmd = face_recognition.faceRecog(speech)
                     print(face_cmd) 
                 # task is to transfer over to facial recognition client program
@@ -62,12 +62,7 @@ def main():
                 # p = Process(target=c1c0_facialrecognition.run, args=(face_cmd,)
                 # p.start()
             elif path_planning.isLocCommand(speech.lower()):
-                if os.getppid() < 50: # this check uses process IDs so that this only runs
-                                    # if it was spawned from a different python process
-                                    # as a child, since those processes spawned from the 
-                                    # linux command line typically have values less than 10
-                                    # while those spawned as a child process have typical values
-                                    # in the hundreds
+                if isloc: # run the locomotion command if the argument for locomotion was set to true
                     cmd = path_planning.pathPlanning(speech.lower())
                     # locomotion_cmd.chatbot_move(cmd)                     
                     print("Move command (itemMove, direction, moveAmmount): ")
@@ -79,7 +74,7 @@ def main():
                 #print("Object to pick up: " + object_detection.object_parse(speech.lower()))
                 # run object detection `onjetson` - gets image of object facing C1C0's camera
                 # this will run the object detection program in parallel as a separate process
-                if os.getppid() > 50: # only run if this process is a child (see description above)
+                if !isloc: # only run if this is not a locomotion input
                     subprocess.Popen(['python3','objectdetection.py'])                
             else:
                 # we don't want the text to be lowercase since it messes with location detection
