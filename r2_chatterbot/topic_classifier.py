@@ -9,46 +9,45 @@ import pandas as pd
 
 
 def import_data():
-  '''
-  Imports data for training a model and converts it to a DF.
-  
-  '''
-  #Import data from file
-  f = open('train-v2.0.json')
-  data = json.load(f)
-
-  to_choose = ['Red', 'Kanye_West', 'Northwestern_University', 'Portugal', 'Dell', 'Mandolin', 'Miami', 'Time',
-  #Choose relevant topics
-               'Napoleon', 'Windows_8']
-
-  #Create list of question_title_pairs
-    topic = item['title']
-  for item in data['data']:
-  question_title_pairs = []
-    if item['title'] in to_choose:
-      for paragraph in item['paragraphs']:
-        for qa in paragraph['qas']:
-          question_title_pairs.append({'question': qa['question'], 'topic': topic})
-
-  #Convert question_title_pairs to dataframe
-  df = pd.DataFrame(question_title_pairs)
-
-  #Assign unique code to every topic
-  codes = {}
-  for index, value in enumerate(to_choose):
-    codes[value] = index
-  df['topic_code'] = df['topic']
-  df = df.replace({'topic_code': codes})
-
-  #Remove punctuation and uppercase from questions
-  df['question_processed'] = df['question'].str.lower()
-  punctuation_signs = list("?:!.,;")
-  for punct_sign in punctuation_signs:
-    df['question_processed'] = df['question_processed'].str.replace(punct_sign, '')
-
-  return df
+    '''
+    Imports data for training a model and converts it to a DF.
 
     '''
+    #Import data from file
+    f = open('train-v2.0.json')
+    data = json.load(f)
+
+    #Choose relevant topics
+    to_choose = ['Red', 'Kanye_West', 'Northwestern_University', 'Portugal', 'Dell', 'Mandolin', 'Miami', 'Time',
+               'Napoleon', 'Windows_8']
+
+    #Create list of question_title_pairs
+    question_title_pairs = []
+    for item in data['data']:
+      topic = item['title']
+      if item['title'] in to_choose:
+          for paragraph in item['paragraphs']:
+              for qa in paragraph['qas']:
+                  question_title_pairs.append({'question': qa['question'], 'topic': topic})
+
+    #Convert question_title_pairs to dataframe
+    df = pd.DataFrame(question_title_pairs)
+
+    #Assign unique code to every topic
+    codes = {}
+    for index, value in enumerate(to_choose):
+        codes[value] = index
+        df['topic_code'] = df['topic']
+        df = df.replace({'topic_code': codes})
+
+    #Remove punctuation and uppercase from questions
+    df['question_processed'] = df['question'].str.lower()
+    punctuation_signs = list("?:!.,;")
+    for punct_sign in punctuation_signs:
+        df['question_processed'] = df['question_processed'].str.replace(punct_sign, '')
+
+    return df
+
 
 
 def get_topic(question, model):
