@@ -5,48 +5,63 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 import pickle
 import json
+import numpy as np
 import pandas as pd
+
+current_topics = ['Red', 'Kanye_West', 'Northwestern_University',
+                  'Portugal', 'Dell', 'Mandolin', 'Miami', 'Time', 'Napoleon', 'Windows_8']
 
 
 def import_data():
     '''
     Imports data for training a model and converts it to a DF.
     '''
-    #Import data from file
+    # Import data from file
     f = open('train-v2.0.json')
     data = json.load(f)
 
-    #Choose relevant topics
-    to_choose = ['Red', 'Kanye_West', 'Northwestern_University', 'Portugal', 'Dell', 'Mandolin', 'Miami', 'Time',
-               'Napoleon', 'Windows_8']
+    # Choose relevant topics
+    to_choose = current_topics
 
-    #Create list of question_title_pairs
+    # Create list of question_title_pairs
     question_title_pairs = []
     for item in data['data']:
-      topic = item['title']
-      if item['title'] in to_choose:
-          for paragraph in item['paragraphs']:
-              for qa in paragraph['qas']:
-                  question_title_pairs.append({'question': qa['question'], 'topic': topic})
+        topic = item['title']
+        if item['title'] in to_choose:
+            for paragraph in item['paragraphs']:
+                for qa in paragraph['qas']:
+                    question_title_pairs.append(
+                        {'question': qa['question'], 'topic': topic})
 
-    #Convert question_title_pairs to dataframe
+    # Convert question_title_pairs to dataframe
     df = pd.DataFrame(question_title_pairs)
 
-    #Assign unique code to every topic
+    # Assign unique code to every topic
     codes = {}
     for index, value in enumerate(to_choose):
         codes[value] = index
         df['topic_code'] = df['topic']
         df = df.replace({'topic_code': codes})
 
-    #Remove punctuation and uppercase from questions
-    df['question_processed'] = df['question'].str.lower()
-    punctuation_signs = list("?:!.,;")
-    for punct_sign in punctuation_signs:
-        df['question_processed'] = df['question_processed'].str.replace(punct_sign, '')
+    # Remove punctuation and uppercase from questions
+    df['question_processed'] = df['question'].apply(process)
 
     return df
 
+
+def process(question):
+    '''
+    Converts a string to lowercase and removes puncutation.
+    Requires:
+        - question: str -> the question
+    Returns:
+        - the processed question (str)
+    '''
+    question = question.lower()
+    punctuation_signs = list("?:!.,;")
+    for punct_sign in punctuation_signs:
+        question = question.replace(punct_sign, '')
+    return question
 
 
 def get_topic(question):
@@ -57,9 +72,9 @@ def get_topic(question):
     Returns:
         - the label of the topic (str)
     '''
+    question = process(question)
     model = pickle.load(open("text_classification.sav", 'rb'))
-    labels = ['Red', 'Kanye_West', 'Northwestern_University', 'Portugal',
-              'Dell', 'Mandolin', 'Miami', 'Time', 'Napoleon', 'Windows_8']
+    labels = current_topics
     predicted_code = model.predict([question])[0]
     predicted_prob = model.predict_proba([question])[0][predicted_code]
     predicted_label = labels[predicted_code]
@@ -101,6 +116,5 @@ if __name__ == '__main__':
     X_test, y_test, model = train(df)
     print("Model trained and saved. Testing model...")
     pred = model.predict(X_test)
-    print(classification_report(y_test, pred))
     print("Classification Report:")
-    pass
+    print(classification_report(y_test, pred))
