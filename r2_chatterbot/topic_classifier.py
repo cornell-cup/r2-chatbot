@@ -10,17 +10,26 @@ import json
 def import_data():
     '''
     Imports data for training a model and converts it to a DF.
-
     '''
 
 
-def get_topic(question, model):
+def get_topic(question):
     '''
-    Returns the topic of a question (in words)
-    Inputs:
-      question (string): the question
-      model: the trained model
+    Loads the topic classification model from "text_classification.sav" and returns the topic of a question (in words)
+    Requires:
+        question: str -> the question
+    Returns:
+        - the label of the topic (str)
     '''
+    model = pickle.load(open("text_classification.sav", 'rb'))
+    labels = ['Red', 'Kanye_West', 'Northwestern_University', 'Portugal',
+              'Dell', 'Mandolin', 'Miami', 'Time', 'Napoleon', 'Windows_8']
+    predicted_code = model.predict([question])[0]
+    predicted_prob = model.predict_proba([question])[0][predicted_code]
+    predicted_label = labels[predicted_code]
+    response = "I think this is most likely a question about {}. The probability of this is {}.".format(
+        predicted_label, predicted_prob)
+    return response
 
 
 def train(df):
@@ -32,7 +41,7 @@ def train(df):
         - df: DataFrame -> dataframe that holds all question data. Should have 
         at least two columns, 'question_processed' and 'topic_code'. 
     Returns:
-        - Test features, test labels, and model.
+        - Test features (DataFrame), test labels (DataFrame), and model.
     '''
     X = df['question_processed']
     y = df['topic_code']
