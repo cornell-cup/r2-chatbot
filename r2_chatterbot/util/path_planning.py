@@ -2,6 +2,7 @@ import utils
 import re
 import nlp_util
 
+
 def isLocCommand(text):
     '''
     Determines whether a string is a locomation command or not based on the
@@ -16,14 +17,19 @@ def isLocCommand(text):
     r_expr = r"""
     VP: {(<JJ>)?<NN.*>+(<VB.*>)?<RB|VBD|JJ|CD>(<CD|JJ>)?}
     """
-    target_movements = ["arm", "body", "C1C0", "head", "strongarm", "precisionarm", "cico", "c1c0", "kiko", "strong-arm", "precision-arm"]
+    r_expr2 = r"""
+    NumberFirst: {(<CD><NNS>?(<TO><DT>)?<RB|VBD|JJ|VBP|NN>)}
+    DirectionFirst: {((<TO><DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS>?)}
+    """
     target_verbs = ["move", "spin", "rotate", "turn", "go", "drive"]
-    locPhrase, keywords = nlp_util.match_regex_and_keywords(text, r_expr, target_movements)
+    target_words = ["degrees", "left", "right", "forward", "backward"]
+
+    locPhrase, keywords = nlp_util.match_regex_and_keywords(
+        text, r_expr, target_words)
     for verb in target_verbs:
         if verb in text and len(locPhrase) > 0:
             return True
     return False
-
 
 
 def pathPlanning(text):
@@ -40,18 +46,20 @@ def pathPlanning(text):
     distance. If the input text is not a locomation command, the function returns
     ("", -500, -500) by default.
     '''
-    #return variables
+    # return variables
     direction = -500
     moveAmmount = -500
     itemMove = ""
-    target_directions = ["forward", "backward", "left", "right", "up", "down", "forwards", "backwards"]
-    target_movements = ["strong arm", "precision arm", "body", "C1C0", "head", "cico", "c1c0", "kiko", "strongarm", "precisionarm","strong-arm", "precision-arm" ]
-    #if we find a path related phrase
+    target_directions = ["forward", "backward", "left",
+                         "right", "up", "down", "forwards", "backwards"]
+    target_movements = ["strong arm", "precision arm", "body", "C1C0", "head", "cico",
+                        "c1c0", "kiko", "strongarm", "precisionarm", "strong-arm", "precision-arm"]
+    # if we find a path related phrase
     if isLocCommand(text):
         ammountE = r"""
         RB: {<CD>}
         """
-        #grabs the number of steps from the phrase
+        # grabs the number of steps from the phrase
         movePhrase, keyword = nlp_util.match_regex_and_keywords(text, ammountE)
         firstItem = movePhrase[0]
         temp = firstItem[0]
@@ -59,7 +67,7 @@ def pathPlanning(text):
         for item in target_movements:
             if item in text:
                 itemMove = item
-        #based on the direction, returns the corresponding degrees
+        # based on the direction, returns the corresponding degrees
         if "left" in text:
             direction = -90
         if "right" in text:
@@ -71,13 +79,14 @@ def pathPlanning(text):
 
     return(itemMove, direction, moveAmmount)
 
+
 if __name__ == "__main__":
     phrase = "C1C0, move forward 10 steps"
     phrase2 = "robot go vroom"
-    with open("tests/isLoc.txt") as f:
-        for line in f:
-            print(line)
-            print(isLocCommand(line))
-            print(pathPlanning(line))
-    # print(pathPlanning(phrase))
-    # print(isLocCommand(phrase))
+    # with open("tests/isLoc.txt") as f:
+    #     for line in f:
+    #         print(line)
+    #         print(isLocCommand(line))
+    #         print(pathPlanning(line))
+    print(isLocCommand(phrase))
+    print(isLocCommand(phrase2))
