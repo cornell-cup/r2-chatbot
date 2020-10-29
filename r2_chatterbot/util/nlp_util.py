@@ -161,12 +161,13 @@ def match_regex_and_keywords(line, exp, keywords=None):
                 #no keyword detection needed
                 matched_chunks.append(chunk)
             else:
-                #the format is (<word>, <pos_tag>) for a single word
-                for word, tag in chunk.leaves():
-                    if word in keywords:
-                        matched_chunks.append(chunk)
-                        matched_keywords.append(word)
-                        break
+                if chunk != subtree:
+                    #the format is (<word>, <pos_tag>) for a single word
+                    for word, tag in chunk.leaves():
+                        if word in keywords:
+                            matched_chunks.append(chunk)
+                            matched_keywords.append(word)
+                            break
 
     return (matched_chunks, matched_keywords)
 
