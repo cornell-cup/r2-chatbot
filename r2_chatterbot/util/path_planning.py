@@ -25,8 +25,8 @@ def isLocCommand(text):
 
     # TODO: Make these include more than just "to the", should also work for "in the"
     r_expr2 = r"""
-    NumberFirst: {(<CD><NNS>?(<TO><DT>)?<RB|VBD|JJ|VBP|NN>)}
-    DirectionFirst: {((<TO><DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS>?)}
+    NumberFirst: {(<CD><NNS>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
+    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS>?)}
     """
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
@@ -34,7 +34,7 @@ def isLocCommand(text):
                     "clockwise", "counterclockwise"]
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
-        text, r_expr, target_words)
+        text, r_expr2, target_words)
     for verb in target_verbs:
         if verb in text and len(locPhrase) > 0:
             return True
@@ -42,15 +42,15 @@ def isLocCommand(text):
 
 
 def get_loc_params(phrase):
-    if locphrase[0].label() == "NumberFirst":
-        number = locphrase[0][0]
-        unit = locphrase[0][1]
-        direction = locphrase[0][-1]
+    if phrase.label() == "NumberFirst":
+        number = phrase[0]
+        unit = phrase[1]
+        direction = phrase[-1]
     else:
-        direction = locphrase[0][-3]
-        number = locphrase[0][-2]
-        unit = locphrase[0][-1]
-    return number, unit, direction
+        direction = phrase[-3]
+        number = phrase[-2]
+        unit = phrase[-1]
+    return int(number[0]), unit[0], direction[0]
 
 
 def process_loc(text):
@@ -58,8 +58,8 @@ def process_loc(text):
     mode = 0  # 0 for garbage, 1 for turn, 2 for move
 
     r_expr2 = r"""
-    NumberFirst: {(<CD><NNS>?(<TO><DT>)?<RB|VBD|JJ|VBP|NN>)}
-    DirectionFirst: {((<TO><DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS>?)}
+    NumberFirst: {(<CD><NNS>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
+    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS>?)}
     """
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
@@ -71,7 +71,7 @@ def process_loc(text):
 
     tagged_list = nltk.pos_tag(nltk.word_tokenize(text))
     verbs_and_nouns = [tup[0]
-                       for tup in tagged_list if tup[1] == 'NN' or tup[1] == 'VB']
+                       for tup in tagged_list if tup[1] == 'NN' or tup[1] == 'VB' or tup[1] == 'VBP']
 
     for verb in verbs_and_nouns:
         if verb == "stop":
@@ -82,8 +82,8 @@ def process_loc(text):
             mode = 2
 
     if mode == 1:
-        number, unit, direction = get_loc_params(locphrase[0])
-        if unit == "radian" or "radians":
+        number, unit, direction = get_loc_params(locPhrase[0])
+        if unit == "radians" or unit == "radian":
             number = number * 180 / math.pi
         if direction == "left":
             direction = "counterclockwise"
@@ -93,11 +93,11 @@ def process_loc(text):
         return (direction, number)
 
     if mode == 2:
-        if len(locphrase) > 1:
+        if len(locPhrase) > 1:
             x, y = 0
-            for each phrase in locphrase:
-                number, unit, direction = get_loc_params(phrase):
-                if unit == "feet" or "foot":
+            for phrase in locPhrase:
+                number, unit, direction = get_loc_params(phrase)
+                if unit == ("feet" or "foot"):
                     number = number * 0.3048
                 if direction1 == "forward":
                     y += number
@@ -109,8 +109,8 @@ def process_loc(text):
                     y -= number
             return (x, y)
         else:
-            number, unit, direction = get_loc_params(locphrase[0])
-            if unit == "feet" or "foot":
+            number, unit, direction = get_loc_params(locPhrase[0])
+            if unit == ("feet" or "foot"):
                 number = number * 0.3048
             if direction == "forward":
                 return ("move forward", number)
@@ -131,7 +131,6 @@ def process_loc(text):
         # ii. check if other dir --> coordinate
 
     return locPhrase, keywords
-
 
 def pathPlanning(text):
     '''
@@ -180,14 +179,11 @@ def pathPlanning(text):
 
     return(itemMove, direction, moveAmmount)
 
-
 if __name__ == "__main__":
-    phrase = "C1C0, move forward 10 steps"
+    phrase = "C1C0, turn left 10 radians"
     phrase2 = "robot go vroom"
     # with open("tests/isLoc.txt") as f:
     #     for line in f:
     #         print(line)
     #         print(isLocCommand(line))
     #         print(pathPlanning(line))
-    print(isLocCommand(phrase))
-    print(isLocCommand(phrase2))
