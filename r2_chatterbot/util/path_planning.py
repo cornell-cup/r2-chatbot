@@ -25,8 +25,8 @@ def isLocCommand(text):
 
     # TODO: Make these include more than just "to the", should also work for "in the"
     r_expr2 = r"""
-    NumberFirst: {(<CD><NNS>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
-    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS>?)}
+    NumberFirst: {(<CD><NNS|NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
+    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS|NN>?)}
     """
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
@@ -43,14 +43,26 @@ def isLocCommand(text):
 
 def get_loc_params(phrase):
     if phrase.label() == "NumberFirst":
-        number = phrase[0]
-        unit = phrase[1]
-        direction = phrase[-1]
+        number = phrase[0][0]
+        units = [word[0]
+                 for word in phrase if word[1] == "NNS" or word[1] == "NN"]
+        if len(units) == 0:
+            unit = None
+        else:
+            unit = units[0]
+        direction = phrase[-1][0]
     else:
-        direction = phrase[-3]
-        number = phrase[-2]
-        unit = phrase[-1]
-    return int(number[0]), unit[0], direction[0]
+        units = [word[0]
+                 for word in phrase if word[1] == "NNS" or word[1] == "NN"]
+        if len(units) == 0:
+            unit = None
+            direction = phrase[-2][0]
+            number = phrase[-1][0]
+        else:
+            unit = units[0]
+            direction = phrase[-3][0]
+            number = phrase[-2][0]
+    return int(number), unit, direction
 
 
 def process_loc(text):
@@ -94,12 +106,24 @@ def process_loc(text):
 
     if mode == 2:
         if len(locPhrase) > 1:
-            x, y = 0
+            x = 0
+            y = 0
+            prev_unit = None
             for phrase in locPhrase:
                 number, unit, direction = get_loc_params(phrase)
+                # if the unit isn't provided, assume it's the same
+                # as the previous unit - if that's unspecified, assume meters
+                if unit == None:
+                    if prev_unit:
+                        unit = prev_unit
+                    else:
+                        unit = "meters"
+                        prev_unit = "unit"
+                else:
+                    prev_unit = unit
                 if unit == ("feet" or "foot"):
                     number = number * 0.3048
-                if direction1 == "forward":
+                if direction == "forward":
                     y += number
                 elif direction == "left":
                     x -= number
@@ -107,11 +131,12 @@ def process_loc(text):
                     x += number
                 elif direction == "backward":
                     y -= number
-            return (x, y)
+            return (round(x, 2), round(y, 2))
         else:
             number, unit, direction = get_loc_params(locPhrase[0])
             if unit == ("feet" or "foot"):
                 number = number * 0.3048
+            number = round(number, 2)
             if direction == "forward":
                 return ("move forward", number)
             elif direction == "left":
@@ -121,7 +146,7 @@ def process_loc(text):
             elif direction == "backward":
                 return (0, -number)
             else:
-                return (0, 0)
+                return ("unknown", 0)
 
         # 2. check if turn --> movement
         # 3. check if moving
@@ -130,7 +155,8 @@ def process_loc(text):
         # i. check if forward --> movement
         # ii. check if other dir --> coordinate
 
-    return locPhrase, keywords
+    return "Not processed"
+
 
 def pathPlanning(text):
     '''
@@ -179,11 +205,13 @@ def pathPlanning(text):
 
     return(itemMove, direction, moveAmmount)
 
+
 if __name__ == "__main__":
-    phrase = "C1C0, turn left 10 radians"
-    phrase2 = "robot go vroom"
-    # with open("tests/isLoc.txt") as f:
-    #     for line in f:
-    #         print(line)
-    #         print(isLocCommand(line))
-    #         print(pathPlanning(line))
+    with open("tests/path_planning_phrases.txt") as f:
+        for line in f:
+            if line[0] != "#":
+                is_command = isLocCommand(line)
+                if is_command:
+                    print(line, is_command, process_loc(line))
+                else:
+                    print(line, is_command)

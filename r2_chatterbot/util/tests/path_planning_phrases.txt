@@ -1,0 +1,31 @@
+turn 90 degrees counterclockwise
+turn 90 to the left
+rotate 30 degrees to the right
+rotate 45 clockwise
+spin 45
+spin clockwise
+move 5 forward
+go 3 backward
+drive 3 to the right
+move 6 to the left
+move 5 meters forward
+go 3 feet backward
+drive 3 to the right
+# move 1 foot to the left
+# move forward 1 foot
+# move right 1 foot
+move right 1
+move left 1 meter
+go to the left 5 feet
+move 5 feet forward and 3 feet to the left
+move 5 feet forward and 3 to the left
+go backward 4 and right 2
+move forward
+move to the left
+move right
+go
+move
+drive
+turn
+
+

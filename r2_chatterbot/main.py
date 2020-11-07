@@ -44,17 +44,17 @@ def main():
         if "quit" in speech or "stop" in speech:
             break
 
-        if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
-                ("hey" in speech.lower()):
-            # filter out cico since it messes with location detection
-            speech = utils.filter_cico(speech)
+        # if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
+        #         ("hey" in speech.lower()):
+        #     # filter out cico since it messes with location detection
+        #     speech = utils.filter_cico(speech)
 
             if face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech))
                 # task is to transfer over to facial recognition client program
             elif path_planning.isLocCommand(speech.lower()):
-                print("Move command (itemMove, direction, moveAmmount): ")
-                print(path_planning.pathPlanning(speech.lower()))
+                print("Move command: ")
+                print(path_planning.process_loc(speech.lower()))
                 # task is to transfer over to path planning on the system
             elif object_detection.isObjCommand(speech.lower()):
                 print("Object to pick up: " +
