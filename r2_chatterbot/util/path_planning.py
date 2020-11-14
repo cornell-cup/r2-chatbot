@@ -3,6 +3,7 @@ import re
 import nlp_util
 import nltk
 import math
+from quantulum3 import parser
 
 
 def isLocCommand(text):
@@ -25,13 +26,17 @@ def isLocCommand(text):
 
     # TODO: Make these include more than just "to the", should also work for "in the"
     r_expr2 = r"""
-    NumberFirst: {(<CD><NNS|NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
-    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS|NN>?)}
+    NumberFirst: {(<CD|NN><NNS|NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
+    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD|NN><NNS|NN>?)}
     """
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
     target_words = ["degrees", "left", "right", "forward", "backward",
                     "clockwise", "counterclockwise"]
+
+    quant = parser.parse(text)
+    if len(quant) == 0:
+        return False
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, r_expr2, target_words)
@@ -42,26 +47,17 @@ def isLocCommand(text):
 
 
 def get_loc_params(phrase):
+    string = " ".join([word[0] for word in phrase])
+    quant = parser.parse(string)[0]
+    unit = quant.unit.name
+    number = quant.value
     if phrase.label() == "NumberFirst":
-        number = phrase[0][0]
-        units = [word[0]
-                 for word in phrase if word[1] == "NNS" or word[1] == "NN"]
-        if len(units) == 0:
-            unit = None
-        else:
-            unit = units[0]
         direction = phrase[-1][0]
     else:
-        units = [word[0]
-                 for word in phrase if word[1] == "NNS" or word[1] == "NN"]
-        if len(units) == 0:
-            unit = None
+        if unit == "dimensionless":
             direction = phrase[-2][0]
-            number = phrase[-1][0]
         else:
-            unit = units[0]
             direction = phrase[-3][0]
-            number = phrase[-2][0]
     return int(number), unit, direction
 
 
@@ -70,8 +66,8 @@ def process_loc(text):
     mode = 0  # 0 for garbage, 1 for turn, 2 for move
 
     r_expr2 = r"""
-    NumberFirst: {(<CD><NNS>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
-    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD><NNS>?)}
+    NumberFirst: {(<CD|NN><NNS|NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
+    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD|NN><NNS|NN>?)}
     """
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
@@ -95,7 +91,7 @@ def process_loc(text):
 
     if mode == 1:
         number, unit, direction = get_loc_params(locPhrase[0])
-        if unit == "radians" or unit == "radian":
+        if unit == "radian":
             number = number * 180 / math.pi
         if direction == "left":
             direction = "counterclockwise"
@@ -103,7 +99,6 @@ def process_loc(text):
             direction = "clockwise"
         # direction: clockwise or counterclockwise, number in degrees
         return (direction, number)
-
     if mode == 2:
         if len(locPhrase) > 1:
             x = 0
@@ -113,15 +108,15 @@ def process_loc(text):
                 number, unit, direction = get_loc_params(phrase)
                 # if the unit isn't provided, assume it's the same
                 # as the previous unit - if that's unspecified, assume meters
-                if unit == None:
+                if unit == "dimensionless":
                     if prev_unit:
                         unit = prev_unit
                     else:
-                        unit = "meters"
+                        unit = "metre"
                         prev_unit = "unit"
                 else:
                     prev_unit = unit
-                if unit == ("feet" or "foot"):
+                if unit == "foot":
                     number = number * 0.3048
                 if direction == "forward":
                     y += number
@@ -134,7 +129,7 @@ def process_loc(text):
             return (round(x, 2), round(y, 2))
         else:
             number, unit, direction = get_loc_params(locPhrase[0])
-            if unit == ("feet" or "foot"):
+            if unit == "foot":
                 number = number * 0.3048
             number = round(number, 2)
             if direction == "forward":
@@ -212,6 +207,7 @@ if __name__ == "__main__":
             if line[0] != "#":
                 is_command = isLocCommand(line)
                 if is_command:
-                    print(line, is_command, process_loc(line))
+                    print("{} \t {} \t {}".format(
+                        line, is_command, process_loc(line)))
                 else:
-                    print(line, is_command)
+                    print("{} \t {}".format(line, is_command))
