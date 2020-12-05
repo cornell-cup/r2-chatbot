@@ -2,8 +2,8 @@ import os
 import re  # regex module
 import nltk
 
-import utils
-# from util import utils
+# import utils
+from util import utils
 
 
 def parse(line, expression):

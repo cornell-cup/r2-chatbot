@@ -6,6 +6,39 @@ import math
 from quantulum3 import parser
 
 
+def preprocess(text):
+    """ 
+    Returns the same text, with all numbers converted from English words to 
+    decimal form. 
+    Ex. "move five feet forward" returns "move 5 feet forward"
+
+    @param text: the original text (must be in lowercase)
+    """
+    quant = parser.parse(text)
+    for q in quant:
+        print(q)
+        words = str(q).split(' ')
+        number_word = words[0]
+        number = int(q.value)
+        text = text.replace(number_word, str(number))
+    lst = text.split(' ', 1)
+    text = text if len(lst) <= 1 else lst[1]
+    print(text)
+    r_expr2 = r"""
+    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN><CD><NNS|NN>?)}
+    NumberFirst: {(<CD><NNS|NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>)}
+    """
+    target_verbs = ["move", "spin", "rotate",
+                    "turn", "go", "drive", "stop", "travel"]
+    target_words = ["degrees", "left", "right", "forward", "backward",
+                    "clockwise", "counterclockwise"]
+
+    locPhrase, keywords = nlp_util.match_regex_and_keywords(
+        text, r_expr2, target_words)
+
+    return locPhrase, keywords
+
+
 def isLocCommand(text):
     '''
     Determines whether a string is a locomation command or not based on the
@@ -24,22 +57,11 @@ def isLocCommand(text):
     if text == "stop":
         return True
 
-    # TODO: Make these include more than just "to the", should also work for "in the"
-    r_expr2 = r"""
-    NumberFirst: {(<CD|NN><NNS|NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
-    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD|NN><NNS|NN>?)}
-    """
+    locPhrase, keywords = preprocess(text)
+    # print(locPhrase)
+
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
-    target_words = ["degrees", "left", "right", "forward", "backward",
-                    "clockwise", "counterclockwise"]
-
-    quant = parser.parse(text)
-    if len(quant) == 0:
-        return False
-
-    locPhrase, keywords = nlp_util.match_regex_and_keywords(
-        text, r_expr2, target_words)
     for verb in target_verbs:
         if verb in text and len(locPhrase) > 0:
             return True
@@ -65,17 +87,7 @@ def process_loc(text):
 
     mode = 0  # 0 for garbage, 1 for turn, 2 for move
 
-    r_expr2 = r"""
-    NumberFirst: {(<CD|NN><NNS|NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN>)}
-    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN><CD|NN><NNS|NN>?)}
-    """
-    target_verbs = ["move", "spin", "rotate",
-                    "turn", "go", "drive", "stop", "travel"]
-    target_words = ["degrees", "left", "right", "forward", "backward",
-                    "clockwise", "counterclockwise"]
-
-    locPhrase, keywords = nlp_util.match_regex_and_keywords(
-        text, r_expr2, target_words)
+    locPhrase, keywords = preprocess(text)
 
     tagged_list = nltk.pos_tag(nltk.word_tokenize(text))
     verbs_and_nouns = [tup[0]
@@ -88,7 +100,7 @@ def process_loc(text):
             mode = 1
         elif verb in ["move", "go", "drive", "travel"]:
             mode = 2
-
+    # print(locPhrase)
     if mode == 1:
         number, unit, direction = get_loc_params(locPhrase[0])
         if unit == "radian":
@@ -127,7 +139,7 @@ def process_loc(text):
                 elif direction == "backward":
                     y -= number
             return (round(x, 2), round(y, 2))
-        else:
+        elif len(locPhrase) > 0:
             number, unit, direction = get_loc_params(locPhrase[0])
             if unit == "foot":
                 number = number * 0.3048
