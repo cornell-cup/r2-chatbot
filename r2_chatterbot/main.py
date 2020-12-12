@@ -44,10 +44,10 @@ def main():
         if "quit" in speech or "stop" in speech:
             break
 
-        # if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
-        #         ("hey" in speech.lower()):
-        #     # filter out cico since it messes with location detection
-        #     speech = utils.filter_cico(speech)
+        if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
+                ("hey" in speech.lower()):
+            # filter out cico since it messes with location detection
+            speech = utils.filter_cico(speech)
 
             if face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech))
@@ -73,9 +73,9 @@ def main():
                     api_data = restaurant.lookup_restaurant_city(
                         data["info"]["location"]["name"])
                     response = make_response.make_response_api(data, api_data)
-                else:
-                    # Q&A system
-                    response = get_topic(speech)
+                # else:
+                #     # Q&A system
+                #     response = get_topic(speech)
                 print(response)
                 # send this element to AWS for response generation
 

@@ -1,12 +1,22 @@
-import utils
 import re
-import nlp_util
+from util import nlp_util
 import nltk
 import math
+import string
 from quantulum3 import parser
 
 
 def preprocess(text):
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    text = text.replace("seats", "feet")
+    text = text.replace("seat", "feet")
+    text = text.replace(u"°", " degrees")
+    text = text.lstrip()
+    return text
+
+
+def get_locphrase(text):
+    print("Beginning text:", text)
     """ 
     Returns the same text, with all numbers converted from English words to 
     decimal form. 
@@ -16,17 +26,16 @@ def preprocess(text):
     """
     quant = parser.parse(text)
     for q in quant:
-        print(q)
         words = str(q).split(' ')
         number_word = words[0]
         number = int(q.value)
         text = text.replace(number_word, str(number))
     lst = text.split(' ', 1)
     text = text if len(lst) <= 1 else lst[1]
-    print(text)
+    print("Preprocessed text:", text)
     r_expr2 = r"""
-    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN><CD><NNS|NN>?)}
-    NumberFirst: {(<CD><NNS|NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>)}
+    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN><CD><NNS|NN|JJ>?)}
+    NumberFirst: {(<CD><NNS|NN|JJ>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>)}
     """
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
@@ -35,6 +44,8 @@ def preprocess(text):
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, r_expr2, target_words)
+
+    print(locPhrase)
 
     return locPhrase, keywords
 
@@ -56,8 +67,8 @@ def isLocCommand(text):
 
     if text == "stop":
         return True
-
-    locPhrase, keywords = preprocess(text)
+    text = preprocess(text)
+    locPhrase, keywords = get_locphrase(text)
     # print(locPhrase)
 
     target_verbs = ["move", "spin", "rotate",
@@ -87,30 +98,32 @@ def process_loc(text):
 
     mode = 0  # 0 for garbage, 1 for turn, 2 for move
 
-    locPhrase, keywords = preprocess(text)
+    text = preprocess(text)
+    locPhrase, _ = get_locphrase(text)
 
-    tagged_list = nltk.pos_tag(nltk.word_tokenize(text))
-    verbs_and_nouns = [tup[0]
-                       for tup in tagged_list if tup[1] == 'NN' or tup[1] == 'VB' or tup[1] == 'VBP']
+    # tagged_list = nltk.pos_tag(nltk.word_tokenize(text))
+    # verbs_and_nouns = [tup[0]
+    #                    for tup in tagged_list if tup[1] == 'NN' or tup[1] == 'VB' or tup[1] == 'VBP']
+    # # DEBUG THISSSS
+    words = nltk.word_tokenize(text)
 
-    for verb in verbs_and_nouns:
+    for verb in words:
         if verb == "stop":
             return ("stop", 0)
         elif verb in ["turn", "spin", "rotate"]:
             mode = 1
+            break
         elif verb in ["move", "go", "drive", "travel"]:
             mode = 2
+            break
     # print(locPhrase)
     if mode == 1:
         number, unit, direction = get_loc_params(locPhrase[0])
         if unit == "radian":
             number = number * 180 / math.pi
-        if direction == "left":
-            direction = "counterclockwise"
-        elif direction == "right":
-            direction = "clockwise"
-        # direction: clockwise or counterclockwise, number in degrees
-        return (direction, number)
+        if direction == "left" or direction == "counterclockwise":
+            number = -1 * number
+        return ("turn", number)
     if mode == 2:
         if len(locPhrase) > 1:
             x = 0
@@ -138,20 +151,20 @@ def process_loc(text):
                     x += number
                 elif direction == "backward":
                     y -= number
-            return (round(x, 2), round(y, 2))
+            return (float(round(x, 2)), float(round(y, 2)))
         elif len(locPhrase) > 0:
             number, unit, direction = get_loc_params(locPhrase[0])
             if unit == "foot":
                 number = number * 0.3048
-            number = round(number, 2)
+            number = float(round(number, 2))
             if direction == "forward":
                 return ("move forward", number)
             elif direction == "left":
-                return (-number, 0)
+                return (-number, 0.0)
             elif direction == "right":
-                return (number, 0)
+                return (number, 0.0)
             elif direction == "backward":
-                return (0, -number)
+                return (0.0, -number)
             else:
                 return ("unknown", 0)
 
