@@ -18,6 +18,7 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 RATE = 24000
 CHUNK = int(RATE / 10)  # 100ms
 
+
 class MicrophoneStream(object):
     """ **Code from Google cloud speech to text documentation**
     Opens a recording stream as a generator yielding the audio chunks."""
@@ -84,6 +85,7 @@ class MicrophoneStream(object):
 
             yield b''.join(data)
 
+
 def listen_print_loop(responses):
     """ ***Code from Google Speech to text documentation ***
     Iterates through server responses and prints them.
@@ -139,6 +141,7 @@ def listen_print_loop(responses):
 
             num_chars_printed = 0
 
+
 def returnResponseString(responses):
     """
     Returns a tuple of the most likely response and its confidence
@@ -173,6 +176,7 @@ def returnResponseString(responses):
 
             #num_chars_printed = 0
 
+
 def get_string(t):
     """
     Returns the output string (1st element of the tuple)
@@ -181,6 +185,7 @@ def get_string(t):
     Precondition: the first element is a string, second is a float
     """
     return t[0]
+
 
 def get_confidence(t):
     """
@@ -192,12 +197,12 @@ def get_confidence(t):
     return t[1]
 
 
-def append_to_file(filePath,message):
+def append_to_file(filePath, message):
     """
     Adds a message [message] to the file specified in the file path [filePath]
     Used to keep track of the history of what has been said and the confidence
     """
-    f = open(filePath,"a")
+    f = open(filePath, "a")
     f.write(message+"\n")
 
 # def delete_file():
@@ -218,14 +223,14 @@ def sub_main(profanityFilterBool):
     sp_c_cico = {
         "phrases": ["cico", "Hey cico"],
         "boost": 20.0
-    } #speech_contexts_cico
+    }  # speech_contexts_cico
     sp_c_kiko = {
         "phrases": ["Hey Kiko", "kiko", "Kiko", "kygo", "Kitty, girl"],
         "boost": 0
     }
     speech_contexts = [sp_c_cico, sp_c_kiko]
     client = speech_v1p1beta1.SpeechClient()
-    #print(help(types.RecognitionConfig))
+    # print(help(types.RecognitionConfig))
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
@@ -245,13 +250,14 @@ def sub_main(profanityFilterBool):
 
         responses = client.streaming_recognize(streaming_config, requests)
         # Now, put the transcription responses to use.
-        solution = returnResponseString(responses) #solution is the result
+        solution = returnResponseString(responses)  # solution is the result
 
-        append_to_file("log.txt",str(solution))
+        append_to_file("log.txt", str(solution))
 
     return solution
 
-def filter(t,switches):
+
+def filter(t, switches):
     """
     Takes a string and filters out and replaces certain words
 
@@ -261,34 +267,34 @@ def filter(t,switches):
     Precondition: t is a tuple - (s,f) s is a string and f is int or float
     """
     assert type(t) == tuple
-    assert type(t[0]) == str and type(t[1]) in [float,int]
+    assert type(t[0]) == str and type(t[1]) in [float, int]
     s = get_string(t)
-    result_string = s #the variable to retur
+    result_string = s  # the variable to retur
     result_conf = get_confidence(t)
     for k in switches:
-        num_occ = s.count(k) #number of occurences
+        num_occ = s.count(k)  # number of occurences
         for i in range(num_occ):
             #pos = result.find(k)
             pos = s.find(k)
-            if pos != -1: #if key found
+            if pos != -1:  # if key found
                 value = switches[k]
                 result_string = result_string[:pos] + value\
-                 + result_string[pos+len(value):]
+                    + result_string[pos+len(value):]
 
-    return (result_string,result_conf)
+    return (result_string, result_conf)
 
 
 def main():
     """
     Returns a tuple of the spoken phrase as a string and the confidence
-    
+
     Runs the full speech to text program with the profanity filter and specific
     words boosted
     """
     response = sub_main(True)
-    switches = {'kiko':'c1c0'} #the words to replace
+    switches = {'kiko': 'c1c0'}  # the words to replace
 
-    result = filter(response,switches)
+    result = filter(response, switches)
     return result
 
 

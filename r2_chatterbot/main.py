@@ -53,8 +53,8 @@ def main():
                 print(face_recognition.faceRecog(speech))
                 # task is to transfer over to facial recognition client program
             elif path_planning.isLocCommand(speech.lower()):
-                print("Move command (itemMove, direction, moveAmmount): ")
-                print(path_planning.pathPlanning(speech.lower()))
+                print("Move command: ")
+                print(path_planning.process_loc(speech.lower()))
                 # task is to transfer over to path planning on the system
             elif object_detection.isObjCommand(speech.lower()):
                 print("Object to pick up: " +
@@ -73,9 +73,9 @@ def main():
                     api_data = restaurant.lookup_restaurant_city(
                         data["info"]["location"]["name"])
                     response = make_response.make_response_api(data, api_data)
-                else:
-                    # Q&A system
-                    response = get_topic(speech)
+                # else:
+                #     # Q&A system
+                #     response = get_topic(speech)
                 print(response)
                 # send this element to AWS for response generation
 

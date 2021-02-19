@@ -1,6 +1,7 @@
 #dist
 dist/
 *.egg-info/
+greeting.txt
 
 __pycache__/*
 

@@ -1,9 +1,8 @@
 import os
-import re   #regex module
+import re  # regex module
 import nltk
-
-# import utils
 from util import utils
+
 
 def parse(line, expression):
     '''
@@ -17,25 +16,26 @@ def parse(line, expression):
     '''
 
     try:
-        #break sentence into tokens (ex: words)
+        # break sentence into tokens (ex: words)
         tokenized_line = nltk.word_tokenize(line)
 
-        #mark tokens with part of speech
+        # mark tokens with part of speech
         pos_tagged = nltk.pos_tag(tokenized_line)
 
-        #the type of phrase we want to detect in a sentence
+        # the type of phrase we want to detect in a sentence
         parser = nltk.RegexpParser(expression)
 
-        #look through the tagged tokens for the phrase
+        # look through the tagged tokens for the phrase
         parsed_text = parser.parse(pos_tagged)
 
-        #print(parsed_text)
-        #parsed_text.draw()
+        # print(parsed_text)
+        # parsed_text.draw()
 
     except Exception as e:
         print(str(e))
 
     return parsed_text
+
 
 def is_question(line):
     '''
@@ -52,10 +52,11 @@ def is_question(line):
             filter=lambda tree: tree.label() == "question"):
         print(subtree)
     '''
-    #checks if any question chunks were found
+    # checks if any question chunks were found
     return len(
-            list(tree.subtrees(
-                filter=lambda tree: tree.label() == "question"))) > 0
+        list(tree.subtrees(
+            filter=lambda tree: tree.label() == "question"))) > 0
+
 
 def search_for_location(line):
     """
@@ -74,17 +75,17 @@ def search_for_location(line):
     @return: a string of the found location, if none found, returns None
     """
     ner_tagger = nltk.StanfordNERTagger(
-        "%s/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz"%(os.getcwd()))
+        "%s/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz" % (os.getcwd()))
 
-    #tags to identify for nltk
+    # tags to identify for nltk
     loc_labels = ["GPE", "ORGANIZATION", "PERSON"]
 
     tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
-    #tree.draw()
+    # tree.draw()
     tags = ner_tagger.tag(line.split())
     print(tags)
 
-    #figure out the location from the Stanford tagger
+    # figure out the location from the Stanford tagger
     ner_location = ""
     for tag in tags:
         if tag[1] == "LOCATION":
@@ -92,20 +93,20 @@ def search_for_location(line):
 
     ner_location = ner_location.strip()
     ner_location = ner_location.strip("?!., ")
-    print("ner loc: %s"%(ner_location))
+    print("ner loc: %s" % (ner_location))
 
-    #figure out the location from the nltk tagger
+    # figure out the location from the nltk tagger
     location = ""
 
-    #only the top level has the "S" label
+    # only the top level has the "S" label
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
         for chunk in subtree.subtrees(lambda t: t.height() == 2):
 
-            #some "chunks" are just strings apparently
+            # some "chunks" are just strings apparently
             if isinstance(chunk, str):
                 continue
 
-            #each seperate detected word will be seperated with a comma
+            # each seperate detected word will be seperated with a comma
             if chunk.label() in loc_labels:
                 location_elem = ""
 
@@ -118,7 +119,7 @@ def search_for_location(line):
 
     location = location.strip()
     location = location.strip(" ,")
-    print("nltk loc: %s"%(location))
+    print("nltk loc: %s" % (location))
 
     '''
     if location != "":
@@ -128,6 +129,7 @@ def search_for_location(line):
     '''
 
     return location if len(location) > len(ner_location) else ner_location
+
 
 def match_regex_and_keywords(line, exp, keywords=None):
     '''
@@ -151,24 +153,26 @@ def match_regex_and_keywords(line, exp, keywords=None):
     matched_keywords = []
     tree = parse(line, exp)
 
-    #only loop over full trees, not subtrees or leaves
-    #only root node has the "S" label
+    # only loop over full trees, not subtrees or leaves
+    # only root node has the "S" label
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
 
-        #now loop through subtrees, detected chunks have height 2
+        # now loop through subtrees, detected chunks have height 2
         for chunk in subtree.subtrees(lambda t: t.height() == 2):
             if keywords == None:
-                #no keyword detection needed
+                # no keyword detection needed
                 matched_chunks.append(chunk)
             else:
-                #the format is (<word>, <pos_tag>) for a single word
-                for word, tag in chunk.leaves():
-                    if word in keywords:
-                        matched_chunks.append(chunk)
-                        matched_keywords.append(word)
-                        break
+                if chunk != subtree:
+                    # the format is (<word>, <pos_tag>) for a single word
+                    for word, tag in chunk.leaves():
+                        if word in keywords:
+                            matched_chunks.append(chunk)
+                            matched_keywords.append(word)
+                            break
 
     return (matched_chunks, matched_keywords)
+
 
 if __name__ == "__main__":
     with open("tests/not_questions.txt") as f:
