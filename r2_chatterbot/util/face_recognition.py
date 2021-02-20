@@ -14,7 +14,7 @@ def isFaceRecognition(text):
     @param text: The sentence to check
     @return: A boolean. True indicates that the input a facial recognition command
     """
-    keywords_greetings = {"wave", "hello", "hi", "check", "attendance", "call me", "greetings", "what's up" }
+    keywords_greetings = {"wave ", "hello ", "hi ", "check ", "attendance ", "call me ", "greetings ", "what's up " }
     for item in keywords_greetings:
         if item in text.lower():
             return True
@@ -30,10 +30,10 @@ def faceRecog(text):
     @param text: The sentence to check
     @return: A new file with the command name listed.
     """
-    greetings_keywords = {"wave", "hello", "hi", "greetings", "what's up","Wave", "Hello", "Hi", "Greetings", "What's up"}
+    greetings_keywords = {"wave ", "hello ", "hi ", "greetings ", "what's up ","Wave ", "Hello ", "Hi ", "Greetings ", "What's up "}
     if isFaceRecognition(text):
         deleteFiles()
-        if "attendance" in text:
+        if "attendance " in text:
             live_streaming.append_to_file("attendance.txt", "attendance")
             print("created new attendance file");
         for greeting in greetings_keywords:
@@ -41,7 +41,7 @@ def faceRecog(text):
                 live_streaming.append_to_file("greeting.txt", "greeting")
                 print("created new greetings file");
 
-        if("call me") in text or "Call me" in text:
+        if("call me ") in text or "Call me " in text:
             name = ""
             nameE = r"""
             nameE: {(<NNP>)+}

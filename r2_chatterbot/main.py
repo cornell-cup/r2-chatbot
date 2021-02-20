@@ -16,6 +16,8 @@ import sys
 import os
 # import corpus_and_adapter
 import re
+from question_answer import get_answer
+import time
 
 # for flask setup
 import requests
@@ -36,10 +38,12 @@ def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        answer = live_streaming.main()
-        speech = live_streaming.get_string(answer)
-        confidence = live_streaming.get_confidence(answer)
+        #answer = live_streaming.main()
+        #speech = live_streaming.get_string(answer)
+        speech = input("What would you like to know?: ")
+        #confidence = live_streaming.get_confidence(answer)
         print(speech)
+        before = time.time()
 
         if "quit" in speech or "stop" in speech:
             break
@@ -47,7 +51,7 @@ def main():
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
                 ("hey" in speech.lower()):
             # filter out cico since it messes with location detection
-            speech = utils.filter_cico(speech)
+            speech = utils.filter_cico(speech) + " "
 
             if face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech))
@@ -62,21 +66,24 @@ def main():
                 # task is to transfer over to object detection on the system
             else:
                 # we don't want the text to be lowercase since it messes with location detection
-                response = "Sorry, I don't understand."
+                # response = "Sorry, I don't understand."
                 data = keywords.get_topic(speech, parse_location=False)
-                keywords.modify_topic_data(data, parse_location=True)
                 if "name" in data.keys() and data["name"] == "weather":
+                    keywords.modify_topic_data(data, parse_location=True)
                     api_data = weather.lookup_weather_today_city(
                         data["info"]["location"]["name"])
                     response = make_response.make_response_api(data, api_data)
                 elif "name" in data.keys() and data["name"] == "restaurant":
+                    keywords.modify_topic_data(data, parse_location=True)
                     api_data = restaurant.lookup_restaurant_city(
                         data["info"]["location"]["name"])
                     response = make_response.make_response_api(data, api_data)
-                # else:
-                #     # Q&A system
-                #     response = get_topic(speech)
+                else:
+                    # Q&A system
+                    response = get_answer(speech)
                 print(response)
+                after = time.time()
+                print(after - before)
                 # send this element to AWS for response generation
 
                 # begin the flask transfer now
