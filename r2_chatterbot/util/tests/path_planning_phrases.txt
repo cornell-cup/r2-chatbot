@@ -1,0 +1,45 @@
+turn 90 degrees counterclockwise
+turn ninety to the left
+rotate 30 degrees to the right
+turn 2 radians counterclockwise
+turn bread to the left
+rotate 45 clockwise
+spin 45
+spin clockwise
+spin clockwise 5 degrees
+move 5 forward
+go 3 backward
+drive 3 to the right
+move six to the left
+move 5 meters forward
+move forward 5
+move forward 3 feet
+go backward 3 feet
+go 3 feet backward
+move 1 foot to the left
+move 1 foot left
+move left one foot
+move to the left one foot
+move forward 1 foot
+move right 1 foot
+move right 1
+move left 1 meter
+move to the left five feet
+move left five feet
+move forward five feet
+move 5 feet forward and 3 feet to the left
+move 5 feet forward and three to the left
+move twenty two feet forward
+move forward forty two meters
+go backward 4 and right 2
+move forward 3 foot
+move forward 1 feet
+move forward
+move to the left
+move right
+go
+move
+drive
+turn
+
+
