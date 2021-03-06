@@ -33,6 +33,7 @@ def parse(line, expression):
 
     except Exception as e:
         print(str(e))
+        return ""
 
     return parsed_text
 
