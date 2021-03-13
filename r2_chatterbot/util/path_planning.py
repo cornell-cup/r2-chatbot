@@ -1,5 +1,5 @@
 import re
-from util import nlp_util
+import nlp_util
 import nltk
 import math
 import string
@@ -17,9 +17,9 @@ def preprocess(text):
 
 def get_locphrase(text):
     print("Beginning text:", text)
-    """ 
-    Returns the same text, with all numbers converted from English words to 
-    decimal form. 
+    """
+    Returns the same text, with all numbers converted from English words to
+    decimal form.
     Ex. "move five feet forward" returns "move 5 feet forward"
 
     @param text: the original text (must be in lowercase)
@@ -49,7 +49,45 @@ def get_locphrase(text):
 
     return locPhrase, keywords
 
+def get_locphrase_b(text):
+    print("Beginning text:", text)
+    """
+    Returns the same text, with all numbers converted from English words to
+    decimal form.
+    Ex. "move five feet forward" returns "move 5 feet forward"
 
+    @param text: the original text (must be in lowercase)
+    """
+    quant = parser.parse(text)
+    for q in quant:
+        words = str(q).split(' ')
+        number_word = words[0]
+        number = int(q.value)
+        text = text.replace(number_word, str(number))
+    lst = text.split(' ', 1)
+    text = text if len(lst) <= 1 else lst[1]
+    print("Preprocessed text00:", text)
+    r_expr2 = r"""
+    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN><CD|DT><NNS|NN|JJ>?<NN>?)}
+    NumberFirst: {(<CD|DT><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>)}
+    """
+    target_verbs = ["move", "spin", "rotate",
+                    "turn", "go", "drive", "stop", "travel"]
+    target_words = ["degrees", "left", "right", "forward", "backward",
+                    "clockwise", "counterclockwise", "little", "bit"]
+
+    locPhrase, keywords = nlp_util.match_regex_and_keywords(
+        text, r_expr2, target_words)
+
+    print(locPhrase)
+
+    return locPhrase, keywords
+    # tokenized_line = nltk.word_tokenize(text)
+    # print(tokenized_line)
+    #
+    # # mark tokens with part of speech
+    # pos_tagged = nltk.pos_tag(['a', 'little', 'bit'])
+    # print(pos_tagged)
 
 def isLocCommand(text):
     '''
@@ -69,8 +107,8 @@ def isLocCommand(text):
     if text == "stop":
         return True
     text = preprocess(text)
-    locPhrase, keywords = get_locphrase(text)
-    # print(locPhrase)
+    locPhrase, keywords = get_locphrase_b(text)
+    print("aa"+str(locPhrase))
 
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
@@ -94,13 +132,31 @@ def get_loc_params(phrase):
             direction = phrase[-3][0]
     return int(number), unit, direction
 
+def get_loc_params_b(phrase):
+    string = " ".join([word[0] for word in phrase])
+    if ('little' or 'bit') in string:
+        print('conversion')
+    else:
+        quant = parser.parse(string)[0]
+        print("quant: ",quant)
+        unit = quant.unit.name
+        number = quant.value
+        if phrase.label() == "NumberFirst":
+            direction = phrase[-1][0]
+        else:
+            if unit == "dimensionless":
+                direction = phrase[-2][0]
+            else:
+                direction = phrase[-3][0]
+        return int(number), unit, direction
+
 
 def process_loc(text):
 
     mode = 0  # 0 for garbage, 1 for turn, 2 for move
 
     text = preprocess(text)
-    locPhrase, _ = get_locphrase(text)
+    locPhrase, _ = get_locphrase_b(text)
 
     # tagged_list = nltk.pos_tag(nltk.word_tokenize(text))
     # verbs_and_nouns = [tup[0]
@@ -119,12 +175,14 @@ def process_loc(text):
             break
     # print(locPhrase)
     if mode == 1:
-        number, unit, direction = get_loc_params(locPhrase[0])
-        if unit == "radian":
-            number = number * 180 / math.pi
-        if direction == "left" or direction == "counterclockwise":
-            number = -1 * number
-        return ("turn", number)
+        print("here"+text)
+        number, unit, direction = get_loc_params_b(locPhrase[0])
+        print(number)
+        # if unit == "radian":
+        #     number = number * 180 / math.pi
+        # if direction == "left" or direction == "counterclockwise":
+        #     number = -1 * number
+        # return ("turn", number)
     if mode == 2:
         if len(locPhrase) > 1:
             x = 0
@@ -228,12 +286,20 @@ def pathPlanning(text):
 
 
 if __name__ == "__main__":
-    with open("tests/path_planning_phrases.txt") as f:
-        for line in f:
-            if line[0] != "#":
-                is_command = isLocCommand(line)
-                if is_command:
-                    print("{} \t {} \t {}".format(
-                        line, is_command, process_loc(line)))
-                else:
-                    print("{} \t {}".format(line, is_command))
+    # with open("tests/path_planning_phrases.txt") as f:
+    #     for line in f:
+    #         if line[0] != "#":
+    #             is_command = isLocCommand(line)
+    #             if is_command:
+    #                 process_loc(line)
+                #     print("{} \t {} \t {}".format(
+                #         line, is_command, process_loc(line)))
+                # else:
+                #     print("{} \t {}".format(line, is_command))
+                # get_locphrase_b("move to the left a tiny little bit")
+    # line = "turn to the left 5 meters"
+    line = "kiko turn five degrees"
+    is_command = isLocCommand(line)
+    print(is_command)
+    if is_command:
+        process_loc(line)
