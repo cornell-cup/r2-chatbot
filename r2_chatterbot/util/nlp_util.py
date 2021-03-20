@@ -34,7 +34,7 @@ def parse(line, expression, custom_tags = []):
         # look through the tagged tokens for the phrase
         parsed_text = parser.parse(pos_tagged)
 
-        # print(parsed_text)
+        # print("Parsed text: ", parsed_text)
         # parsed_text.draw()
 
     except Exception as e:
