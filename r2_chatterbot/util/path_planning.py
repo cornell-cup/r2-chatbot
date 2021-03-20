@@ -6,6 +6,10 @@ import string
 from quantulum3 import parser
 
 
+custom_tags = [("forward", "D"), ("forwards", "D"), ("backward", "D") ("backwards", "D"), 
+("back", "D"), ("left", "D"), ("right", "D")]
+
+
 def preprocess(text):
     text = text.translate(str.maketrans('', '', string.punctuation))
     text = text.replace("seats", "feet")
@@ -45,7 +49,7 @@ def get_locphrase(text):
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, r_expr2, target_words)
 
-    print(locPhrase)
+    print(locPhrase, keywords)
 
     return locPhrase, keywords
 
@@ -66,15 +70,14 @@ def get_locphrase_b(text):
         text = text.replace(number_word, str(number))
     lst = text.split(' ', 1)
     text = text if len(lst) <= 1 else lst[1]
-    print("Preprocessed text00:", text)
+    print("Preprocessed text:", text)
     r_expr2 = r"""
-    DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN><CD|DT><NNS|NN|JJ>?<NN>?)}
-    NumberFirst: {(<CD|DT><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>)}
+    DirectionFirst: {(((<TO|IN>)<DT>)?<D><CD|DT><NNS|NN|JJ>?<NN>?)}
+    NumberFirst: {(<CD|DT><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<D>)}
     """
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
-    target_words = ["degrees", "left", "right", "forward", "backward",
-                    "clockwise", "counterclockwise", "little", "bit"]
+    target_words = ["little", "bit"]
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, r_expr2, target_words)
@@ -136,6 +139,13 @@ def get_loc_params_b(phrase):
     string = " ".join([word[0] for word in phrase])
     if ('little' or 'bit') in string:
         print('conversion')
+        number = 0.5
+        unit = "metre"
+        if phrase.label() == "NumberFirst":
+            direction = phrase[-1][0]
+        else:
+            direction = "forward"
+        return number, unit, direction
     else:
         quant = parser.parse(string)[0]
         print("quant: ",quant)
@@ -237,54 +247,6 @@ def process_loc(text):
     return "Not processed"
 
 
-def pathPlanning(text):
-    '''
-    This function uses regular expressions to determine whether the input is
-    a locomotion command and uses regular expressions to parse the necessary
-    data from the inputed text.
-
-    @param text: The sentence to check if it is a locomotion command and
-    parse the direction and distance from it. ***MUST BE IN LOWERCASE***
-    @return: A triple. The first element is the body part to move.  Second
-    element is the direction (i.e. 90 if right, 0 if forward, -90 if left, or
-    180 of backwards). The Third element is the
-    distance. If the input text is not a locomation command, the function returns
-    ("", -500, -500) by default.
-    '''
-    # return variables
-    direction = -500
-    moveAmmount = -500
-    itemMove = ""
-    target_directions = ["forward", "backward", "left",
-                         "right", "up", "down", "forwards", "backwards"]
-    target_movements = ["strong arm", "precision arm", "body", "C1C0", "head", "cico",
-                        "c1c0", "kiko", "strongarm", "precisionarm", "strong-arm", "precision-arm"]
-    # if we find a path related phrase
-    if isLocCommand(text):
-        ammountE = r"""
-        RB: {<CD>}
-        """
-        # grabs the number of steps from the phrase
-        movePhrase, keyword = nlp_util.match_regex_and_keywords(text, ammountE)
-        firstItem = movePhrase[0]
-        temp = firstItem[0]
-        moveAmmount = temp[0]
-        for item in target_movements:
-            if item in text:
-                itemMove = item
-        # based on the direction, returns the corresponding degrees
-        if "left" in text:
-            direction = -90
-        if "right" in text:
-            direction = 90
-        if "forward" in text or "up" in text:
-            direction = 0
-        if "backward" in text or "down" in text:
-            direction = 180
-
-    return(itemMove, direction, moveAmmount)
-
-
 if __name__ == "__main__":
     # with open("tests/path_planning_phrases.txt") as f:
     #     for line in f:
@@ -298,7 +260,7 @@ if __name__ == "__main__":
                 #     print("{} \t {}".format(line, is_command))
                 # get_locphrase_b("move to the left a tiny little bit")
     # line = "turn to the left 5 meters"
-    line = "kiko turn five degrees"
+    line = "turn a little bit to the left"
     is_command = isLocCommand(line)
     print(is_command)
     if is_command:

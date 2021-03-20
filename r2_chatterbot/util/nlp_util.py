@@ -1,10 +1,11 @@
 import os
 import re  # regex module
 import nltk
-from util import utils
+# from util import utils
+import utils
 
 
-def parse(line, expression):
+def parse(line, expression, custom_tags = []):
     '''
     Looks for a certain type of phrase for all the sentences in a file
 
@@ -21,6 +22,11 @@ def parse(line, expression):
 
         # mark tokens with part of speech
         pos_tagged = nltk.pos_tag(tokenized_line)
+
+        for tag in custom_tags:
+            if tag[0] in tokenized_line:
+                index = tokenized_line.index(tag[0])
+                pos_tagged[index] = tag
 
         # the type of phrase we want to detect in a sentence
         parser = nltk.RegexpParser(expression)
@@ -132,7 +138,7 @@ def search_for_location(line):
     return location if len(location) > len(ner_location) else ner_location
 
 
-def match_regex_and_keywords(line, exp, keywords=None):
+def match_regex_and_keywords(line, exp, custom_tags = [], keywords=None):
     '''
     Attempts to first match the nltk regular expression to the
     specified sentence. Then, for each matched chunk, determines whether
@@ -152,7 +158,7 @@ def match_regex_and_keywords(line, exp, keywords=None):
     '''
     matched_chunks = []
     matched_keywords = []
-    tree = parse(line, exp)
+    tree = parse(line, exp, custom_tags)
 
     # only loop over full trees, not subtrees or leaves
     # only root node has the "S" label
