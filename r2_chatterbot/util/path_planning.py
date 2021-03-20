@@ -201,7 +201,7 @@ def process_loc(text):
             break
     # print(locPhrase)
     if mode == 1:
-        number, unit, direction = get_loc_params(locPhrase[0])
+        number, unit, direction = get_loc_params(locPhrase[0], 1)
         if unit == "radian":
             number = number * 180 / math.pi
         if direction == "left" or direction == "counterclockwise":
@@ -213,7 +213,7 @@ def process_loc(text):
             y = 0
             prev_unit = None
             for phrase in locPhrase:
-                number, unit, direction = get_loc_params(phrase)
+                number, unit, direction = get_loc_params(phrase, 2)
                 # if the unit isn't provided, assume it's the same
                 # as the previous unit - if that's unspecified, assume meters
                 if unit == "dimensionless":
@@ -236,7 +236,7 @@ def process_loc(text):
                     y -= number
             return (float(round(x, 2)), float(round(y, 2)))
         elif len(locPhrase) > 0:
-            number, unit, direction = get_loc_params(locPhrase[0])
+            number, unit, direction = get_loc_params(locPhrase[0], 2)
             if unit == "foot":
                 number = number * 0.3048
             number = float(round(number, 2))
