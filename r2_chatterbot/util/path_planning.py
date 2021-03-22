@@ -17,6 +17,8 @@ directions = ["forward", "forwards", "backward", "backwards", "back", "left", "r
 
 custom_tags = [(d, "D") for d in directions]
 
+LITTLE_BIT_TURN = 30
+LITTLE_BIT_MOVE = 1
 
 def preprocess(text):
     text = text.translate(str.maketrans('', '', string.punctuation))
@@ -41,16 +43,28 @@ def get_locphrase(text):
         number_word = words[0]
         number = int(q.value)
         text = text.replace(number_word, str(number))
+    
+    # try normal expressions first
     expr_normal = r"""
     DirectionFirst: {(((<TO|IN>)<DT>)?<D><CD><NNS|NN|JJ>?)}
     NumberFirst: {(<CD><NNS|NN|JJ>?((<TO|IN>)<DT>)?<D>)}
     """
-    # target_words = ["degrees", "clockwise", "counterclockwise"]
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, expr_normal, custom_tags=custom_tags)
+    
+    # if we get a match, return
+    if len(locPhrase) > 0 and locPhrase[0].label() != "S":
+        return locPhrase, keywords
 
-    # TODO: come up with reg expressions for little bit commands and obstacle commands, 
+    # try little bit expressions next
+    expr_little = r"""
+    DirectionFirst: {(((<TO|IN>)<DT>)?<D><CD|DT><NNS|NN|JJ>?<NN>?)}
+    NumberFirst: {(<CD|DT><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<D>)}
+    """
+
+    locPhrase, keywords = nlp_util.match_regex_and_keywords(
+        text, expr_little, custom_tags=custom_tags, keywords=["little", "bit", "tiny"])
 
     return locPhrase, keywords
 
@@ -78,10 +92,11 @@ def get_locphrase_b(text):
     """
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
-    target_words = ["little", "bit"]
+    target_words = ["degrees", "left", "right", "forward", "backward",
+                    "clockwise", "counterclockwise", "little", "bit"]
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
-        text, r_expr2, target_words)
+        text, r_expr2, custom_tags, target_words)
 
     print(locPhrase)
 
@@ -112,7 +127,6 @@ def isLocCommand(text):
         return True
     text = preprocess(text)
     locPhrase, keywords = get_locphrase(text)
-    print("aa"+str(locPhrase))
 
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
@@ -137,31 +151,46 @@ def get_direction(phrase):
 
 def get_loc_params(phrase, mode):
     string = " ".join([word[0] for word in phrase])
-    if ('little' or 'bit') in string:
-        print('conversion')
-        if mode == '1':
-            number = 30 # TODO: Change
+    if 'little' in string or 'bit' in string:
+        # print('conversion')
+        # print(mode)
+        if mode == 1:
+            number = LITTLE_BIT_TURN
             unit = "degrees" 
         else:
-            number = 0.5 # TODO: Change
+            number = LITTLE_BIT_MOVE
             unit = "metre" 
-    quant = parser.parse(string)[0]
-    unit = quant.unit.name
-    number = quant.value
+    else:
+        quant = parser.parse(string)[0]
+        unit = quant.unit.name
+        number = quant.value
     direction = get_direction(phrase)
     return int(number), unit, direction
 
-def get_loc_params_b(phrase):
+def get_loc_params_b(phrase, mode):
     string = " ".join([word[0] for word in phrase])
-    if ('little' or 'bit') in string:
-        print('conversion')
-        number = 0.5
-        unit = "metre"
+    if ('little' in string) or ('bit' in string):
         if phrase.label() == "NumberFirst":
             direction = phrase[-1][0]
         else:
-            direction = "forward"
-        return number, unit, direction
+            index = 0
+            while phrase[index][1] == 'TO' or phrase[index][1] == 'DT':
+                index += 1
+            direction = phrase[index][0]
+        print("direction",  direction)
+        if mode == 1: #direction
+            return LITTLE_BIT_TURN, "degrees", direction
+        elif mode == 2: #distance
+            return LITTLE_BIT_MOVE, "metre", direction
+        # print('conversion')
+        # number = 0.5
+        # unit = "metre"
+        # print("label", phrase.label())
+        # if phrase.label() == "NumberFirst":
+        #     direction = phrase[-1][0]
+        # else:
+        #     direction = "forward"
+        # return number, unit, direction
     else:
         quant = parser.parse(string)[0]
         print("quant: ",quant)
@@ -199,9 +228,12 @@ def process_loc(text):
         elif verb in ["move", "go", "drive", "travel"]:
             mode = 2
             break
-    # print(locPhrase)
+    print(locPhrase)
     if mode == 1:
-        number, unit, direction = get_loc_params(locPhrase[0], 1)
+        number, unit, direction = get_loc_params(locPhrase[0], mode)
+        # print("here"+text)
+        # number, unit, direction = get_loc_params_b(locPhrase[0], mode)
+        # print(number)
         if unit == "radian":
             number = number * 180 / math.pi
         if direction == "left" or direction == "counterclockwise":
@@ -213,7 +245,8 @@ def process_loc(text):
             y = 0
             prev_unit = None
             for phrase in locPhrase:
-                number, unit, direction = get_loc_params(phrase, 2)
+                number, unit, direction = get_loc_params(phrase, mode)
+                # number, unit, direction = get_loc_params_b(phrase, mode)
                 # if the unit isn't provided, assume it's the same
                 # as the previous unit - if that's unspecified, assume meters
                 if unit == "dimensionless":
@@ -236,7 +269,8 @@ def process_loc(text):
                     y -= number
             return (float(round(x, 2)), float(round(y, 2)))
         elif len(locPhrase) > 0:
-            number, unit, direction = get_loc_params(locPhrase[0], 2)
+            number, unit, direction = get_loc_params(locPhrase[0], mode)
+            # number, unit, direction = get_loc_params_b(locPhrase[0],mode)
             if unit == "foot":
                 number = number * 0.3048
             number = float(round(number, 2))
@@ -262,20 +296,28 @@ def process_loc(text):
 
 
 if __name__ == "__main__":
-    with open("tests/path_planning_phrases.txt") as f:
-        for line in f:
-            if line[0] != "#":
-                is_command = isLocCommand(line)
-                if is_command:
-                    process_loc(line)
-                    print("{} \t {} \t {}".format(
-                        line, is_command, process_loc(line)))
-                else:
-                    print("{} \t {}".format(line, is_command))
+    # with open("tests/path_planning_phrases.txt") as f:
+    #     for line in f:
+    #         if line[0] != "#":
+    #             is_command = isLocCommand(line)
+    #             if is_command:
+    #                 process_loc(line)
+    #                 print("{} \t {} \t {}".format(
+    #                     line, is_command, process_loc(line)))
+    #             else:
+    #                 print("{} \t {}".format(line, is_command))
+    while True:
+        line = input("Command: ")
+        is_command = isLocCommand(line)
+        print(is_command)
+        if is_command:
+            print(process_loc(line))
+
     # get_locphrase_b("move to the left a tiny little bit")
     # line = "turn to the left 5 meters"
-    # line = "turn a little bit to the left"
+    # line = "move left a bit"
     # is_command = isLocCommand(line)
     # print(is_command)
     # if is_command:
-    #     process_loc(line)
+    #     a = process_loc(line)
+    #     print(a)
