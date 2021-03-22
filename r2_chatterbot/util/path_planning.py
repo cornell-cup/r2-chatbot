@@ -49,6 +49,13 @@ def get_locphrase(text):
     DirectionFirst: {(((<TO|IN>)<DT>)?<D><CD><NNS|NN|JJ>?)}
     NumberFirst: {(<CD><NNS|NN|JJ>?((<TO|IN>)<DT>)?<D>)}
     """
+<<<<<<< HEAD
+=======
+    target_verbs = ["move", "spin", "rotate",
+                    "turn", "go", "drive", "stop", "travel"]
+    target_words = ["degrees", "left", "right", "forward", "backward",
+                    "backwards", "clockwise", "counterclockwise"]
+>>>>>>> d4c14476d334bd0fd39d22d6d2bad6e01a417793
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, expr_normal, custom_tags=custom_tags)
@@ -93,7 +100,7 @@ def get_locphrase_b(text):
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
     target_words = ["degrees", "left", "right", "forward", "backward",
-                    "clockwise", "counterclockwise", "little", "bit"]
+                    "backwards", "clockwise", "counterclockwise"]
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, r_expr2, custom_tags, target_words)
@@ -182,18 +189,8 @@ def get_loc_params_b(phrase, mode):
             return LITTLE_BIT_TURN, "degrees", direction
         elif mode == 2: #distance
             return LITTLE_BIT_MOVE, "metre", direction
-        # print('conversion')
-        # number = 0.5
-        # unit = "metre"
-        # print("label", phrase.label())
-        # if phrase.label() == "NumberFirst":
-        #     direction = phrase[-1][0]
-        # else:
-        #     direction = "forward"
-        # return number, unit, direction
     else:
         quant = parser.parse(string)[0]
-        print("quant: ",quant)
         unit = quant.unit.name
         number = quant.value
         if phrase.label() == "NumberFirst":
@@ -265,7 +262,7 @@ def process_loc(text):
                     x -= number
                 elif direction == "right":
                     x += number
-                elif direction == "backward":
+                elif direction == "backward" or direction == "backwards":
                     y -= number
             return (float(round(x, 2)), float(round(y, 2)))
         elif len(locPhrase) > 0:
@@ -280,7 +277,7 @@ def process_loc(text):
                 return (-number, 0.0)
             elif direction == "right":
                 return (number, 0.0)
-            elif direction == "backward":
+            elif direction == "backward" or direction == "backwards":
                 return (0.0, -number)
             else:
                 return ("unknown", 0)
