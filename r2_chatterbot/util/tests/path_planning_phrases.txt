@@ -41,5 +41,10 @@ go
 move
 drive
 turn
-
-
+move to the left a little bit
+move a little bit
+move forward a bit
+turn a little to the left
+turn counterclockwise a little bit
+move forward a little bit and 3 feet to the left
+move forward and left a little bit
