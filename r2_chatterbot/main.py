@@ -49,6 +49,30 @@ def main():
             # filter out cico since it messes with location detection
             speech = utils.filter_cico(speech)
 
+            # if is_question(speech):
+            #     response = "Can't answer"
+                # data = keywords.get_topic(speech, parse_location=False)
+                # keywords.modify_topic_data(data, parse_location=True)
+                # if "name" in data.keys() and data["name"] == "weather":
+                #     api_data = weather.lookup_weather_today_city(
+                #         data["info"]["location"]["name"])
+                #     response = make_response.make_response_api(data, api_data)
+                # elif "name" in data.keys() and data["name"] == "restaurant":
+                #     api_data = restaurant.lookup_restaurant_city(
+                #         data["info"]["location"]["name"])
+                #     response = make_response.make_response_api(data, api_data)
+                # else: 
+                #     Q&A System
+            # else:
+                # if isFaceRec():
+                    # process face rec
+                # elif isLocCommand():
+                    # process loc command
+                # elif isObjCommand():
+                #   # process object command
+                # else:
+                    # process sentiment analysis
+
             if face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech))
                 # task is to transfer over to facial recognition client program
