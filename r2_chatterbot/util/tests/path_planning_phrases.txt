@@ -1,4 +1,4 @@
-turn 90 degrees counterclockwise
+turn 90 degrees counterclockwise:('turn', -90)
 turn ninety to the left
 rotate 30 degrees to the right
 turn 2 radians counterclockwise
@@ -41,7 +41,7 @@ go
 move
 drive
 turn
-move to the left a little bit
+move to the left a little bit:(-1.0, 0.0)
 move a little bit
 move forward a bit
 turn a little to the left
