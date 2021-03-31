@@ -49,13 +49,10 @@ def get_locphrase(text):
     DirectionFirst: {(((<TO|IN>)<DT>)?<D><CD><NNS|NN|JJ>?)}
     NumberFirst: {(<CD><NNS|NN|JJ>?((<TO|IN>)<DT>)?<D>)}
     """
-<<<<<<< HEAD
-=======
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
     target_words = ["degrees", "left", "right", "forward", "backward",
                     "backwards", "clockwise", "counterclockwise"]
->>>>>>> d4c14476d334bd0fd39d22d6d2bad6e01a417793
 
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, expr_normal, custom_tags=custom_tags)
