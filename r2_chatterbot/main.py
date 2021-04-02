@@ -15,7 +15,6 @@ import re
 import sys
 import os
 # import corpus_and_adapter
-import re
 from question_answer import get_answer
 import time
 
@@ -25,11 +24,14 @@ import json
 import io
 import socket
 
+USE_AWS = True
+
 print(os.getcwd())
 credential_path = "api_keys/speech_to_text.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 url = "http://18.216.143.187/"
+route = "chatbot_qa/"
 
 utils.set_classpath()
 
@@ -80,7 +82,10 @@ def main():
                     response = make_response.make_response_api(data, api_data)
                 else:
                     # Q&A system
-                    response = get_answer(speech)
+                    if USE_AWS:
+                        response = requests.get(url+route, data = {'speech': speech})
+                    else:
+                        response = get_answer(speech)
                 print(response)
                 after = time.time()
                 print(after - before)
