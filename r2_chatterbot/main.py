@@ -35,7 +35,6 @@ utils.set_classpath()
 
 
 def main():
-    question_parser = nlp_util.get_parser()
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -51,7 +50,7 @@ def main():
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
                 ("hey" in speech.lower()):
             # filter out cico since it messes with location detection
-            question, question_type = nlp_util.is_question(speech, question_parser)
+            question, question_type = nlp_util.is_question(speech)
             speech = utils.filter_cico(speech) + " "
             print("Question type: " + question_type)
             if not question and face_recognition.isFaceRecognition(speech):
