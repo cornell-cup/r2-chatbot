@@ -6,7 +6,7 @@ input
 import sys
 sys.path.insert(1, "util")
 
-# util.
+# util.imp
 from api import weather
 from api import restaurant
 
