@@ -39,7 +39,7 @@ def parse(line, expression, custom_tags = []):
 
     except Exception as e:
         print(str(e))
-        return ""
+        return None
 
     return parsed_text
 
@@ -159,7 +159,6 @@ def match_regex_and_keywords(line, exp, custom_tags = [], keywords=None):
     matched_chunks = []
     matched_keywords = []
     tree = parse(line, exp, custom_tags)
-
     # only loop over full trees, not subtrees or leaves
     # only root node has the "S" label
     for subtree in tree.subtrees(lambda t: t.label() == "S"):

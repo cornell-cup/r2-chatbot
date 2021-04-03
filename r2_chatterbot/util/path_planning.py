@@ -13,21 +13,44 @@ from quantulum3 import parser
 
 directions = ["forward", "forwards", "backward", "backwards", "back", "left", "right", 
 "clockwise", "counterclockwise"]
+little = ["little", "bit", "smidge", "tiny"]
 # commands = ["move", "spin", "rotate", "turn", "go", "drive", "stop", "travel"]
 
 custom_tags = [(d, "D") for d in directions]
+custom_tags.append(("a", "A"))
 
-LITTLE_BIT_TURN = 30
-LITTLE_BIT_MOVE = 1
+LITTLE_BIT_TURN = 15
+LITTLE_BIT_MOVE = 0.3
 
 def preprocess(text):
-    text = text.translate(str.maketrans('', '', string.punctuation))
+    translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
+    text = text.translate(translator)
     text = text.replace("seats", "feet")
     text = text.replace("seat", "feet")
     text = text.replace(u"°", " degrees")
+    text = text.replace("one", "1")
     text = text.lstrip()
+    quant = parser.parse(text)
+    for q in quant:
+        words = str(q).split(' ')
+        text_to_replace = parser.inline_parse_and_expand(str(q.value))
+        text_to_replace = text_to_replace.replace("-", " ")
+        number = int(q.value)
+        text = text.replace(text_to_replace, str(number))
     return text
 
+def test_locphrase(text):
+    expr = r"""
+    DirectionFirst: {(((<TO|IN>)<DT>)?<D><CD><NNS|NN|JJ>?)}
+    NumberFirst: {(<CD><NNS|NN|JJ>?((<TO|IN>)<DT>)?<D>)}
+    LittleDirection: {(((<TO|IN>)<DT>)?<D><A><NNS|NN|JJ>?<NN>?)}
+    LittleNumber: {(<A><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<D>)}
+    Obstacle: {(((<TO|IN>)<DT>)?<D>)}
+    """
+    locPhrase, keywords = nlp_util.match_regex_and_keywords(
+        text, expr, custom_tags=custom_tags)
+
+    return locPhrase
 
 def get_locphrase(text):
     """
@@ -37,38 +60,23 @@ def get_locphrase(text):
 
     @param text: the original text (must be in lowercase)
     """
-    quant = parser.parse(text)
-    for q in quant:
-        words = str(q).split(' ')
-        number_word = words[0]
-        number = int(q.value)
-        text = text.replace(number_word, str(number))
-    
-    # try normal expressions first
-    expr_normal = r"""
+    expr = r"""
     DirectionFirst: {(((<TO|IN>)<DT>)?<D><CD><NNS|NN|JJ>?)}
     NumberFirst: {(<CD><NNS|NN|JJ>?((<TO|IN>)<DT>)?<D>)}
+    LittleDirection: {(((<TO|IN>)<DT>)?<D><A><NNS|NN|JJ>?<NN>?)}
+    LittleNumber: {(<A><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<D>)}
+    Obstacle: {(((<TO|IN>)<DT>)?<D>)}
     """
-    target_verbs = ["move", "spin", "rotate",
-                    "turn", "go", "drive", "stop", "travel"]
-    target_words = ["degrees", "left", "right", "forward", "backward",
-                    "backwards", "clockwise", "counterclockwise"]
-
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
-        text, expr_normal, custom_tags=custom_tags)
-    
-    # if we get a match, return
-    if len(locPhrase) > 0 and locPhrase[0].label() != "S":
-        return locPhrase, keywords
+        text, expr, custom_tags=custom_tags)
 
-    # try little bit expressions next
-    expr_little = r"""
-    DirectionFirst: {(((<TO|IN>)<DT>)?<D><CD|DT><NNS|NN|JJ>?<NN>?)}
-    NumberFirst: {(<CD|DT><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<D>)}
-    """
-
-    locPhrase, keywords = nlp_util.match_regex_and_keywords(
-        text, expr_little, custom_tags=custom_tags, keywords=["little", "bit", "tiny"])
+    if len(locPhrase) <= 0 or locPhrase[0].label() == "S": 
+        # didn't get a match before, try only looking for obstacle commands
+        expr_obstacle = r"""
+        Obstacle: {(((<TO|IN>)<DT>)?<D>)}
+        """
+        locPhrase, keywords = nlp_util.match_regex_and_keywords(
+        text, expr_obstacle, custom_tags=custom_tags)
 
     return locPhrase, keywords
 
@@ -102,8 +110,6 @@ def get_locphrase_b(text):
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, r_expr2, custom_tags, target_words)
 
-    print(locPhrase)
-
     return locPhrase, keywords
     # tokenized_line = nltk.word_tokenize(text)
     # print(tokenized_line)
@@ -111,6 +117,12 @@ def get_locphrase_b(text):
     # # mark tokens with part of speech
     # pos_tagged = nltk.pos_tag(['a', 'little', 'bit'])
     # print(pos_tagged)
+
+def contains_a_word_in(text_list, search_words):
+    for word in search_words:
+        if word in text_list:
+            return True
+    return False
 
 def isLocCommand(text):
     '''
@@ -130,11 +142,28 @@ def isLocCommand(text):
     if text == "stop":
         return True
     text = preprocess(text)
-    locPhrase, keywords = get_locphrase(text)
+    locPhrase, _ = get_locphrase(text)
+    print(locPhrase)
 
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
-    if len(locPhrase) > 0 and locPhrase[0].label() != 'S':
+
+    phrases = len(locPhrase)
+
+    if phrases > 0 and locPhrase[0].label() != 'S':
+        for phrase in locPhrase:
+            words_only = [x[0] for x in phrase.leaves()]
+            print(words_only)
+            if phrase.label() == "Obstacle":
+                if phrases > 1:
+                    return False # no more than 1 of this type of phrase
+                if contains_a_word_in(text, ["turn", "spin", "rotate"]):
+                    return False # turning commands can't be used with this type
+            # if it fell under the little bit phrase, check if one of the little bit words is there
+            elif phrase.label() == "LittleDirection" or phrase.label() == "LittleNumber":
+                if not contains_a_word_in(words_only, little):
+                    return False
+            # if it's an obstacle command
         for verb in target_verbs:
             if verb in text:
                 return True
@@ -156,8 +185,8 @@ def get_direction(phrase):
 def get_loc_params(phrase, mode):
     string = " ".join([word[0] for word in phrase])
     if 'little' in string or 'bit' in string:
-        # print('conversion')
-        # print(mode)
+        print('conversion')
+        print(mode)
         if mode == 1:
             number = LITTLE_BIT_TURN
             unit = "degrees" 
@@ -169,7 +198,7 @@ def get_loc_params(phrase, mode):
         unit = quant.unit.name
         number = quant.value
     direction = get_direction(phrase)
-    return int(number), unit, direction
+    return float(number), unit, direction
 
 def get_loc_params_b(phrase, mode):
     string = " ".join([word[0] for word in phrase])
@@ -197,7 +226,7 @@ def get_loc_params_b(phrase, mode):
                 direction = phrase[-2][0]
             else:
                 direction = phrase[-3][0]
-        return int(number), unit, direction
+        return float(number), unit, direction
 
 
 def process_loc(text):
@@ -232,7 +261,7 @@ def process_loc(text):
             number = number * 180 / math.pi
         if direction == "left" or direction == "counterclockwise":
             number = -1 * number
-        return ("turn", number)
+        return ("turn", round(number, 2))
     if mode == 2:
         if len(locPhrase) > 1:
             x = 0
@@ -243,12 +272,13 @@ def process_loc(text):
                 # number, unit, direction = get_loc_params_b(phrase, mode)
                 # if the unit isn't provided, assume it's the same
                 # as the previous unit - if that's unspecified, assume meters
+                print(number, unit, direction)
                 if unit == "dimensionless":
                     if prev_unit:
                         unit = prev_unit
                     else:
                         unit = "metre"
-                        prev_unit = "unit"
+                        prev_unit = unit
                 else:
                     prev_unit = unit
                 if unit == "foot":
