@@ -1,7 +1,10 @@
 import os
 import re  # regex module
 import nltk
+import subprocess
+import os
 from util import utils
+from pycorenlp import StanfordCoreNLP
 
 
 def parse(line, expression):
@@ -37,25 +40,34 @@ def parse(line, expression):
     return parsed_text
 
 
-def is_question(line):
+def get_parser():
+    #os.system('java -mx6g -cp "../dep/stanford-corenlp-full/*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -timeout 5000')
+    cmd = os.path.abspath("java") + ' -mx6g -cp ' + os.path.abspath("../dep/stanford-corenlp-full/*") + ' edu.stanford.nlp.pipeline.StanfordCoreNLPServer -timeout 5000'
+    os.system(cmd)
+    parser = StanfordCoreNLP('http://localhost:9000')
+    return parser
+
+
+def is_question(line, parser):
     '''
     Checks if a sentence is a question
 
     @param line: The sentence to check
 
-    @return: Boolean saying whether the sentence is a question
+    @return: List containing boolean saying whether the sentence is a question, and string saying type of question
     '''
-    tree = parse(line, r"question: {<W..?>}")
+    line = utils.filter_cico(line)
 
-    '''
-    for subtree in tree.subtrees(
-            filter=lambda tree: tree.label() == "question"):
-        print(subtree)
-    '''
-    # checks if any question chunks were found
-    return len(
-        list(tree.subtrees(
-            filter=lambda tree: tree.label() == "question"))) > 0
+    parsed_line = parser.annotate(line, properties = {'annotators': 'parse', 'outputFormat': 'json'})
+    print(parsed_line)
+    for i in range(len(parsed_line['sentences'])):
+        if 'SBARQ' in parsed_line['sentences'][i]['parse']:
+            return True, 'wh question'
+        elif 'SQ' in parsed_line['sentences'][i]['parse']:
+            return True, 'yes/no question'
+    if '?' in line:
+        return True, 'unknown question type'
+    return False, 'not a question'
 
 
 def search_for_location(line):

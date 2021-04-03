@@ -35,6 +35,7 @@ utils.set_classpath()
 
 
 def main():
+    question_parser = nlp_util.get_parser()
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -50,16 +51,17 @@ def main():
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
                 ("hey" in speech.lower()):
             # filter out cico since it messes with location detection
+            question, question_type = nlp_util.is_question(speech, question_parser)
             speech = utils.filter_cico(speech) + " "
-
-            if face_recognition.isFaceRecognition(speech):
+            print("Question type: " + question_type)
+            if not question and face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech))
                 # task is to transfer over to facial recognition client program
-            elif path_planning.isLocCommand(speech.lower()):
+            elif not question and path_planning.isLocCommand(speech.lower()):
                 print("Move command: ")
                 print(path_planning.process_loc(speech.lower()))
                 # task is to transfer over to path planning on the system
-            elif object_detection.isObjCommand(speech.lower()):
+            elif not question and object_detection.isObjCommand(speech.lower()):
                 print("Object to pick up: " +
                       object_detection.object_parse(speech.lower()))
                 # task is to transfer over to object detection on the system
@@ -80,6 +82,7 @@ def main():
                 else:
                     # Q&A system
                     response = get_answer(speech)
+                    #response = get_answer(speech)['answers'][0]['answer']
                 print(response)
                 after = time.time()
                 print(after - before)

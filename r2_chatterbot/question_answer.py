@@ -52,3 +52,4 @@ def get_answer(question):
     after = time.time()
     print(after - before)
     return prediction
+
