@@ -49,6 +49,7 @@ def is_question(line):
     '''
     line = utils.filter_cico(line, False)
 
+    question = False
     if '?' in line:
         question = True
 

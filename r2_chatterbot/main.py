@@ -24,7 +24,7 @@ import json
 import io
 import socket
 
-USE_AWS = True
+USE_AWS = False
 
 print(os.getcwd())
 credential_path = "api_keys/speech_to_text.json"
