@@ -50,48 +50,16 @@ def get_locphrase(text):
     UntilObstacle: {((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>}
     """
     target_verbs_obstacle = ["move","go", "drive", "stop", "travel"]
-    target_words_obstacle = ["left", "right", "forward", "backward"]
+    target_words_obstacle = ["left", "right", "forward", "backward","until"]
 
     if(locPhrase==[]):
        locPhrase, keywords = nlp_util.match_regex_and_keywords(
            text, r_expr_obstacle, target_words_obstacle)
 
-
     print(locPhrase)
 
   
     return locPhrase, keywords
-def get_locphrase_obstacle(text):
-    print("Beginning text:", text)
-    """ 
-    Returns the same text, with all numbers converted from English words to 
-    decimal form. 
-    Ex. "move five feet forward" returns "move 5 feet forward"
-
-    @param text: the original text (must be in lowercase)
-    """
-    quant = parser.parse(text)
-    for q in quant:
-        words = str(q).split(' ')
-        number_word = words[0]
-        number = int(q.value)
-        text = text.replace(number_word, str(number))
-    lst = text.split(' ', 1)
-    text = text if len(lst) <= 1 else lst[1]
-    print("Preprocessed texte32e23e23e:", text)
-    r_expr_obstacle = r"""
-    UntilObstacle: {((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>}
-    """
-    
-    target_verbs_obstacle = ["move","go", "drive", "stop", "travel"]
-    target_words_obstacle = ["left", "right", "forward", "backward"]
-
-    locPhrase, keywords = nlp_util.match_regex_and_keywords(
-        text, r_expr_obstacle, target_words_obstacle)
-
-
-    return locPhrase, keywords
-
 
 
 def isLocCommand(text):
@@ -121,16 +89,6 @@ def isLocCommand(text):
 
     for verb in target_verbs:
         if verb in text and len(locPhrase) > 0:
-            return True
-    locPhrase_obstacle, keywords_obstacle= get_locphrase_obstacle(text)
-
-
-    target_verbs_obstacle = ["move","go", "drive", "stop", "travel"]
-
-    print("119"+str(locPhrase_obstacle))
-
-    for verb in target_verbs_obstacle:
-        if verb in text and len(locPhrase_obstacle) > 0:
             return True
     return False
 
