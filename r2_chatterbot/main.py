@@ -7,6 +7,7 @@ from util import path_planning
 from util import object_detection
 from util import face_recognition
 from util import utils
+from util import sentiment
 from util.api import weather
 from util.api import restaurant
 from topic_classifier import get_topic
@@ -73,6 +74,8 @@ def main():
                     api_data = restaurant.lookup_restaurant_city(
                         data["info"]["location"]["name"])
                     response = make_response.make_response_api(data, api_data)
+
+                print("Sentiment: ", sentiment.analyze(speech))
                 # else:
                 #     # Q&A system
                 #     response = get_topic(speech)
