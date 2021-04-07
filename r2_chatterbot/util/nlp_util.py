@@ -1,7 +1,6 @@
 import os
 import re  # regex module
 import nltk
-import os
 from util import utils
 
 
