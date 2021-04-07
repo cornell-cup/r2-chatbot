@@ -82,6 +82,7 @@ def main():
                     response = make_response.make_response_api(data, api_data)
                 else:
                     # Q&A system
+                    print("Sentiment: ", sentiment.analyze(speech))
                     if USE_AWS:
                         response = requests.get(url+route, data = {'speech': speech})
                     else:
