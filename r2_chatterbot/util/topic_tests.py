@@ -57,11 +57,11 @@ def weather(text, parse_location=True):
     time_words = utils.load_words("data/weather_time_words.txt")
 
     chunks, keywords = nlp_util.match_regex_and_keywords(
-            text, expression, target_words)
-    #print(chunks)
+            text, expression, keywords=target_words)
+    # print("Chunks: ", chunks)
 
     #if we found a weather related phrase
-    if len(chunks) > 0:
+    if len(chunks) > 0 and chunks[0].label() != "S":
         output["test_result"] = True
         output["info"]["keywords"] = keywords
 
@@ -76,7 +76,7 @@ def weather(text, parse_location=True):
                 output["info"]["location"]["exists"] = False
                 output["info"]["location"]["name"] = ""
 
-    print(output)
+    # print("Weather output: ", output)
     return output
 
 def restaurant(text, parse_location=True):

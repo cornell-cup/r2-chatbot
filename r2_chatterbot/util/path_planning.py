@@ -148,8 +148,9 @@ def get_loc_params(phrase, mode):
     Returns the number, unit, and direction of one phrase dictating movement based on the phrase
     and the mode (1 for turning, 2 for straight movement)
     """
-    string = " ".join([word[0] for word in phrase])
-    if 'little' in string or 'bit' in string:
+    word_list = [word[0] for word in phrase]
+    string = " ".join(word_list)
+    if contains_a_word_in(word_list, little):
         print('conversion')
         print(mode)
         if mode == 1:

@@ -17,6 +17,7 @@ def isFaceRecognition(text):
     keywords_greetings = {"wave", "hello", "hi", "check", "attendance", "call me", "greetings", "what's up" }
     for item in keywords_greetings:
         if item in text.lower():
+            print("item returned: ", item)
             return True
     return False
 
@@ -35,11 +36,11 @@ def faceRecog(text):
         deleteFiles()
         if "attendance" in text:
             live_streaming.append_to_file("attendance.txt", "attendance")
-            print("created new attendance file");
+            print("created new attendance file")
         for greeting in greetings_keywords:
             if greeting in text:
                 live_streaming.append_to_file("greeting.txt", "greeting")
-                print("created new greetings file");
+                print("created new greetings file")
 
         if("call me") in text or "Call me" in text:
             name = ""
@@ -51,7 +52,7 @@ def faceRecog(text):
             for noun in nameList:
                 name = name + noun[0] + " "
             live_streaming.append_to_file("friends.txt", name)
-            print("created new attendance file with " + name);
+            print("created new attendance file with " + name)
 def deleteFiles():
     if os.path.exists("friends.txt"):
       os.remove("friends.txt")
@@ -64,7 +65,7 @@ if __name__ == "__main__":
     phrase = "call me Bob"
     phrase2 = "robot go vroom"
     print(isFaceRecognition(phrase))
-    faceRecog(phrase);
+    faceRecog(phrase)
     # with open("tests/isLoc.txt") as f:
     #     for line in f:
     #         print(line)

@@ -10,5 +10,5 @@ def analyze(s: str, confidence_thresh: int = .99) -> str:
   confidence = classification[0]['score'] 
   label = classification[0]['label']
   if confidence > confidence_thresh:
-    return label
-  return 'NEUTRAL'
+    return label, confidence
+  return 'NEUTRAL', confidence

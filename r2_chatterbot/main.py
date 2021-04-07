@@ -37,10 +37,11 @@ def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        answer = live_streaming.main()
-        speech = live_streaming.get_string(answer)
-        confidence = live_streaming.get_confidence(answer)
-        print(speech)
+        # answer = live_streaming.main()
+        # speech = live_streaming.get_string(answer)
+        # confidence = live_streaming.get_confidence(answer)
+        speech = input()
+        # print(speech)
 
         if "quit" in speech or "stop" in speech:
             break
@@ -89,7 +90,9 @@ def main():
                 # we don't want the text to be lowercase since it messes with location detection
                 response = "Sorry, I don't understand."
                 data = keywords.get_topic(speech, parse_location=False)
+                # print("Data 1: ", data)
                 keywords.modify_topic_data(data, parse_location=True)
+                # print("Data 2: ", data)
                 if "name" in data.keys() and data["name"] == "weather":
                     api_data = weather.lookup_weather_today_city(
                         data["info"]["location"]["name"])
@@ -98,8 +101,9 @@ def main():
                     api_data = restaurant.lookup_restaurant_city(
                         data["info"]["location"]["name"])
                     response = make_response.make_response_api(data, api_data)
-
-                print("Sentiment: ", sentiment.analyze(speech))
+                else: 
+                    sent, conf = sentiment.analyze(speech)
+                    response = f"Sentiment: {sent} \t Confidence: {conf}"
                 # else:
                 #     # Q&A system
                 #     response = get_topic(speech)

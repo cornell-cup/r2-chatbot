@@ -17,8 +17,8 @@ def isObjCommand(text):
     """
     target_verbs = ["grab", "get", "take", "pick"]
 
-    verbPhrase, keywords = nlp_util.match_regex_and_keywords(text, r_expr, target_verbs)
-    if len(verbPhrase) > 0:
+    verbPhrase, keywords = nlp_util.match_regex_and_keywords(text, r_expr, keywords=target_verbs)
+    if len(verbPhrase) > 0 and verbPhrase[0].label() != 'S':
         return True
     else:
         return False
