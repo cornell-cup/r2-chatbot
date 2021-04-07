@@ -7,6 +7,7 @@ from util import path_planning
 from util import object_detection
 from util import face_recognition
 from util import utils
+from util import sentiment
 from util.api import weather
 from util.api import restaurant
 from topic_classifier import get_topic
@@ -87,6 +88,7 @@ def main():
                         response = requests.get(url+route, data = {'speech': speech})
                     else:
                         response = get_answer(speech)
+
                 print(response)
                 after = time.time()
                 print(after - before)

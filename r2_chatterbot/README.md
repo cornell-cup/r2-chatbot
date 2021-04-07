@@ -1,19 +1,28 @@
 # c1c0-chatbot
 
-This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2020.
+This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2021.
+
+### Spring 2021 Team:
+Sahar Sami, Jerry Guo, Dhruv Sreenivas, Yuyi He, Junyu Wang, Kenny Cai, Anthony Cuturrufo
+
+### Fall 2020 Team:
+Sahar Sami, Jerry Guo, Matt Bean, Dhruv Sreenivas, Yuyi He
+
+### Spring 2020 Team:
+Stanley Lin, Charu Murugesan, Sahar Sami, Jerry Guo, Matt Bean
 
 ### Fall 2019 Team:
 Stanley Lin, Haomiao Liu, Charu Murugesan, Rishi Malhotra
 
-### Spring 2020 Team:
-Stanley Lin, Charu Murugesan, Sahar Sami, Jerry Guo, Matt Bean
 
 
 ## Installation
 
 Make sure you have Python 3 and at least Java 8. Also make sure you have `pip`.
+(Recommended: Use Anaconda as your Python distribution and create a virtual environment with Python 3.8 for all Chatbot work)
 
-The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech geocoder chatterbot chatterbot-corpus`
+The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech==1.3.2 geocoder numpy pandas scikit-learn quantulum3`
+(If using Anaconda, use "conda install" for numpy, pandas, scikit-learn, pyaudio, and nltk and "pip install" for everything else)
 
 If you encounter difficulties, try checking the Installation Issues section.
 
