@@ -31,7 +31,7 @@ def set_classpath():
             os.getcwd(), "dep", "stanford-ner", "stanford-ner.jar")))
     print(os.environ["CLASSPATH"])
 
-def filter_cico(line):
+def filter_cico(line, remove_question_mark = True):
     '''
     Removes any instance of "c1c0" (and other variants) from the string.
     Also filters out the word "hey" and strips some punctation/whitespace.
@@ -44,8 +44,11 @@ def filter_cico(line):
     
     for s in [r"((k|K)((i|1)k(o|0))|((c|C)(i|1)c(o|0)))", r"(h|H)ey"]:
         speech = re.sub(s, "", speech)
-    
-    speech = speech.strip(".,?!")
+
+    if remove_question_mark:
+        speech = speech.strip(".,!?")
+    else:
+        speech = speech.strip(".,!")
     speech = speech.strip()
 
     return speech
