@@ -43,26 +43,25 @@ def parse(line, expression, custom_tags = []):
 
     return parsed_text
 
-
 def is_question(line):
     '''
     Checks if a sentence is a question
 
     @param line: The sentence to check
 
-    @return: Boolean saying whether the sentence is a question
+    @return: List containing boolean saying whether the sentence is a question, and string saying type of question
     '''
-    tree = parse(line, r"question: {<W..?>}")
+    line = utils.filter_cico(line, False)
 
-    '''
-    for subtree in tree.subtrees(
-            filter=lambda tree: tree.label() == "question"):
-        print(subtree)
-    '''
-    # checks if any question chunks were found
-    return len(
-        list(tree.subtrees(
-            filter=lambda tree: tree.label() == "question"))) > 0
+    question = False
+    if '?' in line:
+        question = True
+
+    if question and len(list(tree.subtrees(filter=lambda tree: tree.label() == "question"))) > 0:
+        return True, 'wh question'
+    elif question:
+        return True, 'yes/no question'
+    return False, 'not a question'
 
 
 def search_for_location(line):

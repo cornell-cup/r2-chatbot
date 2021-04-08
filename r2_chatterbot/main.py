@@ -16,7 +16,8 @@ import re
 import sys
 import os
 # import corpus_and_adapter
-import re
+from question_answer import get_answer
+import time
 
 # for flask setup
 import requests
@@ -24,11 +25,14 @@ import json
 import io
 import socket
 
+USE_AWS = False
+
 print(os.getcwd())
 credential_path = "api_keys/speech_to_text.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 url = "http://18.216.143.187/"
+route = "chatbot_qa/"
 
 utils.set_classpath()
 
@@ -42,6 +46,7 @@ def main():
         # confidence = live_streaming.get_confidence(answer)
         speech = input()
         # print(speech)
+        before = time.time()
 
         if "quit" in speech or "stop" in speech:
             break
@@ -49,40 +54,17 @@ def main():
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
                 ("hey" in speech.lower()):
             # filter out cico since it messes with location detection
-            speech = utils.filter_cico(speech)
-
-            # if is_question(speech):
-            #     response = "Can't answer"
-                # data = keywords.get_topic(speech, parse_location=False)
-                # keywords.modify_topic_data(data, parse_location=True)
-                # if "name" in data.keys() and data["name"] == "weather":
-                #     api_data = weather.lookup_weather_today_city(
-                #         data["info"]["location"]["name"])
-                #     response = make_response.make_response_api(data, api_data)
-                # elif "name" in data.keys() and data["name"] == "restaurant":
-                #     api_data = restaurant.lookup_restaurant_city(
-                #         data["info"]["location"]["name"])
-                #     response = make_response.make_response_api(data, api_data)
-                # else: 
-                #     Q&A System
-            # else:
-                # if isFaceRec():
-                    # process face rec
-                # elif isLocCommand():
-                    # process loc command
-                # elif isObjCommand():
-                #   # process object command
-                # else:
-                    # process sentiment analysis
-
-            if face_recognition.isFaceRecognition(speech):
+            question, question_type = nlp_util.is_question(speech)
+            speech = utils.filter_cico(speech) + " "
+            print("Question type: " + question_type)
+            if not question and face_recognition.isFaceRecognition(speech):
                 print(face_recognition.faceRecog(speech))
                 # task is to transfer over to facial recognition client program
-            elif path_planning.isLocCommand(speech.lower()):
+            elif not question and path_planning.isLocCommand(speech.lower()):
                 print("Move command: ")
                 print(path_planning.process_loc(speech.lower()))
                 # task is to transfer over to path planning on the system
-            elif object_detection.isObjCommand(speech.lower()):
+            elif not question and object_detection.isObjCommand(speech.lower()):
                 print("Object to pick up: " +
                       object_detection.object_parse(speech.lower()))
                 # task is to transfer over to object detection on the system
@@ -94,20 +76,29 @@ def main():
                 keywords.modify_topic_data(data, parse_location=True)
                 # print("Data 2: ", data)
                 if "name" in data.keys() and data["name"] == "weather":
+                    keywords.modify_topic_data(data, parse_location=True)
                     api_data = weather.lookup_weather_today_city(
                         data["info"]["location"]["name"])
                     response = make_response.make_response_api(data, api_data)
                 elif "name" in data.keys() and data["name"] == "restaurant":
+                    keywords.modify_topic_data(data, parse_location=True)
                     api_data = restaurant.lookup_restaurant_city(
                         data["info"]["location"]["name"])
                     response = make_response.make_response_api(data, api_data)
-                else: 
-                    sent, conf = sentiment.analyze(speech)
-                    response = f"Sentiment: {sent} \t Confidence: {conf}"
-                # else:
-                #     # Q&A system
-                #     response = get_topic(speech)
+                else:
+                    # Q&A system
+                    if question:
+                        if USE_AWS:
+                            response = requests.get(url+route, data = {'speech': speech})
+                        else:
+                            response = get_answer(speech)
+                    else:
+                        sent, conf = sentiment.analyze(speech)
+                        response = f"Sentiment: {sent} \t Confidence: {conf}"
+
                 print(response)
+                after = time.time()
+                print("Time: ", after - before)
                 # send this element to AWS for response generation
 
                 # begin the flask transfer now
