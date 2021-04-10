@@ -106,7 +106,7 @@ def isLocCommand(text):
         return True
     text = preprocess(text)
     locPhrase, _ = get_locphrase(text)
-    print(locPhrase)
+    # print(locPhrase)
 
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
@@ -117,7 +117,6 @@ def isLocCommand(text):
     if phrases > 0 and locPhrase[0].label() != 'S':
         for phrase in locPhrase:
             words_only = [x[0] for x in phrase.leaves()]
-            print(words_only)
             if phrase.label() == "Obstacle":
                 if phrases > 1:
                     return False  # no more than 1 of this type of phrase
@@ -149,7 +148,7 @@ def get_direction(phrase):
                 return direction
 
 
-def get_loc_params(phrase, mode=None):
+def get_loc_params(phrase, label, mode=None):
     """
     Returns the number, unit, and direction of one phrase dictating movement based on the phrase
     and the mode (1 for turning, 2 for straight movement)
@@ -157,13 +156,12 @@ def get_loc_params(phrase, mode=None):
     string = " ".join([word[0] for word in phrase])
     word_list = [word[0] for word in phrase]
     string = " ".join(word_list)
-    if(parser.parse(string) == []):
+    if label == "Obstacle":  
         unit = -1
         direction = phrase[-1][0]
         return 0, -1, direction
     elif contains_a_word_in(word_list, little):
-        print('conversion')
-        print(mode)
+        print('conversion! mode: ', mode)
         if mode == 1:
             number = LITTLE_BIT_TURN
             unit = "degrees"
@@ -195,16 +193,20 @@ def process_loc(text):
     words = nltk.word_tokenize(text)
     command = []
     keyword = {}
+    modes = {}
     i = 0
     for verb in words:
         if verb == "stop":
             keyword[i] = "stop"
+            modes[i] = 0
             i = i+1
         elif verb in ["turn", "spin", "rotate"]:
             keyword[i] = "turn"
+            modes[i] = 1
             i = i+1
         elif verb in ["move", "go", "drive", "travel"]:
             keyword[i] = "move"
+            modes[i] = 2
             i = i+1
     for verb in words:
         if verb == "stop":
@@ -215,14 +217,14 @@ def process_loc(text):
         elif verb in ["move", "go", "drive", "travel"]:
             mode = 2
             break
-    print("command:"+str(mode))
     if len(locPhrase) > 1 and len(locPhrase) == i:
+        print("multiple")
         x = 0
         y = 0
         degree = 0
         prev_unit = None
         for i, phrase in enumerate(locPhrase):
-            number, unit, direction = get_loc_params(locPhrase[i])
+            number, unit, direction = get_loc_params(locPhrase[i], locPhrase[i].label(), modes[i])
             if(keyword[i] == "stop"):
                 return(command)
             elif(keyword[i] == "turn"):
@@ -263,8 +265,8 @@ def process_loc(text):
             # as the previous unit - if that's unspecified, assume meters
         return (command)
     # print(locPhrase)
-    if mode == 1:
-        number, unit, direction = get_loc_params(locPhrase[0], mode)
+    elif mode == 1:
+        number, unit, direction = get_loc_params(locPhrase[0], locPhrase[0].label(), mode)
         # print("here"+text)
         # number, unit, direction = get_loc_params_b(locPhrase[0], mode)
         # print(number)
@@ -273,13 +275,13 @@ def process_loc(text):
         if direction == "left" or direction == "counterclockwise":
             number = -1 * number
         return ("turn", round(number, 2))
-    if mode == 2:
+    elif mode == 2:
         if len(locPhrase) > 1:
             x = 0
             y = 0
             prev_unit = None
             for phrase in locPhrase:
-                number, unit, direction = get_loc_params(phrase, mode)
+                number, unit, direction = get_loc_params(phrase, phrase.label(), mode)
                 # number, unit, direction = get_loc_params_b(phrase, mode)
                 # if the unit isn't provided, assume it's the same
                 # as the previous unit - if that's unspecified, assume meters
@@ -304,7 +306,7 @@ def process_loc(text):
                     y -= number
             return (float(round(x, 2)), float(round(y, 2)))
         elif len(locPhrase) > 0:
-            number, unit, direction = get_loc_params(locPhrase[0], mode)
+            number, unit, direction = get_loc_params(locPhrase[0], locPhrase[0].label(), mode)
             # number, unit, direction = get_loc_params_b(locPhrase[0],mode)
             if(unit == -1):
                 return ("keep moving", direction)

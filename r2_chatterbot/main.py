@@ -16,7 +16,7 @@ import re
 import sys
 import os
 # import corpus_and_adapter
-from question_answer import get_answer
+# from question_answer import get_answer
 import time
 
 # for flask setup
@@ -41,11 +41,11 @@ def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        # answer = live_streaming.main()
-        # speech = live_streaming.get_string(answer)
-        # confidence = live_streaming.get_confidence(answer)
-        speech = input()
-        # print(speech)
+        answer = live_streaming.main()
+        speech = live_streaming.get_string(answer)
+        confidence = live_streaming.get_confidence(answer)
+        # speech = input()
+        print(speech)
         before = time.time()
 
         if "quit" in speech or "stop" in speech:
@@ -91,7 +91,8 @@ def main():
                         if USE_AWS:
                             response = requests.get(url+route, data = {'speech': speech})
                         else:
-                            response = get_answer(speech)
+                            # response = get_answer(speech)
+                            response = "go to question-answering"
                     else:
                         sent, conf = sentiment.analyze(speech)
                         response = f"Sentiment: {sent} \t Confidence: {conf}"
