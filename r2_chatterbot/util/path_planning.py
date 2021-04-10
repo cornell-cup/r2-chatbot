@@ -38,7 +38,7 @@ def get_locphrase(text):
     DirectionFirst: {(((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN><CD><NNS|NN|JJ>?)}
     NumberFirst: {(<CD><NNS|NN|JJ>?((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>)}
     """
-    
+
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
     target_words = ["degrees", "left", "right", "forward", "backward",
@@ -49,16 +49,15 @@ def get_locphrase(text):
     r_expr_obstacle = r"""
     UntilObstacle: {((<TO|IN>)<DT>)?<RB|VBD|JJ|VBP|NN|VBN>}
     """
-    target_verbs_obstacle = ["move","go", "drive", "stop", "travel"]
-    target_words_obstacle = ["left", "right", "forward", "backward","until"]
+    target_verbs_obstacle = ["move", "go", "drive", "stop", "travel"]
+    target_words_obstacle = ["left", "right", "forward", "backward"]
 
-    if(locPhrase==[]):
-       locPhrase, keywords = nlp_util.match_regex_and_keywords(
-           text, r_expr_obstacle, target_words_obstacle)
+    if(locPhrase == []):
+        locPhrase, keywords = nlp_util.match_regex_and_keywords(
+            text, r_expr_obstacle, target_words_obstacle)
 
     print(locPhrase)
 
-  
     return locPhrase, keywords
 
 
@@ -83,7 +82,6 @@ def isLocCommand(text):
     locPhrase, keywords = get_locphrase(text)
     # print(locPhrase)
 
-
     target_verbs = ["move", "spin", "rotate",
                     "turn", "go", "drive", "stop", "travel"]
 
@@ -93,13 +91,12 @@ def isLocCommand(text):
     return False
 
 
-
 def get_loc_params(phrase):
     string = " ".join([word[0] for word in phrase])
-    if(parser.parse(string)==[]):
-        unit=-1
+    if(parser.parse(string) == []):
+        unit = -1
         direction = phrase[-1][0]
-        return 0,-1,direction
+        return 0, -1, direction
     quant = parser.parse(string)[0]
     unit = quant.unit.name
     number = quant.value
@@ -114,7 +111,6 @@ def get_loc_params(phrase):
     return int(number), unit, direction
 
 
-
 def process_loc(text):
 
     mode = 0  # 0 for garbage, 1 for turn, 2 for move
@@ -122,25 +118,24 @@ def process_loc(text):
     text = preprocess(text)
     locPhrase, _ = get_locphrase(text)
 
-
     # tagged_list = nltk.pos_tag(nltk.word_tokenize(text))
     # verbs_and_nouns = [tup[0]
     #                    for tup in tagged_list if tup[1] == 'NN' or tup[1] == 'VB' or tup[1] == 'VBP']
     # # DEBUG THISSSS
     words = nltk.word_tokenize(text)
-    command=[]
-    keyword={}
-    i=0
+    command = []
+    keyword = {}
+    i = 0
     for verb in words:
         if verb == "stop":
-            keyword[i]="stop"
-            i=i+1
+            keyword[i] = "stop"
+            i = i+1
         elif verb in ["turn", "spin", "rotate"]:
-            keyword[i]="turn"
-            i=i+1
+            keyword[i] = "turn"
+            i = i+1
         elif verb in ["move", "go", "drive", "travel"]:
-            keyword[i]="move"
-            i=i+1
+            keyword[i] = "move"
+            i = i+1
     for verb in words:
         if verb == "stop":
             return ("stop", 0)
@@ -151,23 +146,24 @@ def process_loc(text):
             mode = 2
             break
     print("command:"+str(mode))
-    if len(locPhrase) > 1 and len(locPhrase)==i:
+    if len(locPhrase) > 1 and len(locPhrase) == i:
         x = 0
         y = 0
-        degree=0
+        degree = 0
         prev_unit = None
-        for i,phrase in enumerate(locPhrase):
+        for i, phrase in enumerate(locPhrase):
             number, unit, direction = get_loc_params(locPhrase[i])
-            if(keyword[i]=="stop"):
+            if(keyword[i] == "stop"):
                 return(command)
-            elif(keyword[i]=="turn"):
+            elif(keyword[i] == "turn"):
                 if unit == "radian":
                     number = number * 180 / math.pi
                 if direction == "left" or direction == "counterclockwise":
                     number = -1 * number
-                degree+=number
-                command.append((float(round(x, 2)),float(round(y, 2)),degree))
-            elif(keyword[i]=="move"):
+                degree += number
+                command.append(
+                    (float(round(x, 2)), float(round(y, 2)), degree))
+            elif(keyword[i] == "move"):
                 if unit == "dimensionless":
                     if prev_unit:
                         unit = prev_unit
@@ -191,7 +187,8 @@ def process_loc(text):
                 elif direction == "backward":
                     x -= number*math.cos(math.radians(degree))
                     y -= number*math.sin(math.radians(degree))
-                command.append((float(round(x, 2)),float(round(y, 2)),degree))
+                command.append(
+                    (float(round(x, 2)), float(round(y, 2)), degree))
             # if the unit isn't provided, assume it's the same
             # as the previous unit - if that's unspecified, assume meters
         return (command)
@@ -236,8 +233,8 @@ def process_loc(text):
         elif len(locPhrase) > 0:
             print("finally"+str(locPhrase))
             number, unit, direction = get_loc_params(locPhrase[0])
-            if(unit==-1):
-                return ("keep moving",direction)
+            if(unit == -1):
+                return ("keep moving", direction)
             if unit == "foot":
                 number = number * 0.3048
             number = float(round(number, 2))
