@@ -6,10 +6,10 @@ import string
 from quantulum3 import parser
 
 
-#setup for custom tags
+# setup for custom tags
 
 directions = ["forward", "forwards", "backward", "backwards", "back", "left", "right",
-"clockwise", "counterclockwise"]
+              "clockwise", "counterclockwise"]
 little = ["little", "bit", "smidge", "tiny"]
 # commands = ["move", "spin", "rotate", "turn", "go", "drive", "stop", "travel"]
 
@@ -20,6 +20,7 @@ custom_tags.append(("a", "A"))
 
 LITTLE_BIT_TURN = 15
 LITTLE_BIT_MOVE = 0.3
+
 
 def preprocess(text):
     translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
@@ -38,6 +39,7 @@ def preprocess(text):
         text = text.replace(text_to_replace, str(number))
     return text
 
+
 def test_locphrase(text):
     # experimental function for different regex parsing
     expr = r"""
@@ -51,6 +53,7 @@ def test_locphrase(text):
         text, expr, custom_tags=custom_tags)
 
     return locPhrase
+
 
 def test_locphrase(text):
     # experimental function for different regex parsing
@@ -90,9 +93,10 @@ def get_locphrase(text):
         Obstacle: {(((<TO|IN>)<DT>)?<D>)}
         """
         locPhrase, keywords = nlp_util.match_regex_and_keywords(
-        text, expr_obstacle, custom_tags=custom_tags)
+            text, expr_obstacle, custom_tags=custom_tags)
 
     return locPhrase, keywords
+
 
 def contains_a_word_in(text_list, search_words):
     """
@@ -102,6 +106,7 @@ def contains_a_word_in(text_list, search_words):
         if word in text_list:
             return True
     return False
+
 
 def isLocCommand(text):
     '''
@@ -123,15 +128,16 @@ def isLocCommand(text):
 
     phrases = len(locPhrase)
 
-    if phrases > 0 and locPhrase[0].label() != 'S': # 'S' means we essentially got garbage
+    # 'S' means we essentially got garbage
+    if phrases > 0 and locPhrase[0].label() != 'S':
         for phrase in locPhrase:
             words_only = [x[0] for x in phrase.leaves()]
             print(words_only)
             if phrase.label() == "Obstacle":
                 if phrases > 1:
-                    return False # no more than 1 of this type of phrase
+                    return False  # no more than 1 of this type of phrase
                 if contains_a_word_in(text, ["turn", "spin", "rotate"]):
-                    return False # turning commands can't be used with this type
+                    return False  # turning commands can't be used with this type
             # if it fell under the little bit phrase, check if one of the little bit words is there
             elif phrase.label() == "LittleDirection" or phrase.label() == "LittleNumber":
                 if not contains_a_word_in(words_only, little):
@@ -183,6 +189,7 @@ def get_loc_params(phrase, mode):
         number = quant.value
     direction = get_direction(phrase)
     return float(number), unit, direction
+
 
 def process_loc(text):
     """
@@ -312,6 +319,8 @@ def process_loc(text):
         elif len(locPhrase) > 0:
             number, unit, direction = get_loc_params(locPhrase[0], mode)
             # number, unit, direction = get_loc_params_b(locPhrase[0],mode)
+            if(unit == -1):
+                return ("keep moving", direction)
             if unit == "foot":
                 number = number * 0.3048
             number = float(round(number, 2))
