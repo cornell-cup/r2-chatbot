@@ -57,6 +57,8 @@ def is_question(line):
     if '?' in line:
         question = True
 
+    tree = parse(line, r"question: {<W..?>}")
+
     if question and len(list(tree.subtrees(filter=lambda tree: tree.label() == "question"))) > 0:
         return True, 'wh question'
     elif question:
