@@ -157,11 +157,7 @@ def get_loc_params(phrase, mode=None):
     string = " ".join([word[0] for word in phrase])
     word_list = [word[0] for word in phrase]
     string = " ".join(word_list)
-    if(parser.parse(string) == []):
-        unit = -1
-        direction = phrase[-1][0]
-        return 0, -1, direction
-    elif contains_a_word_in(word_list, little):
+    if contains_a_word_in(word_list, little):
         print('conversion')
         print(mode)
         if mode == 1:
@@ -170,6 +166,10 @@ def get_loc_params(phrase, mode=None):
         else:
             number = LITTLE_BIT_MOVE
             unit = "metre"
+    elif(parser.parse(string) == []):
+        unit = -1
+        direction = phrase[-1][0]
+        return 0, -1, direction
     else:
         quant = parser.parse(string)[0]
         unit = quant.unit.name
