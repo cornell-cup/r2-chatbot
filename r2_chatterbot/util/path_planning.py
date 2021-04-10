@@ -168,6 +168,10 @@ def get_loc_params(phrase, label, mode=None):
         else:
             number = LITTLE_BIT_MOVE
             unit = "metre"
+    elif(parser.parse(string) == []):
+        unit = -1
+        direction = phrase[-1][0]
+        return 0, -1, direction
     else:
         quant = parser.parse(string)[0]
         unit = quant.unit.name
