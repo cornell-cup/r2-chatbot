@@ -27,7 +27,7 @@ return format for all functions in this module
 }
 '''
 def weather(text, parse_location=True):
-    print("weather")
+    # print("weather")
     '''
     Tests if the text is about weather and identifies any time words
 
