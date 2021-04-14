@@ -91,7 +91,7 @@ def search_for_location(line):
     tree = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(line)))
     # tree.draw()
     tags = ner_tagger.tag(line.split())
-    print(tags)
+    # print(tags)
 
     # figure out the location from the Stanford tagger
     ner_location = ""

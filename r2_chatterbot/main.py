@@ -98,8 +98,8 @@ def main():
                         response = f"Sentiment: {sent} \t Confidence: {conf}"
 
                 print(response)
-                after = time.time()
-                print("Time: ", after - before)
+        after = time.time()
+        print("Time: ", after - before)
                 # send this element to AWS for response generation
 
                 # begin the flask transfer now
