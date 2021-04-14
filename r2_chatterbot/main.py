@@ -90,6 +90,12 @@ def main():
                     if question:
                         if USE_AWS:
                             response = requests.get(url+route, data = {'speech': speech})
+                            if response.ok:
+                                response = response.text
+                                response = ast.literal_eval(response)
+                                response = response['answers'][0]['answer']
+                            else:
+                                raise Exception('bad request')
                         else:
                             # response = get_answer(speech)
                             response = "go to question-answering"
