@@ -5,7 +5,7 @@ from util import utils
 # import utils
 
 
-def parse(line, expression, custom_tags = []):
+def parse(line, expression, custom_tags=[]):
     '''
     Looks for a certain type of phrase for all the sentences in a file
 
@@ -43,6 +43,7 @@ def parse(line, expression, custom_tags = []):
 
     return parsed_text
 
+
 def is_question(line):
     '''
     Checks if a sentence is a question
@@ -58,6 +59,9 @@ def is_question(line):
         question = True
 
     tree = parse(line, r"question: {<W..?>}")
+
+    # if question and tree is None:
+    #     return True, "Q/A question"
 
     if question and len(list(tree.subtrees(filter=lambda tree: tree.label() == "question"))) > 0:
         return True, 'wh question'
@@ -139,7 +143,7 @@ def search_for_location(line):
     return location if len(location) > len(ner_location) else ner_location
 
 
-def match_regex_and_keywords(line, exp, custom_tags = [], keywords=None):
+def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     '''
     Attempts to first match the nltk regular expression to the
     specified sentence. Then, for each matched chunk, determines whether

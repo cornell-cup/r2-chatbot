@@ -5,6 +5,7 @@ from util import nlp_util
 
 r = Rake()
 
+
 def extract_keywords(text):
     '''
     Finds the highest ranked keyword phrase
@@ -17,6 +18,7 @@ def extract_keywords(text):
     r = Rake()
     r.extract_keywords_from_text(text)
     return r.get_ranked_phrases()[0]
+
 
 def get_topic(phrase, parse_location=True):
     '''
@@ -49,22 +51,23 @@ def get_topic(phrase, parse_location=True):
     for x in getmembers(topic_tests):
         if(isfunction(x[1])):
             test_funcs.append(x)
-        #if (isfunction(x))
+        # if (isfunction(x))
     #test_funcs = [x for x in getmembers(topic_tests) if isfunction(x[1])]
 
     result = None
     for test in test_funcs:
         result = test[1](phrase, parse_location)
 
-        #if topic was matched
+        # if topic was matched
         if result["test_result"]:
             #print("matched %s"%(test[0]))
             result["name"] = test[0]
             return result
 
-    #may need for another function
+    # may need for another function
     result["name"] = ""
     return result
+
 
 def modify_topic_data(data, parse_location=False):
     '''
@@ -78,7 +81,7 @@ def modify_topic_data(data, parse_location=False):
     @param parse_location: whether to parse location
     '''
     if parse_location:
-        #attempt to find a location
+        # attempt to find a location
         location = nlp_util.search_for_location(data["text"])
         data["info"]["location"] = {}
         if len(location) > 0:
@@ -88,12 +91,13 @@ def modify_topic_data(data, parse_location=False):
             data["info"]["location"]["exists"] = False
             data["info"]["location"]["name"] = ""
 
+
 if __name__ == "__main__":
     #phrase = extract_keywords("what is the weather today")
     #phrase2 = extract_keywords("what is a good restaurant nearby")
-    #print(extract_keywords(phrase))
+    # print(extract_keywords(phrase))
     phrase = "weather in san francisco"
     phrase2 = "how's ithaca new york's weather"
     get_topic(phrase)
     get_topic(phrase2)
-    #print(phrase)
+    # print(phrase)

@@ -1,3 +1,8 @@
+import ast
+import socket
+import io
+import json
+import requests
 from util import live_streaming
 from util import nlp_util
 from util import keywords
@@ -18,21 +23,23 @@ import os
 # import corpus_and_adapter
 # from question_answer import get_answer
 import time
+import nltk
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
 
 # for flask setup
-import requests
-import json
-import io
-import socket
 
-USE_AWS = False
+USE_AWS = True
 
 print(os.getcwd())
 credential_path = "api_keys/speech_to_text.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
-url = "http://18.216.143.187/"
+# url = "http://18.216.143.187/"
+url = "http://3.13.116.251/"
 route = "chatbot_qa/"
+# route = "c1c0_aws_flask/r2-chatbot/r2_chatterbot_server/"
 
 utils.set_classpath()
 
@@ -41,11 +48,11 @@ def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        answer = live_streaming.main()
-        speech = live_streaming.get_string(answer)
-        confidence = live_streaming.get_confidence(answer)
-        # speech = input()
-        print(speech)
+        # answer = live_streaming.main()
+        # speech = live_streaming.get_string(answer)
+        # confidence = live_streaming.get_confidence(answer)
+        speech = input()
+        print('Question is: ' + speech)
         before = time.time()
 
         if "quit" in speech or "stop" in speech:
@@ -89,7 +96,14 @@ def main():
                     # Q&A system
                     if question:
                         if USE_AWS:
-                            response = requests.get(url+route, data = {'speech': speech})
+                            response = requests.get(
+                                url+route, params={'speech': speech})
+                            if response.ok:
+                                response = response.text
+                                response = ast.literal_eval(response)
+                                response = response['answers'][0]['answer']
+                            else:
+                                raise Exception('bad request')
                         else:
                             # response = get_answer(speech)
                             response = "go to question-answering"
@@ -97,7 +111,8 @@ def main():
                         sent, conf = sentiment.analyze(speech)
                         response = f"Sentiment: {sent} \t Confidence: {conf}"
 
-                print(response)
+                print(type(response))
+                print('Response: ' + response)
                 after = time.time()
                 print("Time: ", after - before)
                 # send this element to AWS for response generation
