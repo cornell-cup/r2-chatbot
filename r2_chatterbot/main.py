@@ -48,12 +48,13 @@ def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        # answer = live_streaming.main()
-        # speech = live_streaming.get_string(answer)
-        # confidence = live_streaming.get_confidence(answer)
-        speech = input()
+        answer = live_streaming.main()
+        speech = live_streaming.get_string(answer)
+        confidence = live_streaming.get_confidence(answer)
+        # speech = input()
         print('Question is: ' + speech)
         before = time.time()
+        response = "Sorry, I don't understand"
 
         if "quit" in speech or "stop" in speech:
             break
@@ -65,36 +66,28 @@ def main():
             speech = utils.filter_cico(speech) + " "
             print("Question type: " + question_type)
             if not question and face_recognition.isFaceRecognition(speech):
-                print(face_recognition.faceRecog(speech))
+                response = "executing facial recognition..."
+                face_recognition.faceRecog(speech)
                 # task is to transfer over to facial recognition client program
             elif not question and path_planning.isLocCommand(speech.lower()):
-                print("Move command: ")
-                print(path_planning.process_loc(speech.lower()))
+                response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
             elif not question and object_detection.isObjCommand(speech.lower()):
-                print("Object to pick up: " +
-                      object_detection.object_parse(speech.lower()))
+                response = "Object to pick up: " + object_detection.object_parse(speech.lower())
                 # task is to transfer over to object detection on the system
             else:
-                # we don't want the text to be lowercase since it messes with location detection
-                response = "Sorry, I don't understand."
-                data = keywords.get_topic(speech, parse_location=False)
-                # print("Data 1: ", data)
-                keywords.modify_topic_data(data, parse_location=True)
-                # print("Data 2: ", data)
-                if "name" in data.keys() and data["name"] == "weather":
+                if question:
+                    data = keywords.get_topic(speech, parse_location=False)
                     keywords.modify_topic_data(data, parse_location=True)
-                    api_data = weather.lookup_weather_today_city(
-                        data["info"]["location"]["name"])
-                    response = make_response.make_response_api(data, api_data)
-                elif "name" in data.keys() and data["name"] == "restaurant":
-                    keywords.modify_topic_data(data, parse_location=True)
-                    api_data = restaurant.lookup_restaurant_city(
-                        data["info"]["location"]["name"])
-                    response = make_response.make_response_api(data, api_data)
-                else:
-                    # Q&A system
-                    if question:
+                    if "name" in data.keys() and data["name"] == "weather":
+                        keywords.modify_topic_data(data, parse_location=True)
+                        api_data = weather.lookup_weather_today_city(data["info"]["location"]["name"])
+                        response = make_response.make_response_api(data, api_data)
+                    elif "name" in data.keys() and data["name"] == "restaurant":
+                        keywords.modify_topic_data(data, parse_location=True)
+                        api_data = restaurant.lookup_restaurant_city(data["info"]["location"]["name"])
+                        response = make_response.make_response_api(data, api_data)
+                    else:
                         if USE_AWS:
                             response = requests.get(
                                 url+route, params={'speech': speech})
@@ -107,14 +100,13 @@ def main():
                         else:
                             # response = get_answer(speech)
                             response = "go to question-answering"
-                    else:
-                        sent, conf = sentiment.analyze(speech)
-                        response = f"Sentiment: {sent} \t Confidence: {conf}"
+                else:
+                    sent, conf = sentiment.analyze(speech)
+                    response = f"Sentiment: {sent} \t Confidence: {conf}"
 
-                print(type(response))
-                print('Response: ' + response)
-                after = time.time()
-                print("Time: ", after - before)
+            print('Response: ' + response)
+            after = time.time()
+            print("Time: ", after - before)
                 # send this element to AWS for response generation
 
                 # begin the flask transfer now
