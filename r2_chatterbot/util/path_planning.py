@@ -161,7 +161,7 @@ def get_loc_params(phrase, label, mode=None):
         direction = phrase[-1][0]
         return 0, -1, direction
     elif contains_a_word_in(word_list, little):
-        print('conversion! mode: ', mode)
+        # print('conversion! mode: ', mode)
         if mode == 1:
             number = LITTLE_BIT_TURN
             unit = "degrees"
@@ -222,7 +222,7 @@ def process_loc(text):
             mode = 2
             break
     if len(locPhrase) > 1 and len(locPhrase) == i:
-        print("multiple")
+        # print("multiple")
         x = 0
         y = 0
         degree = 0
@@ -289,7 +289,7 @@ def process_loc(text):
                 # number, unit, direction = get_loc_params_b(phrase, mode)
                 # if the unit isn't provided, assume it's the same
                 # as the previous unit - if that's unspecified, assume meters
-                print(number, unit, direction)
+                # print(number, unit, direction)
                 if unit == "dimensionless":
                     if prev_unit:
                         unit = prev_unit
@@ -335,6 +335,6 @@ if __name__ == "__main__":
     while True:
         line = input("Command: ")
         is_command = isLocCommand(line)
-        print(is_command)
+        # print(is_command)
         if is_command:
-            print(process_loc(line))
+            process_loc(line)
