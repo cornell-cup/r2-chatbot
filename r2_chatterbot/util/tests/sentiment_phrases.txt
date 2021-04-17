@@ -1,0 +1,27 @@
+tests = [
+         "Good job", 
+         "Bad job", 
+         "I had a great day today",
+         "Okay", 
+         "I am sad", 
+         "I am happy", 
+         "Yay", 
+         "I am proud of you", 
+         "I like you", 
+         "You are my favorite toy", 
+         "You are my least favorite toy", 
+         "I hate you"
+]
+
+outputs = [('POSITIVE', 0.9998357892036438),
+ ('NEGATIVE', 0.999717116355896),
+ ('POSITIVE', 0.9998454451560974),
+ ('POSITIVE', 0.9997708797454834),
+ ('NEGATIVE', 0.9991856217384338),
+ ('POSITIVE', 0.9998801946640015),
+ ('NEUTRAL', 0.9140973687171936),
+ ('POSITIVE', 0.9998517036437988),
+ ('POSITIVE', 0.9998695254325867),
+ ('POSITIVE', 0.999557375907898),
+ ('NEGATIVE', 0.9997034072875977),
+ ('NEGATIVE', 0.9991129040718079)]
