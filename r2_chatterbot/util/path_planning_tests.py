@@ -27,7 +27,7 @@ def compare(phrase, expected_bool, expected_result = None):
         print("The phrase is: "+str(phrase)+", correct is_command output should be: "+str(expected_bool)+", instead we have: "+str(is_command))
         return 0
 
-if __name__ == "__main__":
+def test_path_planning():
     file_path = 'tests/path_planning_phrases.txt'
     total_commands = 0
     correct_commands = 0
@@ -37,12 +37,14 @@ if __name__ == "__main__":
             expected_result = None
             tup = make_tuple(line)
             phrase = tup[0]
-            # print(f"Testing phrase: {phrase}")
             expected_bool = tup[1]
             if len(tup) == 3:
                 expected_result = tup[2]
             correct_commands += compare(phrase, expected_bool, expected_result)
             # print("GOOD")
-    print("Total accuracy is "+str(correct_commands/total_commands*100)+"%")
+    return correct_commands/total_commands*100
+
+if __name__ == "__main__":
+    print("Path Planning Accuracy: "+str(test_path_planning())+"%")
             
         
