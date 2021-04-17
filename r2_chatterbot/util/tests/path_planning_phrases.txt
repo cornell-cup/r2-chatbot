@@ -50,4 +50,6 @@
 ("move forward and left a little bit", False)
 ("move forward 14 meter and turn 30 degrees to the right", True, ((0,14,0),(0,14,-30)))
 ("move forward 14 meter and turn 30 degrees to the right and move left 20 feet", True, ((0,14,0),(0,14,-30),(3.04,19.28,-30)))
+("move forward 14 meter, turn 30 degrees to the right", True, ((0,14,0),(0,14,-30)))
+("move forward 14 meter, turn 30 degrees to the right, move left 20 feet", True, ((0,14,0),(0,14,-30),(3.04,19.28,-30)))
 ("move forward 14 meter turn 30 degrees to the right and move left 20 feet", True, (0,14,0))
