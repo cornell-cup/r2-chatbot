@@ -1,27 +1,12 @@
-tests = [
-         "Good job", 
-         "Bad job", 
-         "I had a great day today",
-         "Okay", 
-         "I am sad", 
-         "I am happy", 
-         "Yay", 
-         "I am proud of you", 
-         "I like you", 
-         "You are my favorite toy", 
-         "You are my least favorite toy", 
-         "I hate you"
-]
-
-outputs = [('POSITIVE', 0.9998357892036438),
- ('NEGATIVE', 0.999717116355896),
- ('POSITIVE', 0.9998454451560974),
- ('POSITIVE', 0.9997708797454834),
- ('NEGATIVE', 0.9991856217384338),
- ('POSITIVE', 0.9998801946640015),
- ('NEUTRAL', 0.9140973687171936),
- ('POSITIVE', 0.9998517036437988),
- ('POSITIVE', 0.9998695254325867),
- ('POSITIVE', 0.999557375907898),
- ('NEGATIVE', 0.9997034072875977),
- ('NEGATIVE', 0.9991129040718079)]
+("Good job", 'POSITIVE', 0.9998357892036438)
+("Bad job", 'NEGATIVE', 0.999717116355896)
+("I had a great day today", 'POSITIVE', 0.9998454451560974)
+("Okay", 'POSITIVE', 0.9997708797454834)
+("I am sad", 'NEGATIVE', 0.9991856217384338)
+("I am happy", 'POSITIVE', 0.9998801946640015)
+("Yay", 'NEUTRAL', 0.9140973687171936)
+("I am proud of you", 'POSITIVE', 0.9998517036437988)
+("I like you", 'POSITIVE', 0.9998695254325867)
+("You are my favorite toy", 'POSITIVE', 0.999557375907898)
+("You are my least favorite toy", 'NEGATIVE', 0.9997034072875977)
+("I hate you", 'NEGATIVE', 0.9991129040718079)
