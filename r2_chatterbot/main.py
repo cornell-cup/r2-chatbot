@@ -52,7 +52,7 @@ def main():
         speech = live_streaming.get_string(answer)
         confidence = live_streaming.get_confidence(answer)
         # speech = input()
-        print('Question is: ' + speech)
+        print(speech)
         before = time.time()
         response = "Sorry, I don't understand"
 
@@ -104,7 +104,7 @@ def main():
                     sent, conf = sentiment.analyze(speech)
                     response = f"Sentiment: {sent} \t Confidence: {conf}"
 
-            print('Response: ' + response)
+            print('Response: ', response)
             after = time.time()
             print("Time: ", after - before)
                 # send this element to AWS for response generation
