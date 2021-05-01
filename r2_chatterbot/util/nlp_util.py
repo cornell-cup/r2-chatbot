@@ -2,7 +2,7 @@ import os
 import re  # regex module
 import nltk
 from util import utils
-# import utils
+#import utils
 
 
 def parse(line, expression, custom_tags=[]):
