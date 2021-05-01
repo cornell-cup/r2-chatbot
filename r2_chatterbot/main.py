@@ -56,7 +56,7 @@ def main():
         before = time.time()
         response = "Sorry, I don't understand"
 
-        if "quit" in speech or "stop" in speech:
+        if "quit" in speech.lower() or "stop" in speech.lower():
             break
 
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
@@ -73,7 +73,11 @@ def main():
                 response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
             elif not question and object_detection.isObjCommand(speech.lower()):
-                response = "Object to pick up: " + object_detection.object_parse(speech.lower())
+                pick_up = object_detection.object_parse(speech.lower())
+                if pick_up:
+                    response = "Object to pick up: " + pick_up
+                else:
+                    response = "Sorry, I can't recognize this object."
                 # task is to transfer over to object detection on the system
             else:
                 if question:

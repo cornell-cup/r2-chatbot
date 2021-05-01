@@ -47,7 +47,13 @@ def object_parse(text):
         nounsList = firstItem[0]
         for noun in nounsList:
             item = item + noun[0] + " "
-    return item
+    with open("coco.txt") as f:
+        possible_items = [line[:-1] for line in f]
+        print(possible_items)
+    print(item)
+    if item in possible_items:
+        return item
+    return None
 
 if __name__ == "__main__":
     phrase = "pick up the potato"
