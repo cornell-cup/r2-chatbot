@@ -1,4 +1,5 @@
-from haystack import Finder
+# from haystack import Finder
+from haystack.pipeline import ExtractiveQAPipeline
 from haystack.preprocessor.preprocessor import PreProcessor
 from haystack.reader.farm import FARMReader
 from haystack.utils import print_answers
@@ -10,11 +11,14 @@ from subprocess import Popen, PIPE, STDOUT
 from haystack.file_converter.txt import TextConverter
 import time
 
-os.system('docker run -d -p 9200:9200 -e "discovery.type=single-node" elasticsearch:7.6.2')
+os.system(
+    'docker run -d -p 9200:9200 -e "discovery.type=single-node" elasticsearch:7.6.2')
 
-document_store = ElasticsearchDocumentStore(host='localhost', username="", password="", index="document")
+document_store = ElasticsearchDocumentStore(
+    host='localhost', username="", password="", index="document")
 
-converter = PDFToTextConverter(remove_numeric_tables=True, valid_languages=["en"])
+converter = PDFToTextConverter(
+    remove_numeric_tables=True, valid_languages=["en"])
 converter2 = TextConverter(remove_numeric_tables=True, valid_languages=['en'])
 
 context_dir = "data/"
@@ -41,15 +45,15 @@ for filename in os.listdir(context_dir):
 
 retriever = ElasticsearchRetriever(document_store=document_store)
 
-reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
+reader = FARMReader(
+    model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
 
-finder = Finder(reader, retriever)
+finder = ExtractiveQAPipeline(reader, retriever)
 
 
 def get_answer(question):
     before = time.time()
-    prediction = finder.get_answers(question=question)
+    prediction = finder.run(query=question, top_k_retriever=10, top_k_reader=5)
     after = time.time()
     print(after - before)
     return prediction
-

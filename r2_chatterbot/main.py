@@ -48,10 +48,10 @@ def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        answer = live_streaming.main()
-        speech = live_streaming.get_string(answer)
-        confidence = live_streaming.get_confidence(answer)
-        # speech = input()
+        # answer = live_streaming.main()
+        # speech = live_streaming.get_string(answer)
+        # confidence = live_streaming.get_confidence(answer)
+        speech = input()
         print('Question is: ' + speech)
         before = time.time()
         response = "Sorry, I don't understand"
@@ -73,7 +73,8 @@ def main():
                 response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
             elif not question and object_detection.isObjCommand(speech.lower()):
-                response = "Object to pick up: " + object_detection.object_parse(speech.lower())
+                response = "Object to pick up: " + \
+                    object_detection.object_parse(speech.lower())
                 # task is to transfer over to object detection on the system
             else:
                 if question:
@@ -81,20 +82,31 @@ def main():
                     keywords.modify_topic_data(data, parse_location=True)
                     if "name" in data.keys() and data["name"] == "weather":
                         keywords.modify_topic_data(data, parse_location=True)
-                        api_data = weather.lookup_weather_today_city(data["info"]["location"]["name"])
-                        response = make_response.make_response_api(data, api_data)
+                        api_data = weather.lookup_weather_today_city(
+                            data["info"]["location"]["name"])
+                        response = make_response.make_response_api(
+                            data, api_data)
                     elif "name" in data.keys() and data["name"] == "restaurant":
                         keywords.modify_topic_data(data, parse_location=True)
-                        api_data = restaurant.lookup_restaurant_city(data["info"]["location"]["name"])
-                        response = make_response.make_response_api(data, api_data)
+                        api_data = restaurant.lookup_restaurant_city(
+                            data["info"]["location"]["name"])
+                        response = make_response.make_response_api(
+                            data, api_data)
                     else:
                         if USE_AWS:
                             response = requests.get(
                                 url+route, params={'speech': speech})
                             if response.ok:
                                 response = response.text
+                                # print(response)
                                 response = ast.literal_eval(response)
-                                response = response['answers'][0]['answer']
+                                answers = response['answers']
+                                # for i in range(len(answers)):
+                                #     print(f'Answer {i}: {answers[i]}')
+
+                                # this is response with highest score, we need to keep all answers somewhere
+                                # response = response['answers'][0]['answer']
+                                response = response['answers']
                             else:
                                 raise Exception('bad request')
                         else:
@@ -104,12 +116,31 @@ def main():
                     sent, conf = sentiment.analyze(speech)
                     response = f"Sentiment: {sent} \t Confidence: {conf}"
 
-            print('Response: ' + response)
-            after = time.time()
-            print("Time: ", after - before)
-                # send this element to AWS for response generation
+            if type(response) == list:
+                i = 0
+                while i < len(response):
+                    answer = response[i]['answer']
+                    if i == 0:
+                        print(
+                            f'I think the answer is {answer}. Is this correct?')
+                    else:
+                        print(f'Ok, got it. Is the answer then {answer}?')
+                    user_response = input().lower()
 
-                # begin the flask transfer now
+                    # very simple interface, we can also experiment with if the user supplies the actual answer that they want
+                    # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
+                    if 'yes' in user_response:
+                        print('Ayy we love to see it')
+                        break
+                    else:
+                        i += 1
+            else:
+                print('Response: ' + response)
+                after = time.time()
+                print("Time: ", after - before)
+            # send this element to AWS for response generation
+
+            # begin the flask transfer now
 
 
 if __name__ == '__main__':
