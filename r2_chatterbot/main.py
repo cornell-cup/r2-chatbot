@@ -3,6 +3,7 @@ import socket
 import io
 import json
 import requests
+import pandas as pd
 from util import live_streaming
 from util import nlp_util
 from util import keywords
@@ -24,6 +25,7 @@ import os
 # from question_answer import get_answer
 import time
 import nltk
+import random
 nltk.download('averaged_perceptron_tagger')
 nltk.download('maxent_ne_chunker')
 nltk.download('words')
@@ -42,6 +44,25 @@ route = "chatbot_qa/"
 # route = "c1c0_aws_flask/r2-chatbot/r2_chatterbot_server/"
 
 utils.set_classpath()
+
+# saved answers setup
+if os.path.exists('./saved_answers.csv'):
+    saved_answers = pd.read_csv('./saved_answers.csv').to_dict()
+else:
+    saved_answers = {}
+
+# bad punctuation for cleaning string (no question mark)
+punctuations = '''!()-[]{};:'"\,<>./@#$%^&*_~'''
+
+
+def no_punct(string):
+    no_punct = ''
+    for char in string:
+        if char not in punctuations:
+            no_punct += char
+
+    no_punct = no_punct.strip()
+    return no_puct
 
 
 def main():
@@ -85,37 +106,95 @@ def main():
                     keywords.modify_topic_data(data, parse_location=True)
                     if "name" in data.keys() and data["name"] == "weather":
                         keywords.modify_topic_data(data, parse_location=True)
-                        api_data = weather.lookup_weather_today_city(data["info"]["location"]["name"])
-                        response = make_response.make_response_api(data, api_data)
+                        api_data = weather.lookup_weather_today_city(
+                            data["info"]["location"]["name"])
+                        response = make_response.make_response_api(
+                            data, api_data)
                     elif "name" in data.keys() and data["name"] == "restaurant":
                         keywords.modify_topic_data(data, parse_location=True)
-                        api_data = restaurant.lookup_restaurant_city(data["info"]["location"]["name"])
-                        response = make_response.make_response_api(data, api_data)
+                        api_data = restaurant.lookup_restaurant_city(
+                            data["info"]["location"]["name"])
+                        response = make_response.make_response_api(
+                            data, api_data)
                     else:
-                        if USE_AWS:
-                            response = requests.get(
-                                url+route, params={'speech': speech})
-                            if response.ok:
-                                response = response.text
-                                response = ast.literal_eval(response)
-                                response = response['answers'][0]['answer']
-                            else:
-                                raise Exception('bad request')
+                        # Q/A section
+
+                        # check if question in saved answers (if, so we don't need to go to AWS)
+                        clean_q = no_punct(speech)
+                        if clean_q in saved_answers:
+                            # choose random answer (all are guaranteed correct if they're here)
+                            all_good_answers = []
+                            idx = random.randint(0, len(all_good_answers))
+                            response = all_good_answers[idx]
                         else:
-                            # response = get_answer(speech)
-                            response = "go to question-answering"
+                            if USE_AWS:
+                                response = requests.get(
+                                    url+route, params={'speech': speech})
+                                if response.ok:
+                                    response = response.text
+                                    # print(response)
+                                    response = ast.literal_eval(response)
+                                    answers = response['answers']
+                                    # for i in range(len(answers)):
+                                    #     print(f'Answer {i}: {answers[i]}')
+
+                                    # this is response with highest score, we need to keep all answers somewhere
+                                    # response = response['answers'][0]['answer']
+                                    response = response['answers']
+                                else:
+                                    raise Exception('bad request')
+                            else:
+                                # response = get_answer(speech)
+                                response = "go to question-answering"
                 else:
                     sent, conf = sentiment.analyze(speech)
                     response = f"Sentiment: {sent} \t Confidence: {conf}"
 
-            print('Response: ', response)
-            after = time.time()
-            print("Time: ", after - before)
-                # send this element to AWS for response generation
+            if type(response) == list:
+                i = 0
+                while i < len(response):
+                    answer = response[i]['answer']
+                    if i == 0:
+                        print(
+                            f'I think the answer is {answer}. Is this correct?')
+                    else:
+                        print(f'Ok, got it. Is the answer then {answer}?')
+                    user_response = input().lower()
 
-                # begin the flask transfer now
+                    # very simple interface, we can also experiment with if the user supplies the actual answer that they want
+                    # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
+                    if 'yes' in user_response or 'yeah' in user_response:
+                        # save question/answer pair
+                        clean_q = no_punct(speech)
+                        saved_answers[clean_q] = [answer]
+
+                        print('Ayy we love to see it. Any others that I should know?')
+
+                        # assumes response is just answers, no other small talk
+                        new_words = input().split(', ')
+                        saved_answers[clean_q] += new_words
+                        break
+                    else:
+                        i += 1
+            else:
+                print('Response: ' + response)
+                after = time.time()
+                print("Time: ", after - before)
+            # send this element to AWS for response generation
+
+            # begin the flask transfer now
 
 
 if __name__ == '__main__':
     # playsound('sounds/cicoremix.mp3')
     main()
+
+    # need to save the new saved_answers thing into a csv
+    import csv
+    save_file = open('./saved_answers.csv', 'w+')
+    writer = csv.writer(save_file)
+
+    for key, value in saved_answers.items():
+        writer.writerow([key, value])
+
+    save_file.close()
