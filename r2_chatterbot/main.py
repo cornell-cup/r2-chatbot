@@ -72,7 +72,7 @@ def main():
             elif not question and path_planning.isLocCommand(speech.lower()):
                 response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
-            elif not question and object_detection.isObjCommand(speech.lower()):
+            elif (not question or question_type == "yes/no question") and object_detection.isObjCommand(speech.lower()):
                 pick_up = object_detection.object_parse(speech.lower())
                 if pick_up:
                     response = "Object to pick up: " + pick_up

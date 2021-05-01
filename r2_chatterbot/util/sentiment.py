@@ -1,6 +1,9 @@
-from transformers import pipeline
+# from transformers import pipeline
 
-classifier = pipeline('sentiment-analysis')
+# classifier = pipeline('sentiment-analysis')
+import pickle
+c = pickle.load( open( "/Users/anthonycuturrufo/Downloads/classifier.p", "rb" ) )
+
 '''
 Takes in [s: str] and returns either 'POSITIVE', 'NEGATIVE' or 'NEUTRAL'
 Optionally: [confidence_thresh] to make 'NEUTRAL' more or less sensitive
