@@ -1,8 +1,11 @@
 import os
 import re  # regex module
 import nltk
-from util import utils
-#import utils
+# from util import utils
+import utils
+import numpy as np
+from pyphonetics import Soundex
+from pyphonetics import Metaphone
 
 
 def parse(line, expression, custom_tags=[]):
@@ -186,8 +189,31 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     return (matched_chunks, matched_keywords)
 
 
+def replace_similar_words(line, correct_words, sim_threshold):
+    soundex = Soundex()
+    metaphone = Metaphone()
+    for i in range(len(correct_words)):
+        for j in range(len(line)):
+            correct_word = correct_words[i]
+            word = line[j]
+            temp_sim_threshold = sim_threshold
+            print(word)
+            print(correct_word)
+
+            similarity = 0.5 * soundex.distance(word, correct_word, metric='levenshtein') + 0.5 * metaphone.distance(word, correct_word, metric='levenshtein')
+            print(similarity)
+
+            if similarity <= temp_sim_threshold and correct_word != word:
+                line[j] = correct_word
+                temp_sim_threshold = similarity
+                print("replaced " + word + " with " + correct_word)
+            print("similarity: " + str(similarity))
+            print("threshold: " + str(temp_sim_threshold) + "\n")
+    return line
+
+
 if __name__ == "__main__":
     with open("tests/not_questions.txt") as f:
         for line in f:
             print(is_question(line))
-            #print(match_regex_and_keywords(line, ""))
+            print(match_regex_and_keywords(line, ""))
