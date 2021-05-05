@@ -62,7 +62,7 @@ def no_punct(string):
             no_punct += char
 
     no_punct = no_punct.strip()
-    return no_puct
+    return no_punct
 
 
 def main():
@@ -159,7 +159,10 @@ def main():
                             f'I think the answer is {answer}. Is this correct?')
                     else:
                         print(f'Ok, got it. Is the answer then {answer}?')
-                    user_response = input().lower()
+                    user_response = live_streaming.main()
+                    user_response = live_streaming.get_string(user_response)
+                    user_response = user_response.lower()
+                    print(user_response)
 
                     # very simple interface, we can also experiment with if the user supplies the actual answer that they want
                     # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
@@ -168,7 +171,7 @@ def main():
                         clean_q = no_punct(speech)
                         saved_answers[clean_q] = [answer]
 
-                        print('Ayy we love to see it. Any others that I should know?')
+                        print('Great! Any others that I should know?')
 
                         # assumes response is just answers, no other small talk
                         new_words = input().split(', ')
@@ -177,7 +180,7 @@ def main():
                     else:
                         i += 1
             else:
-                print('Response: ' + response)
+                print('Response: ', response)
                 after = time.time()
                 print("Time: ", after - before)
             # send this element to AWS for response generation
