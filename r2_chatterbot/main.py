@@ -40,7 +40,8 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 # url = "http://18.216.143.187/"
 url = "http://3.13.116.251/"
-route = "chatbot_qa/"
+chatbot_qa_route = "chatbot_qa/"
+sentiment_qa_route = "sentiment_analysis/"
 # route = "c1c0_aws_flask/r2-chatbot/r2_chatterbot_server/"
 
 utils.set_classpath()
@@ -126,7 +127,7 @@ def main():
                         else:
                             if USE_AWS:
                                 response = requests.get(
-                                    url+route, params={'speech': speech})
+                                    url+chatbot_qa_route, params={'speech': speech})
                                 if response.ok:
                                     response = response.text
                                     # print(response)
@@ -144,8 +145,16 @@ def main():
                                 # response = get_answer(speech)
                                 response = "go to question-answering"
                 else:
-                    sent, conf = sentiment.analyze(speech)
-                    response = f"Sentiment: {sent} \t Confidence: {conf}"
+                    if USE_AWS:
+                        response = requests.get(
+                            url + sentiment_qa_route, params={'speech': speech})
+                        if response.ok:
+                            print('AWS worked')
+                            response = response.text
+                    else:
+                        print('AWS was not used')
+                        sent, conf = sentiment.analyze(speech)
+                        response = f"Sentiment: {sent} \t Confidence: {conf}"
 
             if type(response) == list:
                 i = 0
