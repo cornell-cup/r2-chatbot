@@ -10,11 +10,15 @@ from quantulum3 import parser
 
 directions = ["forward", "forwards", "backward", "backwards", "back", "left", "right",
               "clockwise", "counterclockwise"]
+directions_obstacles = ["forward", "forwards",
+                        "backward", "backwards", "back", "left", "right"]
 little = ["little", "bit", "smidge", "tiny"]
 # commands = ["move", "spin", "rotate", "turn", "go", "drive", "stop", "travel"]
 
 custom_tags = [(d, "D") for d in directions]
 custom_tags.append(("a", "A"))
+custom_tags_obstacle = [(d, "D") for d in directions_obstacles]
+custom_tags_obstacle.append(("a", "A"))
 
 # defining constants for small movements
 
@@ -51,6 +55,7 @@ def test_locphrase(text):
     """
     locPhrase, keywords = nlp_util.match_regex_and_keywords(
         text, expr, custom_tags=custom_tags)
+    print(locPhrase)
 
     return locPhrase
 
@@ -78,7 +83,8 @@ def get_locphrase(text):
         Obstacle: {(((<TO|IN>)<DT>)?<D>)}
         """
         locPhrase, keywords = nlp_util.match_regex_and_keywords(
-            text, expr_obstacle, custom_tags=custom_tags)
+            text, expr_obstacle, custom_tags=custom_tags_obstacle)
+    print(locPhrase)
 
     return locPhrase, keywords
 
@@ -156,7 +162,7 @@ def get_loc_params(phrase, label, mode=None):
     string = " ".join([word[0] for word in phrase])
     word_list = [word[0] for word in phrase]
     string = " ".join(word_list)
-    if label == "Obstacle":  
+    if label == "Obstacle":
         unit = -1
         direction = phrase[-1][0]
         return 0, -1, direction
@@ -228,7 +234,8 @@ def process_loc(text):
         degree = 0
         prev_unit = None
         for i, phrase in enumerate(locPhrase):
-            number, unit, direction = get_loc_params(locPhrase[i], locPhrase[i].label(), modes[i])
+            number, unit, direction = get_loc_params(
+                locPhrase[i], locPhrase[i].label(), modes[i])
             if(keyword[i] == "stop"):
                 return(command)
             elif(keyword[i] == "turn"):
@@ -270,22 +277,90 @@ def process_loc(text):
         return (command)
     # print(locPhrase)
     elif mode == 1:
-        number, unit, direction = get_loc_params(locPhrase[0], locPhrase[0].label(), mode)
+        if len(locPhrase) > 2:
+            command = []
+            final_degree = 0
+
+            for phrase in locPhrase:
+                number, unit, direction = get_loc_params(
+                    phrase, phrase.label(), mode)
+                # number, unit, direction = get_loc_params_b(phrase, mode)
+                # if the unit isn't provided, assume it's the same
+                # as the previous unit - if that's unspecified, assume meters
+                # print(number, unit, direction)
+                if unit == "radian":
+                    number = number * 180 / math.pi
+                if direction == "left" or direction == "counterclockwise":
+                    number = -1 * number
+                final_degree = final_degree+number
+                command.append(round(final_degree, 2))
+            return ("turn", command)
+        elif len(locPhrase) > 1:
+            final_degree = 0
+            for phrase in locPhrase:
+                number, unit, direction = get_loc_params(
+                    phrase, phrase.label(), mode)
+                # number, unit, direction = get_loc_params_b(phrase, mode)
+                # if the unit isn't provided, assume it's the same
+                # as the previous unit - if that's unspecified, assume meters
+                # print(number, unit, direction)
+                if unit == "radian":
+                    number = number * 180 / math.pi
+                if direction == "left" or direction == "counterclockwise":
+                    number = -1 * number
+                final_degree = final_degree+number
+            return ("turn", round(final_degree, 2))
+        else:
+            number, unit, direction = get_loc_params(
+                locPhrase[0], locPhrase[0].label(), mode)
         # print("here"+text)
         # number, unit, direction = get_loc_params_b(locPhrase[0], mode)
         # print(number)
-        if unit == "radian":
-            number = number * 180 / math.pi
-        if direction == "left" or direction == "counterclockwise":
-            number = -1 * number
-        return ("turn", round(number, 2))
+            if unit == "radian":
+                number = number * 180 / math.pi
+            if direction == "left" or direction == "counterclockwise":
+                number = -1 * number
+            return ("turn", round(number, 2))
     elif mode == 2:
-        if len(locPhrase) > 1:
+        if len(locPhrase) > 2:
+            command = []
             x = 0
             y = 0
             prev_unit = None
             for phrase in locPhrase:
-                number, unit, direction = get_loc_params(phrase, phrase.label(), mode)
+                number, unit, direction = get_loc_params(
+                    phrase, phrase.label(), mode)
+                # number, unit, direction = get_loc_params_b(phrase, mode)
+                # if the unit isn't provided, assume it's the same
+                # as the previous unit - if that's unspecified, assume meters
+                # print(number, unit, direction)
+                if unit == "dimensionless":
+                    if prev_unit:
+                        unit = prev_unit
+                    else:
+                        unit = "metre"
+                        prev_unit = unit
+                else:
+                    prev_unit = unit
+                if unit == "foot":
+                    number = number * 0.3048
+                if direction == "forward":
+                    y += number
+                elif direction == "left":
+                    x -= number
+                elif direction == "right":
+                    x += number
+                elif direction == "backward" or direction == "backwards":
+                    y -= number
+                command.append((float(round(x, 2)), float(round(y, 2))))
+            return ("move", command)
+        elif len(locPhrase) > 1:
+            x = 0
+            y = 0
+            prev_unit = None
+            for phrase in locPhrase:
+                number, unit, direction = get_loc_params(
+                    phrase, phrase.label(), mode)
                 # number, unit, direction = get_loc_params_b(phrase, mode)
                 # if the unit isn't provided, assume it's the same
                 # as the previous unit - if that's unspecified, assume meters
@@ -310,7 +385,8 @@ def process_loc(text):
                     y -= number
             return (float(round(x, 2)), float(round(y, 2)))
         elif len(locPhrase) > 0:
-            number, unit, direction = get_loc_params(locPhrase[0], locPhrase[0].label(), mode)
+            number, unit, direction = get_loc_params(
+                locPhrase[0], locPhrase[0].label(), mode)
             # number, unit, direction = get_loc_params_b(locPhrase[0],mode)
             if(unit == -1):
                 return ("keep moving", direction)
