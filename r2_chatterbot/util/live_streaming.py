@@ -229,10 +229,14 @@ def sub_main(profanityFilterBool):
         "boost": 0
     }
     movement_words = {
-        "phrases" : ["move", "feet", "meters", "turn", "go", "drive", "spin", "rotate", "travel", "ft", "forward", "right", "left", "backward"],
-        "boost": 20.0
+        "phrases" : ["move", "feet", "meters", "turn", "go", "drive", "spin", "rotate", "travel", "ft", "forward", "right", "left", "backward", "degrees", "radians"],
+        "boost": 30.0
     }
-    speech_contexts = [sp_c_cico, sp_c_kiko]
+    relevant_words = {
+        "phrases": "cornell cup robotics", 
+        "boost": 10.0
+    }
+    speech_contexts = [sp_c_cico, sp_c_kiko, movement_words, relevant_words]
     client = speech_v1p1beta1.SpeechClient()
     # print(help(types.RecognitionConfig))
     config = types.RecognitionConfig(

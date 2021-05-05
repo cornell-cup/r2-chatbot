@@ -171,11 +171,15 @@ def main():
                         clean_q = no_punct(speech)
                         saved_answers[clean_q] = [answer]
 
-                        print('Great! Any others that I should know?')
-
-                        # assumes response is just answers, no other small talk
-                        new_words = input().split(', ')
-                        saved_answers[clean_q] += new_words
+                        print('Great! Any other answers that I should know? Otherwise, say \"done\".')
+                        user_response = live_streaming.main()
+                        user_response = live_streaming.get_string(user_response)
+                        user_response = user_response.lower()
+                        print(user_response)
+                        if "done" not in user_response:
+                            # assumes response is just answers, no other small talk
+                            new_words = input().split(', ')
+                            saved_answers[clean_q] += new_words
                         break
                     else:
                         i += 1
