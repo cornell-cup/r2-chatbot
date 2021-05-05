@@ -63,22 +63,22 @@ def no_punct(string):
             no_punct += char
 
     no_punct = no_punct.strip()
-    return no_puct
+    return no_punct
 
 
 def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        # answer = live_streaming.main()
-        # speech = live_streaming.get_string(answer)
-        # confidence = live_streaming.get_confidence(answer)
-        speech = input()
-        print('Question is: ' + speech)
+        answer = live_streaming.main()
+        speech = live_streaming.get_string(answer)
+        confidence = live_streaming.get_confidence(answer)
+        # speech = input()
+        print(speech)
         before = time.time()
         response = "Sorry, I don't understand"
 
-        if "quit" in speech or "stop" in speech:
+        if "quit" in speech.lower() or "stop" in speech.lower():
             break
 
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
@@ -94,9 +94,12 @@ def main():
             elif not question and path_planning.isLocCommand(speech.lower()):
                 response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
-            elif not question and object_detection.isObjCommand(speech.lower()):
-                response = "Object to pick up: " + \
-                    object_detection.object_parse(speech.lower())
+            elif (not question or question_type == "yes/no question") and object_detection.isObjCommand(speech.lower()):
+                pick_up = object_detection.object_parse(speech.lower())
+                if pick_up:
+                    response = "Object to pick up: " + pick_up
+                else:
+                    response = "Sorry, I can't recognize this object."
                 # task is to transfer over to object detection on the system
             else:
                 if question:
@@ -165,7 +168,10 @@ def main():
                             f'I think the answer is {answer}. Is this correct?')
                     else:
                         print(f'Ok, got it. Is the answer then {answer}?')
-                    user_response = input().lower()
+                    user_response = live_streaming.main()
+                    user_response = live_streaming.get_string(user_response)
+                    user_response = user_response.lower()
+                    print(user_response)
 
                     # very simple interface, we can also experiment with if the user supplies the actual answer that they want
                     # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
@@ -174,16 +180,20 @@ def main():
                         clean_q = no_punct(speech)
                         saved_answers[clean_q] = [answer]
 
-                        print('Ayy we love to see it. Any others that I should know?')
-
-                        # assumes response is just answers, no other small talk
-                        new_words = input().split(', ')
-                        saved_answers[clean_q] += new_words
+                        print('Great! Any other answers that I should know? Otherwise, say \"done\".')
+                        user_response = live_streaming.main()
+                        user_response = live_streaming.get_string(user_response)
+                        user_response = user_response.lower()
+                        print(user_response)
+                        if "done" not in user_response:
+                            # assumes response is just answers, no other small talk
+                            new_words = input().split(', ')
+                            saved_answers[clean_q] += new_words
                         break
                     else:
                         i += 1
             else:
-                print('Response: ' + response)
+                print('Response: ', response)
                 after = time.time()
                 print("Time: ", after - before)
             # send this element to AWS for response generation

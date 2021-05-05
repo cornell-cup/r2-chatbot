@@ -221,14 +221,22 @@ def sub_main(profanityFilterBool):
     # for a list of supported languages.
     language_code = 'en-US'  # a BCP-47 language tag
     sp_c_cico = {
-        "phrases": ["cico", "Hey cico"],
-        "boost": 20.0
+        "phrases": ["Hey cico", "Hey Kiko"],
+        "boost": 30.0
     }  # speech_contexts_cico
     sp_c_kiko = {
-        "phrases": ["Hey Kiko", "kiko", "Kiko", "kygo", "Kitty, girl"],
+        "phrases": ["cico", "Cico", "kiko", "Kiko", "kygo", "Kitty, girl"],
         "boost": 0
     }
-    speech_contexts = [sp_c_cico, sp_c_kiko]
+    movement_words = {
+        "phrases" : ["move", "feet", "meters", "turn", "go", "drive", "spin", "rotate", "travel", "ft", "forward", "right", "left", "backward", "degrees", "radians"],
+        "boost": 30.0
+    }
+    relevant_words = {
+        "phrases": "cornell cup robotics", 
+        "boost": 10.0
+    }
+    speech_contexts = [sp_c_cico, sp_c_kiko, movement_words, relevant_words]
     client = speech_v1p1beta1.SpeechClient()
     # print(help(types.RecognitionConfig))
     config = types.RecognitionConfig(
@@ -292,7 +300,7 @@ def main():
     words boosted
     """
     response = sub_main(True)
-    switches = {'kiko': 'c1c0'}  # the words to replace
+    switches = {'kiko': 'c1c0', "Kiko": "c1c0"}  # the words to replace
 
     result = filter(response, switches)
     return result
