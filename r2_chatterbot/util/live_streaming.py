@@ -229,11 +229,15 @@ def sub_main(profanityFilterBool):
         "boost": 0
     }
     movement_words = {
-        "phrases" : ["move", "feet", "meters", "turn", "go", "drive", "spin", "rotate", "travel", "ft", "forward", "right", "left", "backward", "degrees", "radians"],
-        "boost": 30.0
+        "phrases" : ["move", "feet", "meters", "turn", "go", "drive", "spin", "rotate", "travel", "ft", "forward", "right", "left", "backward", "degrees", "radians", "to the left", "to the right"],
+        "boost": 20.0
+    }
+    numbers = {
+        "phrases": ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"],
+        "boost": 5.0
     }
     relevant_words = {
-        "phrases": "cornell cup robotics", 
+        "phrases": ["cornell cup robotics", "and", "pick up", "grab", "done"],
         "boost": 10.0
     }
     speech_contexts = [sp_c_cico, sp_c_kiko, movement_words, relevant_words]
