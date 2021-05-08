@@ -13,11 +13,11 @@ directions = ["forward", "forwards", "backward", "backwards", "back", "left", "r
 directions_obstacles = ["forward", "forwards",
                         "backward", "backwards", "back", "left", "right"]
 little = ["little", "bit", "smidge", "tiny"]
-# commands = ["move", "spin", "rotate", "turn", "go", "drive", "stop", "travel"]
+commands = ["move", "spin", "rotate", "turn", "go", "drive", "stop", "travel"]
 
-custom_tags = [(d, "D") for d in directions]
+custom_tags = [(d, "D") for d in directions] + [(c, "V") for c in commands]
 custom_tags.append(("a", "A"))
-custom_tags_obstacle = [(d, "D") for d in directions_obstacles]
+custom_tags_obstacle = [(d, "D") for d in directions_obstacles] + [(c, "V") for c in commands]
 custom_tags_obstacle.append(("a", "A"))
 
 # defining constants for small movements
@@ -111,6 +111,7 @@ def isLocCommand(text):
     if text == "stop":
         return True
     text = preprocess(text)
+    print("Text: ", text)
     locPhrase, _ = get_locphrase(text)
     # print(locPhrase)
 

@@ -13,7 +13,7 @@ from util import path_planning
 from util import object_detection
 from util import face_recognition
 from util import utils
-from util import sentiment
+# from util import sentiment
 from util.api import weather
 from util.api import restaurant
 from topic_classifier import get_topic
@@ -91,8 +91,8 @@ def main():
                 response = "executing facial recognition..."
                 face_recognition.faceRecog(speech)
                 # task is to transfer over to facial recognition client program
-            elif not question and path_planning.isLocCommand(speech.lower()):
-                response = path_planning.process_loc(speech.lower())
+            elif not question and path_planning.isLocCommand(no_punct(speech.lower())):
+                response = path_planning.process_loc(no_punct(speech.lower()))
                 # task is to transfer over to path planning on the system
             elif (not question or question_type == "yes/no question") and object_detection.isObjCommand(speech.lower()):
                 pick_up = object_detection.object_parse(speech.lower())
@@ -189,8 +189,9 @@ def main():
                             response = response.text
                     else:
                         print('AWS was not used')
-                        sent, conf = sentiment.analyze(speech)
-                        response = f"Sentiment: {sent} \t Confidence: {conf}"
+                        response = "go to sentiment analysis"
+                        # sent, conf = sentiment.analyze(speech)
+                        # response = f"Sentiment: {sent} \t Confidence: {conf}"
             print('Response: ', response)
             after = time.time()
             print("Time: ", after - before)
