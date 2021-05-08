@@ -32,12 +32,14 @@ pymongo==3.10.1
 python-dateutil==2.7.5
 pytz==2019.3
 PyYAML==5.1.2
+quantulum3==0.7.6
 rake-nltk==1.0.4
 ratelim==0.1.6
 regex==2020.4.4
 requests==2.23.0
 rsa==4.0
 six==1.14.0
+scikit-learn
 spacy==2.1.9
 SQLAlchemy==1.2.19
 srsly==1.0.2
