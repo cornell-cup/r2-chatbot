@@ -261,12 +261,13 @@ def process_loc(text):
                     x += number*math.cos(math.radians(degree))
                     y += number*math.sin(math.radians(degree))
                 elif direction == "left":
-                    x += number*math.cos(math.radians(degree-90))
-                    y += number*math.sin(math.radians(degree-90))
+                    degree = degree-90
+                    x += number*math.cos(math.radians(degree))
+                    y += number*math.sin(math.radians(degree))
                 elif direction == "right":
-                    x += number*math.cos(math.radians(degree+90))
-                    y += number*math.sin(math.radians(degree+90))
-
+                    degree = degree+90
+                    x += number*math.cos(math.radians(degree))
+                    y += number*math.sin(math.radians(degree))
                 elif direction == "backward":
                     x -= number*math.cos(math.radians(degree))
                     y -= number*math.sin(math.radians(degree))
