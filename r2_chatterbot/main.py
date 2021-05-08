@@ -40,7 +40,8 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 # url = "http://18.216.143.187/"
 url = "http://3.13.116.251/"
-route = "chatbot_qa/"
+chatbot_qa_route = "chatbot_qa/"
+sentiment_qa_route = "sentiment_analysis/"
 # route = "c1c0_aws_flask/r2-chatbot/r2_chatterbot_server/"
 
 utils.set_classpath()
@@ -129,7 +130,7 @@ def main():
                         else:
                             if USE_AWS:
                                 response = requests.get(
-                                    url+route, params={'speech': speech})
+                                    url+chatbot_qa_route, params={'speech': speech})
                                 if response.ok:
                                     response = response.text
                                     # print(response)
@@ -146,47 +147,53 @@ def main():
                             else:
                                 # response = get_answer(speech)
                                 response = "go to question-answering"
+                        if type(response) == list:
+                            i = 0
+                            while i < len(response):
+                                answer = response[i]['answer']
+                                if i == 0:
+                                    print(
+                                        f'I think the answer is {answer}. Is this correct?')
+                                else:
+                                    print(f'Ok, got it. Is the answer then {answer}?')
+                                user_response = live_streaming.main()
+                                user_response = live_streaming.get_string(user_response)
+                                user_response = user_response.lower()
+                                print(user_response)
+
+                                # very simple interface, we can also experiment with if the user supplies the actual answer that they want
+                                # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
+                                if 'yes' in user_response or 'yeah' in user_response:
+                                    # save question/answer pair
+                                    clean_q = no_punct(speech)
+                                    saved_answers[clean_q] = [answer]
+
+                                    print('Great! Any other answers that I should know? Otherwise, say \"done\".')
+                                    user_response = live_streaming.main()
+                                    user_response = live_streaming.get_string(user_response)
+                                    user_response = user_response.lower()
+                                    print(user_response)
+                                    if "done" not in user_response:
+                                        # assumes response is just answers, no other small talk
+                                        new_words = input().split(', ')
+                                        saved_answers[clean_q] += new_words
+                                    break
+                                else:
+                                    i += 1
                 else:
-                    sent, conf = sentiment.analyze(speech)
-                    response = f"Sentiment: {sent} \t Confidence: {conf}"
-
-            if type(response) == list:
-                i = 0
-                while i < len(response):
-                    answer = response[i]['answer']
-                    if i == 0:
-                        print(
-                            f'I think the answer is {answer}. Is this correct?')
+                    if USE_AWS:
+                        response = requests.get(
+                            url + sentiment_qa_route, params={'speech': speech})
+                        if response.ok:
+                            print('AWS worked')
+                            response = response.text
                     else:
-                        print(f'Ok, got it. Is the answer then {answer}?')
-                    user_response = live_streaming.main()
-                    user_response = live_streaming.get_string(user_response)
-                    user_response = user_response.lower()
-                    print(user_response)
-
-                    # very simple interface, we can also experiment with if the user supplies the actual answer that they want
-                    # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
-                    if 'yes' in user_response or 'yeah' in user_response:
-                        # save question/answer pair
-                        clean_q = no_punct(speech)
-                        saved_answers[clean_q] = [answer]
-
-                        print('Great! Any other answers that I should know? Otherwise, say \"done\".')
-                        user_response = live_streaming.main()
-                        user_response = live_streaming.get_string(user_response)
-                        user_response = user_response.lower()
-                        print(user_response)
-                        if "done" not in user_response:
-                            # assumes response is just answers, no other small talk
-                            new_words = input().split(', ')
-                            saved_answers[clean_q] += new_words
-                        break
-                    else:
-                        i += 1
-            else:
-                print('Response: ', response)
-                after = time.time()
-                print("Time: ", after - before)
+                        print('AWS was not used')
+                        sent, conf = sentiment.analyze(speech)
+                        response = f"Sentiment: {sent} \t Confidence: {conf}"
+            print('Response: ', response)
+            after = time.time()
+            print("Time: ", after - before)
             # send this element to AWS for response generation
 
             # begin the flask transfer now
