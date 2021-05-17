@@ -2,7 +2,8 @@ import os
 import re  # regex module
 import nltk
 from util import utils
-# import utils
+#import utils
+import itertools
 
 
 def parse(line, expression, custom_tags=[]):
@@ -150,7 +151,7 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     any keywords are in the chunk
 
     @param line: The sentence to check
-    @param expression: A raw string containing the regular expression
+    @param expression: A list containing the regular expressions
             chunk to match. This is utilizing nltk's regex parser
     @param keywords: Optional. An array containing keywords to match.
             Can also require keywords to appear only in certain chunks.
@@ -163,7 +164,26 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     '''
     matched_chunks = []
     matched_keywords = []
-    tree = parse(line, exp, custom_tags)
+    # find all possible permutation of the regex
+    expressions = list(itertools.permutations(exp, len(exp)))
+    minLen = float('inf')
+    minIndex = 0
+    # find the regex so that the tree has the least number of subtrees in order to maximize matching
+    for i, expression in enumerate(expressions):
+        expr = ""
+        for e in expression:
+            expr = expr+e
+            expr = expr+"\n"
+        tree = parse(line, expr, custom_tags)
+        if (len(tree) < minLen):
+            minIndex = i
+            minLen = len(tree)
+    # construct the optimal regex
+    expr = ""
+    for e in expressions[minIndex]:
+        expr = expr+e
+        expr = expr+"\n"
+    tree = parse(line, expr, custom_tags)
     # only loop over full trees, not subtrees or leaves
     # only root node has the "S" label
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
