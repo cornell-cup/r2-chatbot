@@ -121,65 +121,65 @@ def main():
                         # Q/A section
 
                         # check if question in saved answers (if, so we don't need to go to AWS)
-                        # clean_q = no_punct(speech)
-                        # if clean_q in saved_answers:
-                        #     # choose random answer (all are guaranteed correct if they're here)
-                        #     all_good_answers = []
-                        #     idx = random.randint(0, len(all_good_answers))
-                        #     response = all_good_answers[idx]
-                        # else:
-                        if USE_AWS:
-                            response = requests.get(
-                                url+chatbot_qa_route, params={'speech': speech})
-                            if response.ok:
-                                response = response.text
-                                # print(response)
-                                response = ast.literal_eval(response)                                    
-                                answers = response['answers']
+                        clean_q = no_punct(speech)
+                        if clean_q in saved_answers:
+                            # choose random answer (all are guaranteed correct if they're here)
+                            all_good_answers = []
+                            idx = random.randint(0, len(all_good_answers))
+                            response = all_good_answers[idx]
+                        else:
+                            if USE_AWS:
+                                response = requests.get(
+                                    url+chatbot_qa_route, params={'speech': speech})
+                                if response.ok:
+                                    response = response.text
+                                    # print(response)
+                                    response = ast.literal_eval(response)
+                                    answers = response['answers']
                                     # for i in range(len(answers)):
                                     #     print(f'Answer {i}: {answers[i]}')
 
                                     # this is response with highest score, we need to keep all answers somewhere
                                     # response = response['answers'][0]['answer']
-                                response = response['answers'][0]['answer']
+                                    response = response['answers']
+                                else:
+                                    raise Exception('bad request')
                             else:
-                                raise Exception('bad request')
-                        else:
                                 # response = get_answer(speech)
-                            response = "go to question-answering"
-                        # if type(response) == list:
-                        #     i = 0
-                        #     while i < len(response):
-                        #         answer = response[i]['answer']
-                        #         if i == 0:
-                        #             print(
-                        #                 f'I think the answer is {answer}. Is this correct?')
-                        #         else:
-                        #             print(f'Ok, got it. Is the answer then {answer}?')
-                        #         user_response = live_streaming.main()
-                        #         user_response = live_streaming.get_string(user_response)
-                        #         user_response = user_response.lower()
-                        #         print(user_response)
+                                response = "go to question-answering"
+                        if type(response) == list:
+                            i = 0
+                            while i < len(response):
+                                answer = response[i]['answer']
+                                if i == 0:
+                                    print(
+                                        f'I think the answer is {answer}. Is this correct?')
+                                else:
+                                    print(f'Ok, got it. Is the answer then {answer}?')
+                                user_response = live_streaming.main()
+                                user_response = live_streaming.get_string(user_response)
+                                user_response = user_response.lower()
+                                print(user_response)
 
-                        #         # very simple interface, we can also experiment with if the user supplies the actual answer that they want
-                        #         # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
-                        #         if 'yes' in user_response or 'yeah' in user_response:
-                        #             # save question/answer pair
-                        #             clean_q = no_punct(speech)
-                        #             saved_answers[clean_q] = [answer]
+                                # very simple interface, we can also experiment with if the user supplies the actual answer that they want
+                                # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
+                                if 'yes' in user_response or 'yeah' in user_response:
+                                    # save question/answer pair
+                                    clean_q = no_punct(speech)
+                                    saved_answers[clean_q] = [answer]
 
-                        #             print('Great! Any other answers that I should know? Otherwise, say \"done\".')
-                        #             user_response = live_streaming.main()
-                        #             user_response = live_streaming.get_string(user_response)
-                        #             user_response = user_response.lower()
-                        #             print(user_response)
-                        #             if "done" not in user_response:
-                        #                 # assumes response is just answers, no other small talk
-                        #                 new_words = input().split(', ')
-                        #                 saved_answers[clean_q] += new_words
-                        #             break
-                        #         else:
-                        #             i += 1
+                                    print('Great! Any other answers that I should know? Otherwise, say \"done\".')
+                                    user_response = live_streaming.main()
+                                    user_response = live_streaming.get_string(user_response)
+                                    user_response = user_response.lower()
+                                    print(user_response)
+                                    if "done" not in user_response:
+                                        # assumes response is just answers, no other small talk
+                                        new_words = input().split(', ')
+                                        saved_answers[clean_q] += new_words
+                                    break
+                                else:
+                                    i += 1
                 else:
                     if USE_AWS:
                         response = requests.get(
