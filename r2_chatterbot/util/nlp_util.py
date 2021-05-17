@@ -167,7 +167,7 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     # find all possible permutation of the regex
     expressions = list(itertools.permutations(exp, len(exp)))
     minLen = float('inf')
-    minIndex = -1
+    minIndex = 0
     # find the regex so that the tree has the least number of subtrees in order to maximize matching
     for i, expression in enumerate(expressions):
         expr = ""
