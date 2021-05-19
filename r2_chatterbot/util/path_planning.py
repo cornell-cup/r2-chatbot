@@ -52,7 +52,7 @@ def test_locphrase(text):
             "LittleDirection: {(((<TO|IN>)<DT>)?<D><A><NNS|NN|JJ>?<NN>?)}",
             "LittleNumber: {(<A><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<D>)}",
             "Obstacle: {(((<TO|IN>)<DT>)?<D>)}"]
-    locPhrase, keywords = nlp_util.match_regex_and_keywords(
+    locPhrase, keywords = nlp_util.match_regex_and_keywords_pp(
         text, expr, custom_tags=custom_tags)
     # print(locPhrase)
 
@@ -71,13 +71,13 @@ def get_locphrase(text):
             "LittleDirection: {(((<TO|IN>)<DT>)?<D><A><NNS|NN|JJ>?<NN>?)}",
             "LittleNumber: {(<A><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<D>)}",
             "Obstacle: {(((<TO|IN>)<DT>)?<D>)}"]
-    locPhrase, keywords = nlp_util.match_regex_and_keywords(
+    locPhrase, keywords = nlp_util.match_regex_and_keywords_pp(
         text, expr, custom_tags=custom_tags)
 
     if len(locPhrase) <= 0 or locPhrase[0].label() == "S":
         # didn't get a match before, try only looking for obstacle commands
         expr_obstacle = ["Obstacle: {(((<TO|IN>)<DT>)?<D>)}"]
-        locPhrase, keywords = nlp_util.match_regex_and_keywords(
+        locPhrase, keywords = nlp_util.match_regex_and_keywords_pp(
             text, expr_obstacle, custom_tags=custom_tags_obstacle)
     print(locPhrase)
 

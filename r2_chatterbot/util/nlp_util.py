@@ -164,26 +164,8 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     '''
     matched_chunks = []
     matched_keywords = []
-    # find all possible permutation of the regex
-    expressions = list(itertools.permutations(exp, len(exp)))
-    minLen = float('inf')
-    minIndex = 0
-    # find the regex so that the tree has the least number of subtrees in order to maximize matching
-    for i, expression in enumerate(expressions):
-        expr = ""
-        for e in expression:
-            expr = expr+e
-            expr = expr+"\n"
-        tree = parse(line, expr, custom_tags)
-        if (len(tree) < minLen):
-            minIndex = i
-            minLen = len(tree)
-    # construct the optimal regex
-    expr = ""
-    for e in expressions[minIndex]:
-        expr = expr+e
-        expr = expr+"\n"
-    tree = parse(line, expr, custom_tags)
+
+    tree = parse(line, exp, custom_tags)
     # only loop over full trees, not subtrees or leaves
     # only root node has the "S" label
     for subtree in tree.subtrees(lambda t: t.label() == "S"):
@@ -204,6 +186,47 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
                                 break
 
     return (matched_chunks, matched_keywords)
+
+
+def match_regex_and_keywords_pp(line, exp, custom_tags=[], keywords=None):
+    '''
+    Attempts to first match the nltk regular expression to the
+    specified sentence. Then, for each matched chunk, determines whether
+    any keywords are in the chunk
+
+    @param line: The sentence to check
+    @param expression: A list containing the regular expressions
+            chunk to match. This is utilizing nltk's regex parser
+    @param keywords: Optional. An array containing keywords to match.
+            Can also require keywords to appear only in certain chunks.
+
+    @return: A tuple. First element is a list of matched chunks. If
+            keywords was specified, will only return chunks where a
+            keyword was contained in it
+            Second element is a list of matched keywords. Only use if
+            keywords was specified
+    '''
+
+    # find all possible permutation of the regex
+    expressions = list(itertools.permutations(exp, len(exp)))
+    minLen = float('inf')
+    minIndex = 0
+    # find the regex so that the tree has the least number of subtrees in order to maximize matching
+    for i, expression in enumerate(expressions):
+        expr = ""
+        for e in expression:
+            expr = expr+e
+            expr = expr+"\n"
+        tree = parse(line, expr, custom_tags)
+        if (len(tree) < minLen):
+            minIndex = i
+            minLen = len(tree)
+    # construct the optimal regex
+    expr = ""
+    for e in expressions[minIndex]:
+        expr = expr+e
+        expr = expr+"\n"
+    return match_regex_and_keywords(line, expr, custom_tags, keywords)
 
 
 if __name__ == "__main__":
