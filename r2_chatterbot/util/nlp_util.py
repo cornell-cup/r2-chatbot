@@ -2,18 +2,15 @@ import os
 import re  # regex module
 import nltk
 from util import utils
-#import utils
-import itertools
+# import utils
 
 
 def parse(line, expression, custom_tags=[]):
     '''
     Looks for a certain type of phrase for all the sentences in a file
-
     @param line: The sentence to check
     @param expression: A raw string containing the regular expression
             chunk to match. This is utilizing nltk's regex parser
-
     @return: The syntax tree representing the parsed sentence
     '''
 
@@ -48,9 +45,7 @@ def parse(line, expression, custom_tags=[]):
 def is_question(line):
     '''
     Checks if a sentence is a question
-
     @param line: The sentence to check
-
     @return: List containing boolean saying whether the sentence is a question, and string saying type of question
     '''
     line = utils.filter_cico(line, False)
@@ -74,17 +69,13 @@ def is_question(line):
 def search_for_location(line):
     """
     Verifies if passed in chunks are names of cities/locations
-
     Assumptions made:
     If the statement is about weather, then all named entities are treated
     as a location (this includes ORGANIZATION, PERSON tags)
-
     This function utilizes a combination of nltk's built in pos_tag() function and
     the Stanford NER Tagger. The function will choose the option that gives a longer
     location string.
-
     @param line: the text to search through
-
     @return: a string of the found location, if none found, returns None
     """
     ner_tagger = nltk.StanfordNERTagger(
@@ -149,13 +140,11 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     Attempts to first match the nltk regular expression to the
     specified sentence. Then, for each matched chunk, determines whether
     any keywords are in the chunk
-
     @param line: The sentence to check
-    @param expression: A list containing the regular expressions
+    @param expression: A raw string containing the regular expression
             chunk to match. This is utilizing nltk's regex parser
     @param keywords: Optional. An array containing keywords to match.
             Can also require keywords to appear only in certain chunks.
-
     @return: A tuple. First element is a list of matched chunks. If
             keywords was specified, will only return chunks where a
             keyword was contained in it
@@ -164,7 +153,7 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     '''
     matched_chunks = []
     matched_keywords = []
-
+    
     tree = parse(line, exp, custom_tags)
     # only loop over full trees, not subtrees or leaves
     # only root node has the "S" label
