@@ -9,23 +9,11 @@ url = "http://3.13.116.251/"
 route = "chatbot_qa/"
 
 def check_result(phrase, result, expected_result):
-    if expected_result is not None:
-        # print(result)
-        # print(correct)
-        if expected_result == result:
-            return 1
-        else:
-            print("The phrase is: "+str(phrase)+", correct output should be: " +
-                  str(expected_result)+", instead we have: "+str(result))
-            return 0
-        # assert (expected_result == result), f"Result: {result} \t Expected: {expected_result}"
+    if result == expected_result:
+        return 1
     else:
-        if result is None:
-            return 1
-        else:
-            print("The phrase is: "+str(phrase) +
-                  ", correct output should be None, instead we have: "+str(result))
-            return 0
+        print(f"Incorrect result for: {phrase} \t Expected: {expected_result} \t Result: {result}")
+        return 0
 
 
 def compare(phrase, expected_bool, file_desc, expected_result=None):
@@ -46,7 +34,7 @@ def compare(phrase, expected_bool, file_desc, expected_result=None):
         return check_result(phrase, result, (expected_bool, expected_result))
     elif file_desc == "sentiment":
         label, result = sentiment.analyze(phrase)
-        return check_result(phrase, label, expected_bool)
+        return check_result(phrase, label, expected_bool)        
     else:
         print("invalid file_desc")
         return 0

@@ -1,8 +1,11 @@
 import os
 import re  # regex module
 import nltk
-from util import utils
-# import utils
+import sys
+print(sys.path)
+# from util import utils
+import utils
+import itertools
 
 
 def parse(line, expression, custom_tags=[]):
