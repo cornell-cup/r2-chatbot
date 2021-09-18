@@ -17,7 +17,8 @@ commands = ["move", "spin", "rotate", "turn", "go", "drive", "stop", "travel"]
 
 custom_tags = [(d, "D") for d in directions] + [(c, "V") for c in commands]
 custom_tags.append(("a", "A"))
-custom_tags_obstacle = [(d, "D") for d in directions_obstacles] + [(c, "V") for c in commands]
+custom_tags_obstacle = [
+    (d, "D") for d in directions_obstacles] + [(c, "V") for c in commands]
 custom_tags_obstacle.append(("a", "A"))
 
 # defining constants for small movements
@@ -27,8 +28,9 @@ LITTLE_BIT_MOVE = 0.3
 
 
 def preprocess(text):
-    translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
-    text = text.translate(translator)
+    #translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
+    #text = text.translate(translator)
+    text.translate(str.maketrans('', '', string.punctuation))
     text = text.replace("seats", "feet")
     text = text.replace("seat", "feet")
     text = text.replace(u"°", " degrees")
