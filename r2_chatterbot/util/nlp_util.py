@@ -2,6 +2,7 @@ import os
 import re  # regex module
 import nltk
 from util import utils
+import itertools
 # import utils
 
 
@@ -153,7 +154,7 @@ def match_regex_and_keywords(line, exp, custom_tags=[], keywords=None):
     '''
     matched_chunks = []
     matched_keywords = []
-    
+
     tree = parse(line, exp, custom_tags)
     # only loop over full trees, not subtrees or leaves
     # only root node has the "S" label

@@ -17,7 +17,8 @@ commands = ["move", "spin", "rotate", "turn", "go", "drive", "stop", "travel"]
 
 custom_tags = [(d, "D") for d in directions] + [(c, "V") for c in commands]
 custom_tags.append(("a", "A"))
-custom_tags_obstacle = [(d, "D") for d in directions_obstacles] + [(c, "V") for c in commands]
+custom_tags_obstacle = [
+    (d, "D") for d in directions_obstacles] + [(c, "V") for c in commands]
 custom_tags_obstacle.append(("a", "A"))
 
 # defining constants for small movements
@@ -27,8 +28,9 @@ LITTLE_BIT_MOVE = 0.3
 
 
 def preprocess(text):
-    translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
-    text = text.translate(translator)
+    # removes punctuation
+    text.translate(str.maketrans('', '', string.punctuation))
+
     text = text.replace("seats", "feet")
     text = text.replace("seat", "feet")
     text = text.replace(u"°", " degrees")
@@ -89,10 +91,7 @@ def contains_a_word_in(text_list, search_words):
     """
     Returns true if at least one of the words in search_words is contained in text_list
     """
-    for word in search_words:
-        if word in text_list:
-            return True
-    return False
+    return any(word in text_list for word in search_words)
 
 
 def isLocCommand(text):
