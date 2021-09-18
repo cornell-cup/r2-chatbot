@@ -77,7 +77,7 @@ def test(file_path, file_desc):
 
 
 if __name__ == "__main__":
-    test('tests/path_planning_phrases.txt', "path planning")
-    test('tests/is_question_phrases.txt', "is question")
-    test('tests/sentiment_phrases.txt', "sentiment")
-    test('tests/question_tests.txt', 'question answering')
+    test('../tests/testcases/path_planning_phrases.txt', "path planning")
+    test('../tests/testcases/is_question_phrases.txt', "is question")
+    test('../tests/testcases/sentiment_phrases.txt', "sentiment")
+    test('../tests/testcases/question_tests.txt', 'question answering')
