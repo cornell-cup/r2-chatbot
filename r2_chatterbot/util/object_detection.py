@@ -47,7 +47,7 @@ def object_parse(text):
         for noun in nounsList:
             item = item + noun[0] + " "
     item = item.strip()
-    with open("util/coco.txt") as f:
+    with open("util/possible_objects.txt") as f:
         for line in f:
             if item in line:
                 return item
