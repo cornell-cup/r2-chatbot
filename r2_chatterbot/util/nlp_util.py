@@ -1,9 +1,10 @@
 import os
 import re  # regex module
 import nltk
-from util import utils
+# from util import utils
+import utils
 import itertools
-# import utils
+
 
 
 def parse(line, expression, custom_tags=[]):
