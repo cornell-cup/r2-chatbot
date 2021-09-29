@@ -68,18 +68,21 @@ def no_punct(string):
 
 
 def main():
+    scheduler = client.Client("chatbot")
+    scheduler.handshake()
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        #answer = live_streaming.main()
-        #speech = live_streaming.get_string(answer)
-        #confidence = live_streaming.get_confidence(answer)
-        speech = input()
+        answer = live_streaming.main()
+        speech = live_streaming.get_string(answer)
+        confidence = live_streaming.get_confidence(answer)
+        # speech = input()
         print(speech)
         before = time.time()
         response = "Sorry, I don't understand"
 
         if "quit" in speech.lower() or "stop" in speech.lower():
+            scheduler.close()
             break
 
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
@@ -95,13 +98,15 @@ def main():
             elif not question and path_planning.isLocCommand(no_punct(speech.lower())):
                 response = path_planning.process_loc(no_punct(speech.lower()))
                 # task is to transfer over to path planning on the system
+                scheduler.communicate("path-planning")
             elif (not question or question_type == "yes/no question") and object_detection.isObjCommand(speech.lower()):
                 pick_up = object_detection.object_parse(speech.lower())
                 if pick_up:
                     response = "Object to pick up: " + pick_up
+                    # task is to transfer over to object detection on the system
+                    scheduler.communicate("object-detection")
                 else:
                     response = "Sorry, I can't recognize this object."
-                # task is to transfer over to object detection on the system
             else:
                 if question:
                     data = keywords.get_topic(speech, parse_location=False)
