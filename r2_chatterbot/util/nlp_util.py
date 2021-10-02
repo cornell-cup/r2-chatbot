@@ -1,8 +1,8 @@
 import os
 import re  # regex module
 import nltk
-# from util import utils
-import utils
+from util import utils
+# import utils
 import itertools
 
 

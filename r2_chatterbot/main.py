@@ -8,7 +8,7 @@ from util import live_streaming
 from util import nlp_util
 from util import keywords
 from util import make_response
-from util import playtrack
+# from util import playtrack
 from util import path_planning
 from util import object_detection
 from util import face_recognition
@@ -16,7 +16,7 @@ from util import utils
 # from util import sentiment
 from util.api import weather
 from util.api import restaurant
-from topic_classifier import get_topic
+# from topic_classifier import get_topic
 from playsound import playsound
 import re
 import sys
