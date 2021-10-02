@@ -3,7 +3,10 @@
 This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2021.
 
 ### Spring 2021 Team:
-Sahar Sami, Jerry Guo, Dhruv Sreenivas, Yuyi He, Junyu Wang, Kenny Cai, Anthony Cuturrufo
+Sahar Sami, Jerry Guo, Junyu Wang, Anthony Cuturrufo
+
+### Spring 2021 Team:
+Sahar Sami, Jerry Guo, Dhruv Sreenivas, Yuyi He, Junyu Wang, Anthony Cuturrufo
 
 ### Fall 2020 Team:
 Sahar Sami, Jerry Guo, Matt Bean, Dhruv Sreenivas, Yuyi He
