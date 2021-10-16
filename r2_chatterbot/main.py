@@ -68,7 +68,7 @@ def no_punct(string):
 
 
 def main():
-    scheduler = client.Client("chatbot")
+    scheduler = client.Client("Chatbot")
     scheduler.handshake()
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
