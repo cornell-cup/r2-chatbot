@@ -68,8 +68,7 @@ def no_punct(string):
 
 
 def main():
-    scheduler = client.Client("Chatbot")
-    scheduler.handshake()
+
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -207,7 +206,14 @@ def main():
 
 if __name__ == '__main__':
     # playsound('sounds/cicoremix.mp3')
-    main()
+    scheduler = client.Client("Chatbot")
+    scheduler.handshake()
+    try:
+        main()
+    except KeyboardInterrupt:
+        scheduler.close()
+        sys.exit(0)
+
 
     # need to save the new saved_answers thing into a csv
     # import csv
