@@ -97,13 +97,13 @@ def main():
             elif not question and path_planning.isLocCommand(no_punct(speech.lower())):
                 response = path_planning.process_loc(no_punct(speech.lower()))
                 # task is to transfer over to path planning on the system
-                scheduler.communicate("path-planning")
+                scheduler.communicate("path-planning" + ' ' + str(response))
             elif (not question or question_type == "yes/no question") and object_detection.isObjCommand(speech.lower()):
                 pick_up = object_detection.object_parse(speech.lower())
                 if pick_up:
                     response = "Object to pick up: " + pick_up
                     # task is to transfer over to object detection on the system
-                    scheduler.communicate("object-detection")
+                    scheduler.communicate("object-detection" + ' ' + response)
                 else:
                     response = "Sorry, I can't recognize this object."
             else:
