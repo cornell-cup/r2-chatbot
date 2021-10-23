@@ -13,7 +13,7 @@ from util import path_planning
 from util import object_detection
 from util import face_recognition
 from util import utils
-# from util import sentiment
+from util import sentiment
 from util.api import weather
 from util.api import restaurant
 # from topic_classifier import get_topic
@@ -41,7 +41,6 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 # url = "http://18.216.143.187/"
 url = "http://3.13.116.251/"
 chatbot_qa_route = "chatbot_qa/"
-sentiment_qa_route = "sentiment_analysis/"
 # route = "c1c0_aws_flask/r2-chatbot/r2_chatterbot_server/"
 
 utils.set_classpath()
@@ -54,16 +53,6 @@ else:
 
 # bad punctuation for cleaning string (no question mark)
 punctuations = '''!()-[]{};:'"\,<>./@#$%^&*_~'''
-
-
-def no_punct(string):
-    no_punct = ''
-    for char in string:
-        if char not in punctuations:
-            no_punct += char
-
-    no_punct = no_punct.strip()
-    return no_punct
 
 
 def main():
@@ -91,8 +80,8 @@ def main():
                 response = "executing facial recognition..."
                 face_recognition.faceRecog(speech)
                 # task is to transfer over to facial recognition client program
-            elif not question and path_planning.isLocCommand(no_punct(speech.lower())):
-                response = path_planning.process_loc(no_punct(speech.lower()))
+            elif (not question or question_type == "yes/no question") and path_planning.isLocCommand(speech.lower()):
+                response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
             elif (not question or question_type == "yes/no question") and object_detection.isObjCommand(speech.lower()):
                 pick_up = object_detection.object_parse(speech.lower())
@@ -103,6 +92,7 @@ def main():
                 # task is to transfer over to object detection on the system
             else:
                 if question:
+                    print("C1C0 is thinking...")
                     data = keywords.get_topic(speech, parse_location=False)
                     keywords.modify_topic_data(data, parse_location=True)
                     if "name" in data.keys() and data["name"] == "weather":
@@ -119,15 +109,6 @@ def main():
                             data, api_data)
                     else:
                         # Q/A section
-
-                        # check if question in saved answers (if, so we don't need to go to AWS)
-                        # clean_q = no_punct(speech)
-                        # if clean_q in saved_answers:
-                        #     # choose random answer (all are guaranteed correct if they're here)
-                        #     all_good_answers = []
-                        #     idx = random.randint(0, len(all_good_answers))
-                        #     response = all_good_answers[idx]
-                        # else:
                         if USE_AWS:
                             response = requests.get(url+chatbot_qa_route, params={'speech': speech})
                             if response.ok:
@@ -145,70 +126,30 @@ def main():
                                 raise Exception('bad request')
                         else:
                                 # response = get_answer(speech)
-                            response = "go to question-answering"
-                        # if type(response) == list:
-                        #     i = 0
-                        #     while i < len(response):
-                        #         answer = response[i]['answer']
-                        #         if i == 0:
-                        #             print(
-                        #                 f'I think the answer is {answer}. Is this correct?')
-                        #         else:
-                        #             print(f'Ok, got it. Is the answer then {answer}?')
-                        #         user_response = live_streaming.main()
-                        #         user_response = live_streaming.get_string(user_response)
-                        #         user_response = user_response.lower()
-                        #         print(user_response)
-
-                        #         # very simple interface, we can also experiment with if the user supplies the actual answer that they want
-                        #         # there are also times when the system actually gets multiple correct answers so we can try to find all of those if we want (i.e. Grogu/Baby Yoda)
-                        #         if 'yes' in user_response or 'yeah' in user_response:
-                        #             # save question/answer pair
-                        #             clean_q = no_punct(speech)
-                        #             saved_answers[clean_q] = [answer]
-
-                        #             print('Great! Any other answers that I should know? Otherwise, say \"done\".')
-                        #             user_response = live_streaming.main()
-                        #             user_response = live_streaming.get_string(user_response)
-                        #             user_response = user_response.lower()
-                        #             print(user_response)
-                        #             if "done" not in user_response:
-                        #                 # assumes response is just answers, no other small talk
-                        #                 new_words = input().split(', ')
-                        #                 saved_answers[clean_q] += new_words
-                        #             break
-                        #         else:
-                        #             i += 1
+                            response = "Sorry, I can't answer this right now."
+                        if type(response) == list:
+                            i = 0
+                            while i < len(response):
+                                answer = response[i]['answer']
+                                if i == 0:
+                                    print(
+                                        f'I think the answer is {answer}. Is this correct?')
+                                else:
+                                    print(f'Ok, got it. Is the answer then {answer}?')
+                                user_response = live_streaming.main()
+                                user_response = live_streaming.get_string(user_response)
+                                user_response = user_response.lower()
+                                print(user_response)
+                                if 'yes' in user_response or 'yeah' in user_response:
+                                    break
                 else:
-                    if USE_AWS:
-                        response = requests.get(
-                            url + sentiment_qa_route, params={'speech': speech})
-                        if response.ok:
-                            print('AWS worked')
-                            response = response.text
-                    else:
-                        print('AWS was not used')
-                        response = "go to sentiment analysis"
-                        # sent, conf = sentiment.analyze(speech)
-                        # response = f"Sentiment: {sent} \t Confidence: {conf}"
+                   response = sentiment.get_sentiment(speech, USE_AWS)
             print('Response: ', response)
             after = time.time()
             print("Time: ", after - before)
-            # send this element to AWS for response generation
 
-            # begin the flask transfer now
 
 
 if __name__ == '__main__':
     # playsound('sounds/cicoremix.mp3')
     main()
-
-    # need to save the new saved_answers thing into a csv
-    # import csv
-    # save_file = open('./saved_answers.csv', 'w+')
-    # writer = csv.writer(save_file)
-
-    # for key, value in saved_answers.items():
-    #     writer.writerow([key, value])
-
-    # save_file.close()
