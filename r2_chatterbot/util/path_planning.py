@@ -27,7 +27,7 @@ LITTLE_BIT_MOVE = 0.3
 
 def preprocess(text):
     # removes punctuation
-    text.translate(str.maketrans('', '', string.punctuation))
+    text = text.translate(str.maketrans('', '', string.punctuation))
     
     text = text.replace("seats", "feet")
     text = text.replace("seat", "feet")
@@ -64,7 +64,8 @@ def get_locphrase(text):
             "NumberFirst: {(<CD><NNS|NN|JJ>?((<TO|IN>)<DT>)?<D>)}",
             "LittleDirection: {(((<TO|IN>)<DT>)?<D><A><NNS|NN|JJ>?<NN>?)}",
             "LittleNumber: {(<A><NNS|NN|JJ>?<NN>?((<TO|IN>)<DT>)?<D>)}",
-            "Obstacle: {(((<TO|IN>)<DT>)?<D>)}"]
+            "Obstacle: {(((<TO|IN>)<DT>)?<D>)}"
+            ]
     locPhrase, keywords = nlp_util.match_regex_and_keywords_pp(
 
         text, expr, custom_tags=custom_tags)
@@ -73,7 +74,6 @@ def get_locphrase(text):
         # didn't get a match before, try only looking for obstacle commands
         expr_obstacle = ["Obstacle: {(((<TO|IN>)<DT>)?<D>)}"]
         locPhrase, keywords = nlp_util.match_regex_and_keywords_pp(
-
             text, expr_obstacle, custom_tags=custom_tags_obstacle)
     print(locPhrase)
     return locPhrase, keywords
