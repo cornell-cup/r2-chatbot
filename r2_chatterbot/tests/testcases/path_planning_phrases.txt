@@ -47,4 +47,7 @@
 ("turn a little to the left", True, ("turn", -15))
 ("turn counterclockwise a little bit", True, ("turn", -15))
 ("move forward a little bit and 3 feet to the left", True, (-0.91, 0.3))
+("move forward 14 meter and turn 30 degrees to the right", True,  [(14.0, 0.0, 0), (14.0, 0.0, 30.0)])
+("move forward 14 meter, turn 30 degrees to the right", True, [(14.0, 0.0, 0), (14.0, 0.0, 30.0)])
+("turn 14 degrees clockwise, and 20 degrees to the left", True, ('turn', -6.0))
 ("move forward and left a little bit", False)

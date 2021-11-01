@@ -1,7 +1,7 @@
 import utils
 import re
 import nlp_util
-
+custom = [("pick", "VB")]
 def isObjCommand(text):
     '''
     Determines whether a string is an object detection command or not based on the
@@ -11,13 +11,12 @@ def isObjCommand(text):
     include "grab the watter bottle" or "pick up the pen"
     @return: A boolean. True indicates that the input is an object detection command
     '''
-
     r_expr = r"""
-    VP: {<VB.*>(<RP>)?(<DT>)?(<NN>)+}
+    VP: {<VB.*>(<RP>)?(<DT>|<PRP.*>)?(<NN>)+}
     """
     target_verbs = ["grab", "get", "take", "pick"]
 
-    verbPhrase, keywords = nlp_util.match_regex_and_keywords(text, r_expr, keywords=target_verbs)
+    verbPhrase, keywords = nlp_util.match_regex_and_keywords(text, r_expr, keywords=target_verbs, custom_tags=custom)
     if len(verbPhrase) > 0 and verbPhrase[0].label() != 'S':
         return True
     else:
@@ -42,18 +41,20 @@ def object_parse(text):
     RB: {(<NN>)+}
     """
     if isObjCommand(text):
-        locItem = nlp_util.match_regex_and_keywords(text, itemExp)
+        locItem = nlp_util.match_regex_and_keywords(text, itemExp, custom_tags=custom)
         firstItem = locItem[0]
         nounsList = firstItem[0]
         for noun in nounsList:
             item = item + noun[0] + " "
-    return item
+    item = item.strip()
+    with open("util/coco.txt") as f:
+        for line in f:
+            if item in line:
+                return item
+    return None
 
 if __name__ == "__main__":
-    phrase = "pick up the potato"
+    phrase = "pick up my umbrella"
     phrase2 = "take 2 steps forward"
-    #print(isObjCommand(phrase2))
-    with open("tests/is_obj.txt") as f:
-        for line in f:
-            print(line)
-            print(object_parse(line))
+    print(isObjCommand(phrase))
+    print(object_parse(phrase))
