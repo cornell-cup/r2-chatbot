@@ -41,7 +41,7 @@ if __name__ == "__main__":
                 )
                 response = make_response.make_response_api(topic_data, data)
             end_time = time.time()
-            print("--- %s seconds ---" % (-start_time))
+            print("--- %s seconds ---" % (end_time - start_time))
             start_time_aws = time.time()
             response = requests.get(
                 url + weather_restaurant_route,
@@ -49,20 +49,20 @@ if __name__ == "__main__":
             )
             if response.ok:
                 response = response.text
-                # print(response)
-                response = ast.literal_eval(response)
+                print(response)
+                # response = ast.literal_eval(response)
                 # for i in range(len(answers)):
                 #     print(f'Answer {i}: {answers[i]}')
 
                 # this is response with highest score, we need to keep all answers somewhere
                 # response = response['answers'][0]['answer']
-                aws_response = response["answers"][0]["answer"]
+                # aws_response = response["answers"][0]["answer"]
             else:
                 raise Exception("bad request")
             end_time_aws = time.time()
             print("local performance %s seconds" % (end_time - start_time))
             print("aws performance %s seconds" % (end_time_aws - start_time_aws))
-            if aws_response.strip() == response.strip():
+            if response.strip() == response.strip():
                 correct += 1
             i += 1
-        print("{:.2f}".format(correct / i))
+        print("it has " + "{:.2f}".format(correct / i * 100) + " percent accuracy")
