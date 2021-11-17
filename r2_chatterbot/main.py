@@ -164,7 +164,7 @@ if __name__ == '__main__':
         print("Scheduler handshake unsuccesful")
     try:
         main()
-    except KeyboardInterrupt:
+    except:
         scheduler.close()
         sys.exit(0)
 
