@@ -157,11 +157,11 @@ def main():
 
 if __name__ == '__main__':
     # playsound('sounds/cicoremix.mp3')
-<<<<<<< HEAD
-    main()
-=======
     scheduler = client.Client("Chatbot")
-    scheduler.handshake()
+    try:
+        scheduler.handshake()
+    except:
+        print("Scheduler handshake unsuccesful")
     try:
         main()
     except KeyboardInterrupt:
@@ -178,4 +178,3 @@ if __name__ == '__main__':
     #     writer.writerow([key, value])
 
     # save_file.close()
->>>>>>> 80ce8af1b90531ac38aec1af4dff891e27540897
