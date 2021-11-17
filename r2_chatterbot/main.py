@@ -4,6 +4,7 @@ import io
 import json
 import requests
 import pandas as pd
+from util import client
 from util import live_streaming
 from util import nlp_util
 from util import keywords
@@ -56,6 +57,7 @@ punctuations = '''!()-[]{};:'"\,<>./@#$%^&*_~'''
 
 
 def main():
+
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -68,6 +70,7 @@ def main():
         response = "Sorry, I don't understand"
 
         if "quit" in speech.lower() or "stop" in speech.lower():
+            scheduler.close()
             break
 
         if("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and \
@@ -83,13 +86,15 @@ def main():
             elif (not question or question_type == "yes/no question") and path_planning.isLocCommand(speech.lower()):
                 response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
+                scheduler.communicate("path-planning" + ' ' + str(response))
             elif (not question or question_type == "yes/no question") and object_detection.isObjCommand(speech.lower()):
                 pick_up = object_detection.object_parse(speech.lower())
                 if pick_up:
                     response = "Object to pick up: " + pick_up
+                    # task is to transfer over to object detection on the system
+                    scheduler.communicate("object-detection" + ' ' + response)
                 else:
                     response = "Sorry, I can't recognize this object."
-                # task is to transfer over to object detection on the system
             else:
                 if question:
                     print("C1C0 is thinking...")
@@ -152,4 +157,24 @@ def main():
 
 if __name__ == '__main__':
     # playsound('sounds/cicoremix.mp3')
-    main()
+    scheduler = client.Client("Chatbot")
+    try:
+        scheduler.handshake()
+    except:
+        print("Scheduler handshake unsuccesful")
+    try:
+        main()
+    except:
+        scheduler.close()
+        sys.exit(0)
+
+
+    # need to save the new saved_answers thing into a csv
+    # import csv
+    # save_file = open('./saved_answers.csv', 'w+')
+    # writer = csv.writer(save_file)
+
+    # for key, value in saved_answers.items():
+    #     writer.writerow([key, value])
+
+    # save_file.close()
