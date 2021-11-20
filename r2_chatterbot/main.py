@@ -14,7 +14,7 @@ from util import make_response
 from util import path_planning
 from util import object_detection
 from util import face_recognition
-from util import util
+from util import utils
 from util import sentiment
 from util.api import weather
 from util.api import restaurant
@@ -89,11 +89,7 @@ def main():
             scheduler.close()
             break
 
-        if (
-            "cico" in speech.lower()
-            or "kiko" in speech.lower()
-            or "c1c0" in speech.lower()
-        ) and ("hey" in speech.lower()):
+        if ("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and ("hey" in speech.lower()):
             # filter out cico since it messes with location detection
             question, question_type = nlp_util.is_question(speech)
             speech = utils.filter_cico(speech) + " "
@@ -194,7 +190,8 @@ if __name__ == "__main__":
         print("Scheduler handshake unsuccesful")
     try:
         main()
-    except:
+    except Exception as e:
+        print(e)
         scheduler.close()
         sys.exit(0)
 
