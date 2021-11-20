@@ -221,7 +221,9 @@ def match_regex_and_keywords_pp(line, exp, custom_tags=[], keywords=None):
 
 
 if __name__ == "__main__":
-    with open("tests/not_questions.txt") as f:
-        for line in f:
-            print(is_question(line))
-            #print(match_regex_and_keywords(line, ""))
+    line = input("Enter some text: ")
+    print(parse(line))
+    # with open("tests/not_questions.txt") as f:
+    #     for line in f:
+    #         print(is_question(line))
+    #         #print(match_regex_and_keywords(line, ""))
