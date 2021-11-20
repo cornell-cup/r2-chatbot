@@ -126,17 +126,8 @@ def main():
                             )
                             if response.ok:
                                 response = response.text
-                                # print(response)
-                                response = ast.literal_eval(response)
-                                answers = response["answers"][0]["answer"]
-                                # for i in range(len(answers)):
-                                #     print(f'Answer {i}: {answers[i]}')
-
-                                # this is response with highest score, we need to keep all answers somewhere
-                                # response = response['answers'][0]['answer']
-                                response = response["answers"][0]["answer"]
                             else:
-                                raise Exception("bad request")
+                                response = "Bad request"
                         elif data["name"] == "weather":
                             api_data = weather.lookup_weather_today_city(
                                 data["info"]["location"]["name"]
@@ -174,7 +165,7 @@ def main():
                                 # response = response['answers'][0]['answer']
                                 response = response["answers"][0]["answer"]
                             else:
-                                raise Exception("bad request")
+                                response = "Bad request"
                         else:
                             # response = get_answer(speech)
                             response = "go to question-answering"
