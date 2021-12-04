@@ -28,6 +28,7 @@ if __name__ == "__main__":
         correct = 0
         i = 0
         faster = 0
+        aws_faster = 0
         for line in f:
             start_time = time.time()
             topic_data = keywords.get_topic(line)
@@ -65,13 +66,23 @@ if __name__ == "__main__":
             aws_duration = end_time_aws - start_time_aws
             print("local performance %s seconds" % (local_duration))
             print("aws performance %s seconds" % (aws_duration))
-            faster = faster + (local_duration - aws_duration) / local_duration
+            if aws_duration < local_duration:
+                faster = faster + (local_duration - aws_duration) / local_duration
+                aws_faster = aws_faster + 1
+
             if response.strip() == response.strip():
                 correct += 1
             i += 1
         print("it has " + "{:.2f}".format(correct / i * 100) + " percent accuracy")
+
         print(
             "aws is better than local by "
-            + "{:.2f}".format(faster / i * 100)
-            + " percent"
+            + "{:.2f}".format(aws_faster / i * 100)
+            + " percent of the time "
         )
+        if aws_faster != 0:
+            print(
+                "aws is better than local by "
+                + "{:.2f}".format(faster / aws_faster * 100)
+                + " percent"
+            )
