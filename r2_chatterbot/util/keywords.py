@@ -1,7 +1,7 @@
 from inspect import getmembers, isfunction
 from rake_nltk import Rake
-#from util import topic_tests
-#from util import nlp_util
+from util import topic_tests
+from util import nlp_util
 
 r = Rake()
 

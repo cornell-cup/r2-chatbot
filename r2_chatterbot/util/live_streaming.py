@@ -229,7 +229,7 @@ def sub_main(profanityFilterBool):
         "boost": 0
     }
     movement_words = {
-        "phrases" : ["move", "feet", "meters", "turn", "go", "drive", "spin", "rotate", "travel", "ft", "forward", "right", "left", "backward", "degrees", "radians", "to the left", "to the right"],
+        "phrases" : ["move", "feet", "forward", "right", "left", "backward", "degrees", "radians", "to the left", "to the right"],
         "boost": 20.0
     }
     numbers = {
@@ -237,7 +237,7 @@ def sub_main(profanityFilterBool):
         "boost": 5.0
     }
     relevant_words = {
-        "phrases": ["cornell cup robotics", "and", "pick up", "grab", "done"],
+        "phrases": ["cornell cup robotics", "and", "pick up", "grab"],
         "boost": 10.0
     }
     speech_contexts = [sp_c_cico, sp_c_kiko, movement_words, relevant_words]
