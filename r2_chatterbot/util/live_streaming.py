@@ -5,7 +5,7 @@ import sys
 import os
 
 from google.cloud import speech_v1p1beta1
-from google.cloud.speech_v1p1beta1 import enums
+# from google.cloud.speech_v1p1beta1 import enums
 from google.cloud.speech_v1p1beta1 import types
 import pyaudio
 from six.moves import queue
@@ -244,7 +244,7 @@ def sub_main(profanityFilterBool):
     client = speech_v1p1beta1.SpeechClient()
     # print(help(types.RecognitionConfig))
     config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        encoding=types.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
         language_code=language_code,
         enable_automatic_punctuation=True,
