@@ -9,6 +9,7 @@ from google.cloud import speech_v1p1beta1
 from google.cloud.speech_v1p1beta1 import types
 import pyaudio
 from six.moves import queue
+from util.speech_optimization.speech_adaptation import speech_adaptation_object
 
 """sets the credential path for Speech to Text api key """
 credential_path = "../api_keys/speech_to_text.json"
@@ -17,7 +18,6 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 # Audio recording parameters
 RATE = 24000
 CHUNK = int(RATE / 10)  # 100ms
-
 
 class MicrophoneStream(object):
     """ **Code from Google cloud speech to text documentation**
@@ -248,7 +248,9 @@ def sub_main(profanityFilterBool):
         sample_rate_hertz=RATE,
         language_code=language_code,
         enable_automatic_punctuation=True,
-        speech_contexts=speech_contexts)
+        # speech_contexts=speech_contexts
+        adaptation=speech_adaptation_object
+        )
 
     streaming_config = types.StreamingRecognitionConfig(
         config=config,

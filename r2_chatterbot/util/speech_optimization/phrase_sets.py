@@ -1,6 +1,4 @@
 from google.cloud.speech_v1p1beta1.types import PhraseSet
-import google_speech_contexts
-
 
 def movement_phrases():
   """
@@ -11,7 +9,7 @@ def movement_phrases():
   phrases = [
     # "${movement-words} $OPERAND ${unit} ${direction-word}",
     # "${movement-words} ${unit}  ${OPERAND} ${direction-word}",
-    "${movement-words}" #,
+    "${movement_words}" #,
     # "${direction-word}"
   ]
   boost_value = 10 # this may change
