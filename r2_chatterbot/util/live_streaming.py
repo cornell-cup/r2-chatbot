@@ -7,8 +7,29 @@ import os
 from google.cloud import speech_v1p1beta1
 from google.cloud.speech_v1p1beta1 import enums
 from google.cloud.speech_v1p1beta1 import types
+from ctypes import *
+from contextlib import contextmanager
 import pyaudio
 from six.moves import queue
+
+
+# Handling ALSA Error Messages
+ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
+
+def py_error_handler(filename, line, function, err, fmt):
+    pass
+
+c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
+
+@contextmanager
+def noalsaerr():
+    asound = cdll.LoadLibrary('libasound.so')
+    asound.snd_lib_error_set_handler(c_error_handler)
+    yield
+    asound.snd_lib_error_set_handler(None)
+
+with noalsaerr():
+    p = pyaudio.PyAudio()
 
 """sets the credential path for Speech to Text api key """
 credential_path = "../api_keys/speech_to_text.json"
@@ -32,7 +53,7 @@ class MicrophoneStream(object):
         self.closed = True
 
     def __enter__(self):
-        self._audio_interface = pyaudio.PyAudio()
+        self._audio_interface = p
         self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
             # The API currently only supports 1-channel (mono) audio
