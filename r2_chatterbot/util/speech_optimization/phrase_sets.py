@@ -7,10 +7,10 @@ def movement_phrases():
   """
   name = "Movement Phrases"
   phrases = [
-    # "${movement-words} $OPERAND ${unit} ${direction-word}",
-    # "${movement-words} ${unit}  ${OPERAND} ${direction-word}",
-    "${movement_words}" #,
-    # "${direction-word}"
+    "${movement-words} $OPERAND ${unit} ${direction-word}",
+    "${movement-words} ${unit}  ${OPERAND} ${direction-word}",
+    "${movement_words}",
+    "${direction-word}"
   ]
   boost_value = 10 # this may change
   class_items = list(map(lambda word: PhraseSet.Phrase(value=word, boost=boost_value), phrases))
