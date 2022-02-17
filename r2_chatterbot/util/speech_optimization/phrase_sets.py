@@ -28,3 +28,4 @@ def common_phrases():
  
 
 movement_phrase_set = movement_phrases()
+common_phrase_set = common_phrases()
