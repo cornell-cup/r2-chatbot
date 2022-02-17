@@ -1,6 +1,6 @@
 from google.cloud.speech_v1p1beta1.types import PhraseSet
 
-def movement_phrases():
+def create_movement_phrases():
   """
   examples:
   
@@ -17,8 +17,8 @@ def movement_phrases():
   movement_phrase_set = PhraseSet(name=name, phrases=class_items, boost=boost_value)
   return movement_phrase_set
 
-def common_phrases():
+def create_common_phrases():
   pass
 
 
-movement_phrase_set = movement_phrases()
+movement_phrase_set = create_movement_phrases()
