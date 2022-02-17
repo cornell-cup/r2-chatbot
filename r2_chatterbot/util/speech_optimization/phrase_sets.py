@@ -7,10 +7,10 @@ def movement_phrases():
   """
   name = "Movement Phrases"
   phrases = [
-    # "${movement-words} $OPERAND ${unit} ${direction-word}",
-    # "${movement-words} ${unit}  ${OPERAND} ${direction-word}",
-    "${movement_words}" #,
-    # "${direction-word}"
+    "${movement-words} $OPERAND ${unit} ${direction-word}",
+    "${movement-words} ${unit}  ${OPERAND} ${direction-word}",
+    "${movement_words}" 
+    "${direction-word}"
   ]
   boost_value = 10 # this may change
   class_items = list(map(lambda word: PhraseSet.Phrase(value=word, boost=boost_value), phrases))
@@ -18,7 +18,13 @@ def movement_phrases():
   return movement_phrase_set
 
 def common_phrases():
-  pass
+  name = "Common Phrases"
+  phrases = ["Cornell Cup Robotics","Hey cico","Pick up","grab","Cornell"]
+  boost_value = 10 #this may change 
+  class_items = list(map(lambda word: PhraseSet.Phrase(value=word, boost=boost_value), phrases ))
+  common_phrase_set = PhraseSet(name=name, phrases= class_items, boost = boost_value)
+  return common_phrase_set
 
+ 
 
 movement_phrase_set = movement_phrases()
