@@ -18,6 +18,7 @@ from util import utils
 from util import sentiment
 from util.api import weather
 from util.api import restaurant
+from util import input_type
 
 # from topic_classifier import get_topic
 from playsound import playsound
@@ -48,6 +49,7 @@ url = "http://3.13.116.251/"
 chatbot_qa_route = "chatbot_qa/"
 sentiment_qa_route = "sentiment_analysis/"
 weather_restaurant_route = "weather_restaurant"
+input_type_route = "input_type"
 # route = "c1c0_aws_flask/r2-chatbot/r2_chatterbot_server/"
 
 utils.set_classpath()
@@ -77,10 +79,10 @@ def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        answer = live_streaming.main()
-        speech = live_streaming.get_string(answer)
-        confidence = live_streaming.get_confidence(answer)
-        # speech = input()
+        # answer = live_streaming.main()
+        # speech = live_streaming.get_string(answer)
+        # confidence = live_streaming.get_confidence(answer)
+        speech = input()
         print(speech)
         before = time.time()
         response = "Sorry, I don't understand"
@@ -94,15 +96,20 @@ def main():
             question, question_type = nlp_util.is_question(speech)
             speech = utils.filter_cico(speech) + " "
             print("Question type: " + question_type)
-            if not question and face_recognition.isFaceRecognition(speech):
+            if USE_AWS:
+                in_type = requests.get(url + input_type_route, params={"speech": speech})
+            else:
+                input_type.getInputType(speech)
+            print("Input type: " + in_type)
+            if not question and in_type == 'face':
                 response = "executing facial recognition..."
                 face_recognition.faceRecog(speech)
                 # task is to transfer over to facial recognition client program
-            elif (not question or question_type == "yes/no question") and path_planning.isLocCommand(speech.lower()):
+            elif (not question or question_type == "yes/no question") and in_type == 'loc':
                 response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
                 scheduler.communicate("path-planning" + ' ' + str(response))
-            elif (not question or question_type == "yes/no question") and object_detection.isObjCommand(speech.lower()):
+            elif (not question or question_type == "yes/no question") and in_type == 'obj':
                 pick_up = object_detection.object_parse(speech.lower())
                 if pick_up:
                     response = "Object to pick up: " + pick_up
@@ -113,8 +120,11 @@ def main():
             else:
                 if question:
                     print("C1C0 is thinking...")
+                    after = time.time()
+                    print("Time before get_topic: ", after - before)
                     data = keywords.get_topic(speech, parse_location=False)
-                    keywords.modify_topic_data(data, parse_location=True)
+                    after = time.time()
+                    print("Time after get_topic: ", after - before)
                     if "name" in data.keys() and (
                         data["name"] == "weather" or data["name"] == "restaurant"
                     ):
@@ -128,11 +138,13 @@ def main():
                             else:
                                 response = "Bad request"
                         elif data["name"] == "weather":
+                            keywords.modify_topic_data(data, parse_location=True)
                             api_data = weather.lookup_weather_today_city(
                                 data["info"]["location"]["name"]
                             )
                             response = make_response.make_response_api(data, api_data)
                         elif data["name"] == "restaurant":
+                            keywords.modify_topic_data(data, parse_location=True)
                             api_data = restaurant.lookup_restaurant_city(
                                 data["info"]["location"]["name"]
                             )
@@ -192,6 +204,9 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         print(e)
+        scheduler.close()
+        sys.exit(0)
+    except:
         scheduler.close()
         sys.exit(0)
 
