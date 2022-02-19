@@ -11,5 +11,5 @@ input_type = Blueprint('input_type', __name__, url_prefix='/input_type')
 def get_input_type():
     if request.method == 'GET':
         speech = request.args.get('speech', '')
-        response = input_type(speech)
+        response = input_type.getInputType(speech)
         return response
