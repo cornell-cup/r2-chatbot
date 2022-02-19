@@ -1,6 +1,12 @@
 # c1c0-chatbot
 
-This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2021.
+This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2022.
+
+### Spring 2022 Team:
+Sahar Sami, Jerry Guo, Junyu Wang, Bahaa Kotb, Vincent Jiang
+
+### Fall 2021 Team:
+Sahar Sami, Jerry Guo, Junyu Wang, Anthony Cuturrufo, Bahaa Kotb, Anant Shyam
 
 ### Spring 2021 Team:
 Sahar Sami, Jerry Guo, Junyu Wang, Anthony Cuturrufo
@@ -85,7 +91,7 @@ Within `util/api`, we also have modules to handle API interactions:
 * `restaurant`: interfaces with the Zomato API
 
 ## API keys
-Some of these keys can be downloaded from the Cornell Cup drive (under "Cornell Cup 19-20/C1C0/Chatbot/api keys").
+Some of these keys can be downloaded from the Cornell Cup drive (under "Cornell Cup 20-21/C1C0/C1C0 CS/Chatbot/api keys").
 
 It is *highly* advised that you find your own versions of these keys, as the ones in the drive may no longer be valid
 
