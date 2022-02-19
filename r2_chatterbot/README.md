@@ -30,8 +30,8 @@ Stanley Lin, Haomiao Liu, Charu Murugesan, Rishi Malhotra
 Make sure you have Python 3 and at least Java 8. Also make sure you have `pip`.
 (Recommended: Use Anaconda as your Python distribution and create a virtual environment with Python 3.8 for all Chatbot work)
 
-The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech==1.3.2 geocoder numpy pandas scikit-learn quantulum3`
-(If using Anaconda, use "conda install" for numpy, pandas, scikit-learn, pyaudio, and nltk and "pip install" for everything else)
+The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech geocoder numpy pandas scikit-learn quantulum3`
+(If using Anaconda, use "conda install" for numpy, pandas, scikit-learn, pyaudio, and nltk and "pip install" for everything else. Alternatively, there is a requirements.txt file with the requirements)
 
 If you encounter difficulties, try checking the Installation Issues section.
 
