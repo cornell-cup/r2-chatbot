@@ -9,11 +9,10 @@ def create_movement_class():
   return movement_class
 
 def create_direction_class():
-  #phrase
-  # s and words included
+  # phrases and words included
   direction_words = ["forward","forwards","backward","backwards","back","left","right","clockwise","counterclockwise","to the left","to the right"]
   name = "Direction Words"
-  custom_class_id = "direction_words"
+  custom_class_id = "directions"
   class_items = list(map(lambda word: CustomClass.ClassItem(value=word),direction_words ))
   direction_class = CustomClass(name=name, custom_class_id=custom_class_id,items=class_items)
   return direction_class 
@@ -21,7 +20,7 @@ def create_direction_class():
 def create_unit_class():
   unit_words = ["meter","meters","feet","foot","degrees","radians"]
   name = "Unit Words"
-  custom_class_id = "unit_words"
+  custom_class_id = "units"
   class_items = list(map(lambda word: CustomClass.ClassItem(value=word),unit_words ))
   unit_class = CustomClass(name=name, custom_class_id=custom_class_id,items=class_items)
   return unit_class
