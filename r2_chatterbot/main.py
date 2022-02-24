@@ -97,19 +97,20 @@ def main():
             speech = utils.filter_cico(speech) + " "
             print("Question type: " + question_type)
             if USE_AWS:
-                in_type = requests.get(url + input_type_route, params={"speech": speech})
+                in_type = requests.get(url + input_type_route, params={"speech": speech}).text
             else:
-                input_type.getInputType(speech)
-            print("Input type: " + in_type)
-            if not question and in_type == 'face':
+                in_type = input_type.getInputType(speech)
+            print("Command type: " + in_type)
+            # print("Input type: " + in_type)
+            if not question and in_type == 'facial recognition':
                 response = "executing facial recognition..."
                 face_recognition.faceRecog(speech)
                 # task is to transfer over to facial recognition client program
-            elif (not question or question_type == "yes/no question") and in_type == 'loc':
+            elif (not question or question_type == "yes/no question") and in_type == 'path planning':
                 response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
                 scheduler.communicate("path-planning" + ' ' + str(response))
-            elif (not question or question_type == "yes/no question") and in_type == 'obj':
+            elif (not question or question_type == "yes/no question") and in_type == 'object detection':
                 pick_up = object_detection.object_parse(speech.lower())
                 if pick_up:
                     response = "Object to pick up: " + pick_up

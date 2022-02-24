@@ -150,13 +150,13 @@ def isObjCommand(text):
 def getInputType(speech):
     before = time.time()
     if isFaceRecognition(speech):
-        response = 'face'
+        response = 'facial recognition'
     elif isLocCommand(speech):
-        response = 'loc'
+        response = 'path planning'
     elif isObjCommand(speech):
-        response = 'obj'
+        response = 'object detection'
     else:
-        response = 'unknown'
+        response = 'not a command'
     after = time.time()
     print("Time: ", after - before)
     return response
