@@ -18,7 +18,7 @@ from util import utils
 from util import sentiment
 from util.api import weather
 from util.api import restaurant
-from util import input_type
+from util import command_type
 
 # from topic_classifier import get_topic
 from playsound import playsound
@@ -96,21 +96,23 @@ def main():
             question, question_type = nlp_util.is_question(speech)
             speech = utils.filter_cico(speech) + " "
             print("Question type: " + question_type)
-            if USE_AWS:
-                in_type = requests.get(url + input_type_route, params={"speech": speech}).text
+            if question_type != "yes/no question":
+                com_type = "not a command"
+            elif USE_AWS:
+                com_type = requests.get(url + input_type_route, params={"speech": speech}).text
             else:
-                in_type = input_type.getInputType(speech)
-            print("Command type: " + in_type)
-            # print("Input type: " + in_type)
-            if not question and in_type == 'facial recognition':
+                com_type = command_type.getCommandType(speech)
+            print("Command type: " + com_type)
+            # print("Input type: " + com_type)
+            if com_type == 'facial recognition':
                 response = "executing facial recognition..."
                 face_recognition.faceRecog(speech)
                 # task is to transfer over to facial recognition client program
-            elif (not question or question_type == "yes/no question") and in_type == 'path planning':
+            elif com_type == 'path planning':
                 response = path_planning.process_loc(speech.lower())
                 # task is to transfer over to path planning on the system
                 scheduler.communicate("path-planning" + ' ' + str(response))
-            elif (not question or question_type == "yes/no question") and in_type == 'object detection':
+            elif com_type == 'object detection':
                 pick_up = object_detection.object_parse(speech.lower())
                 if pick_up:
                     response = "Object to pick up: " + pick_up
@@ -121,11 +123,7 @@ def main():
             else:
                 if question:
                     print("C1C0 is thinking...")
-                    after = time.time()
-                    print("Time before get_topic: ", after - before)
                     data = keywords.get_topic(speech, parse_location=False)
-                    after = time.time()
-                    print("Time after get_topic: ", after - before)
                     if "name" in data.keys() and (
                         data["name"] == "weather" or data["name"] == "restaurant"
                     ):
