@@ -45,5 +45,5 @@ SQLAlchemy==1.2.19
 srsly==1.0.2
 thinc==7.0.8
 tqdm==4.45.0
-urllib3==1.25.9
+urllib3==1.26.5
 wasabi==0.6.0
