@@ -3,6 +3,7 @@ import time
 from quantulum3 import parser
 
 import nlp_util
+import path_planning
 
 # Facial Recognition
 def isFaceRecognition(text):
@@ -23,16 +24,12 @@ def isFaceRecognition(text):
     return False
 
 # Path Planning
-directions = ["forward", "forwards", "backward", "backwards", "back", "left", "right",
-              "clockwise", "counterclockwise"]
-directions_obstacles = ["forward", "forwards", "backward", "backwards", "back", "left", "right"]
-little = ["little", "bit", "smidge", "tiny"]
-commands = ["move", "spin", "rotate", "turn", "go", "drive", "stop", "travel"]
-
-custom_tags = [(d, "D") for d in directions] + [(c, "V") for c in commands]
-custom_tags.append(("a", "A"))
-custom_tags_obstacle = [(d, "D") for d in directions_obstacles] + [(c, "V") for c in commands]
-custom_tags_obstacle.append(("a", "A"))
+directions = path_planning.directions
+directions_obstacles = path_planning.directions_obstacles
+little = path_planning.little
+commands = path_planning.commands
+custom_tags = path_planning.custom_tags
+custom_tags_obstacle = path_planning.custom_tags_obstacle
 
 def get_locphrase(text):
     """
