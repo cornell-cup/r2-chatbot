@@ -49,7 +49,7 @@ url = "http://3.13.116.251/"
 chatbot_qa_route = "chatbot_qa/"
 sentiment_qa_route = "sentiment_analysis/"
 weather_restaurant_route = "weather_restaurant"
-input_type_route = "input_type"
+command_type_route = "command_type"
 # route = "c1c0_aws_flask/r2-chatbot/r2_chatterbot_server/"
 
 utils.set_classpath()
@@ -96,14 +96,13 @@ def main():
             question, question_type = nlp_util.is_question(speech)
             speech = utils.filter_cico(speech) + " "
             print("Question type: " + question_type)
-            if question_type != "yes/no question":
+            if question and question_type != "yes/no question":
                 com_type = "not a command"
             elif USE_AWS:
-                com_type = requests.get(url + input_type_route, params={"speech": speech}).text
+                com_type = requests.get(url + command_type_route, params={"speech": speech}).text
             else:
                 com_type = command_type.getCommandType(speech)
             print("Command type: " + com_type)
-            # print("Input type: " + com_type)
             if com_type == 'facial recognition':
                 response = "executing facial recognition..."
                 face_recognition.faceRecog(speech)
