@@ -10,11 +10,11 @@ def create_app():
 
     s3.init_app(app)
 
-    from views import chatbot_qa, sentiment_analysis#, weather_restaurant
+    from views import chatbot_qa, sentiment_analysis, weather_restaurant, command_type
     app.register_blueprint(chatbot_qa.chatbot_qa)
     app.register_blueprint(sentiment_analysis.sentiment_analysis)
-    print('registered sentiment analysis')
-    #app.register_blueprint(weather_restaurant.weather_restaurant)
+    app.register_blueprint(weather_restaurant.weather_restaurant)
+    app.register_blueprint(command_type.command_type_blueprint)
 
     return app
 
