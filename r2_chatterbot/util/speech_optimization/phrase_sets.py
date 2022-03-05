@@ -38,7 +38,16 @@ def common_phrases():
   common_phrase_set = PhraseSet(name=name, phrases= class_items, boost = boost_value)
   return common_phrase_set
 
+def grab_phrases():
+  name = "grab_phrases"
+  phrases = ["grab","pick up"]
+  boost_value = 8 #this may change 
+  class_items = list(map(lambda word: PhraseSet.Phrase(value=word), phrases))
+  grab_phrase_set = PhraseSet(name = name, phrases = class_items, boost = boost_value)
+  return grab_phrase_set
+
  
 movement_phrase_set = movement_phrases()
 cico_phrase_set = cico_phrases()
 common_phrase_set = common_phrases()
+grab_phrase_set = grab_phrases()
