@@ -43,7 +43,7 @@ def cico_phrases():
 def object_detection_phrases():
   name = "od_phrases"
   phrases = ["pick up", "grab", "get", "take"]
-  boost_value = 15
+  boost_value = 8
   class_items = list(map(lambda word: PhraseSet.Phrase(value=word), phrases ))
   phrase_set = PhraseSet(name=name, phrases= class_items, boost = boost_value)
   return phrase_set
@@ -61,3 +61,4 @@ def common_phrases():
 movement_phrase_set = movement_phrases()
 cico_phrase_set = cico_phrases()
 common_phrase_set = common_phrases()
+object_grab_phrase_set = object_detection_phrases()
