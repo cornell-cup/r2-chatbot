@@ -12,7 +12,7 @@ def isObjCommand(text):
     @return: A boolean. True indicates that the input is an object detection command
     '''
     r_expr = r"""
-    VP: {<VB.*>(<RP>)?(<DT>|<PRP.*>)?(<NN>)+}
+    VP: {<VB.*>(<RP>)?(<DT>|<PRP.*>)?(<NN>|<NNS>)+}
     """
     target_verbs = ["grab", "get", "take", "pick"]
 
@@ -38,7 +38,7 @@ def object_parse(text):
 
     item = ""
     itemExp = r"""
-    RB: {(<NN>)+}
+    RB: {(<NN>|<NNS>)+}
     """
     if isObjCommand(text):
         locItem = nlp_util.match_regex_and_keywords(text, itemExp, custom_tags=custom)
