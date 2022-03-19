@@ -27,13 +27,14 @@ Stanley Lin, Haomiao Liu, Charu Murugesan, Rishi Malhotra
 
 ## Installation
 
-Make sure you have Python 3 and at least Java 8. Also make sure you have `pip`.
-(Recommended: Use Anaconda as your Python distribution and create a virtual environment with Python 3.8 for all Chatbot work)
+0. Make sure you have Python 3 and at least Java 8. Also make sure you have `pip`. (Recommended: Use Anaconda as your Python distribution and create a virtual environment with Python 3.8+ for all Chatbot work)
 
-The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech geocoder numpy pandas scikit-learn quantulum3`
-(If using Anaconda, use "conda install" for numpy, pandas, scikit-learn, pyaudio, and nltk and "pip install" for everything else. Alternatively, there is a requirements.txt file with the requirements)
-
-If you encounter difficulties, try checking the Installation Issues section.
+1. Install PyAudio using the following instructions depending on your operating system and distribution:
+    1. Windows: `conda install pyaudio` or `pip install pyaudio`
+    2. Mac OS X: `brew install portaudio`, then `pip install pyaudio` 
+    3. Ubuntu: first install the portaudio19-dev package, then run `sudo apt-get install python-pyaudio python3-pyaudio`
+	
+2. Run 'pip install -r requirements.txt" to install all other requirements."
 
 ### Setting Up Named Entity Recognition
 You will need to download the Stanford Named Entity Recognizer (NER) from [here](https://nlp.stanford.edu/software/CRF-NER.shtml). Unzip the resulting file and rename the folder to `stanford-ner` and move it into the `dep/` directory. The `dep/` directory should look like
