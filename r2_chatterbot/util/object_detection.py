@@ -3,6 +3,7 @@ from xmlrpc.client import MAXINT
 import utils
 import re
 import nlp_util
+import time
 
 custom = [("pick", "VB")]
 def isObjCommand(text):
@@ -51,14 +52,13 @@ def object_parse(text):
             item = item + noun[0] + " "
     else: return None
     item = item.strip()
-    print("item:" + item)
     with open("coco.txt") as f:
         closest = 15 # longest string in COCO list
         targ = ""
         arr = item.split()
         len_thres = 5
         for line in f:
-            line = line[:-1]
+            line = line.strip()
             if (len(arr) > 1): # considers only if there are more than 2 words in item
                 for s in arr:
                     if (line == s): return line
@@ -100,10 +100,18 @@ def lev_dist_dp(item, line):
     return dist_arr[len1][len2]
 
 if __name__ == "__main__":
+    phrases = ["can you grab the bottle?",
+    "pick up the book", "pick up the cell phone", "grab the glasses", "pick up the umbrella"]
+    for phrase in phrases:
+        before = time.time()
+        isCommand = isObjCommand(phrase)
+        obj = object_parse(phrase)
+        after = time.time()
+        print(isCommand, obj, f"{after - before} s")
     #phrase = "pick up the toothbrushes please"
-    phrase2 = "pick up the boat"
-    print(isObjCommand(phrase2))
-    #print(lev_dist_dp("computer keyboard", "keyboard"))
-    #print(lev_dist_dp("toothbrushes", "toothbrush"))
-    #print(lev_dist_dp("please", "plate"))
-    print(object_parse(phrase2))
+    # phrase2 = "pick up the water bottle"
+    # print(isObjCommand(phrase2))
+    # # print(lev_dist_dp("computer keyboard", "keyboard"))
+    # # print(lev_dist_dp("toothbrushes", "toothbrush"))
+    # # print(lev_dist_dp("please", "plate"))
+    # print(object_parse(phrase2))
