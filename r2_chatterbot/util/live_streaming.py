@@ -21,6 +21,7 @@ def py_error_handler(filename, line, function, err, fmt):
 
 c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
 
+'''
 @contextmanager
 def noalsaerr():
     asound = cdll.LoadLibrary('libasound.so')
@@ -29,7 +30,8 @@ def noalsaerr():
     asound.snd_lib_error_set_handler(None)
 
 with noalsaerr():
-    p = pyaudio.PyAudio()
+'''
+p = pyaudio.PyAudio()
 
 """sets the credential path for Speech to Text api key """
 credential_path = "../api_keys/speech_to_text.json"
