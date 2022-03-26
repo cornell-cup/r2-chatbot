@@ -77,7 +77,6 @@ def get_locphrase(text):
     #     expr_obstacle = ["Obstacle: {(((<TO|IN>)<DT>)?<D>)}"]
     #     locPhrase, keywords = nlp_util.match_regex_and_keywords_pp(
     #         text, expr_obstacle, custom_tags=custom_tags_obstacle)
-    print(locPhrase)
     return locPhrase, keywords
 
 

@@ -38,7 +38,7 @@ nltk.download("words")
 
 # for flask setup
 
-USE_AWS = True
+USE_AWS = False
 
 print(os.getcwd())
 credential_path = "api_keys/speech_to_text.json"
