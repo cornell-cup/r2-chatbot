@@ -5,12 +5,13 @@ import sys
 import os
 
 from google.cloud import speech_v1p1beta1
-from google.cloud.speech_v1p1beta1 import enums
+# from google.cloud.speech_v1p1beta1 import enums
 from google.cloud.speech_v1p1beta1 import types
 from ctypes import *
 from contextlib import contextmanager
 import pyaudio
 from six.moves import queue
+from util.speech_optimization.speech_adaptation import speech_adaptation_object
 
 
 # Handling ALSA Error Messages
@@ -39,7 +40,6 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 # Audio recording parameters
 RATE = 24000
 CHUNK = int(RATE / 10)  # 100ms
-
 
 class MicrophoneStream(object):
     """ **Code from Google cloud speech to text documentation**
@@ -266,11 +266,13 @@ def sub_main(profanityFilterBool):
     client = speech_v1p1beta1.SpeechClient()
     # print(help(types.RecognitionConfig))
     config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        encoding=types.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
         language_code=language_code,
         enable_automatic_punctuation=True,
-        speech_contexts=speech_contexts)
+        # speech_contexts=speech_contexts
+        adaptation=speech_adaptation_object
+        )
 
     streaming_config = types.StreamingRecognitionConfig(
         config=config,

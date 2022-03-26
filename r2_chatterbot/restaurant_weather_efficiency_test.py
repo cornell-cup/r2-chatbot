@@ -24,7 +24,7 @@ url = "http://3.13.116.251/"
 
 if __name__ == "__main__":
     utils.set_classpath()
-    with open("restuarant_weather_efficiency_questions.txt") as f:
+    with open("restaurant_weather_efficiency_questions.txt") as f:
         correct = 0
         i = 0
         faster = 0
