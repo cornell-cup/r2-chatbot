@@ -1,9 +1,12 @@
 # c1c0-chatbot
 
-This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2021.
+This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2022.
 
-### Spring 2021 Team:
-Sahar Sami, Jerry Guo, Junyu Wang, Anthony Cuturrufo
+### Spring 2022 Team:
+Sahar Sami, Jerry Guo, Bahaa Kotb, Vincent Jiang, Junyu Wang, Anant Shyam
+
+### Fall 2021 Team:
+Sahar Sami, Jerry Guo, Junyu Wang, Anthony Cuturrufo, Bahaa Kotb, Anant Shyam
 
 ### Spring 2021 Team:
 Sahar Sami, Jerry Guo, Dhruv Sreenivas, Yuyi He, Junyu Wang, Anthony Cuturrufo
@@ -21,13 +24,14 @@ Stanley Lin, Haomiao Liu, Charu Murugesan, Rishi Malhotra
 
 ## Installation
 
-Make sure you have Python 3 and at least Java 8. Also make sure you have `pip`.
-(Recommended: Use Anaconda as your Python distribution and create a virtual environment with Python 3.8 for all Chatbot work)
+0. Make sure you have Python 3 and at least Java 8. Also make sure you have `pip`. (Recommended: Use Anaconda as your Python distribution and create a virtual environment with Python 3.8+ for all Chatbot work)
 
-The following modules are needed: `nltk rake-nltk playsound pyaudio google-cloud-speech==1.3.2 geocoder numpy pandas scikit-learn quantulum3`
-(If using Anaconda, use "conda install" for numpy, pandas, scikit-learn, pyaudio, and nltk and "pip install" for everything else)
-
-If you encounter difficulties, try checking the Installation Issues section.
+1. Install PyAudio using the following instructions depending on your operating system and distribution:
+    1. Windows: `conda install pyaudio` or `pip install pyaudio`
+    2. Mac OS X: `brew install portaudio`, then `pip install pyaudio` 
+    3. Ubuntu: first install the portaudio19-dev package, then run `sudo apt-get install python-pyaudio python3-pyaudio`
+	
+2. Run 'pip install -r requirements.txt" to install all other requirements."
 
 ### Setting Up Named Entity Recognition
 You will need to download the Stanford Named Entity Recognizer (NER) from [here](https://nlp.stanford.edu/software/CRF-NER.shtml). Unzip the resulting file and rename the folder to `stanford-ner` and move it into the `dep/` directory. The `dep/` directory should look like
@@ -85,7 +89,7 @@ Within `util/api`, we also have modules to handle API interactions:
 * `restaurant`: interfaces with the Zomato API
 
 ## API keys
-Some of these keys can be downloaded from the Cornell Cup drive (under "Cornell Cup 19-20/C1C0/Chatbot/api keys").
+Some of these keys can be downloaded from the Cornell Cup drive (under "Cornell Cup 20-21/C1C0/C1C0 CS/Chatbot/api keys").
 
 It is *highly* advised that you find your own versions of these keys, as the ones in the drive may no longer be valid
 
