@@ -52,7 +52,7 @@ def object_parse(text):
             item = item + noun[0] + " "
     else: return None
     item = item.strip()
-    with open("coco.txt") as f:
+    with open("util/coco.txt") as f:
         closest = 15 # longest string in COCO list
         targ = ""
         arr = item.split()
