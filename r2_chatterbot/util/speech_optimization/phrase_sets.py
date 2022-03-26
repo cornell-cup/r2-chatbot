@@ -20,8 +20,6 @@ def movement_phrases():
     "$OPERAND ${r_unit}",
     "${l_unit} $OPERAND",
     "${r_unit} $OPERAND",
-    "${l_move}",
-    "${r_move}",
     "${l_dir}",
     "${r_dir}"    
   ]
@@ -33,7 +31,7 @@ def movement_phrases():
 
 def cico_phrases():
   name = "cico_phrases"
-  phrases = ["Hey cico","cico", "kiko"]
+  phrases = ["cico", "kiko","Hey","Hey Kiko","Hey cico"]
   boost_value = 20  #this may change 
   class_items = list(map(lambda word: PhraseSet.Phrase(value=word), phrases ))
   phrase_set = PhraseSet(name=name, phrases= class_items, boost = boost_value)
@@ -52,7 +50,7 @@ def object_detection_phrases():
 def common_phrases():
   name = "common_phrases"
   phrases = ["Cornell Cup Robotics", "Cornell"]
-  boost_value = 10  #this may change 
+  boost_value = 12  #this may change 
   class_items = list(map(lambda word: PhraseSet.Phrase(value=word), phrases ))
   common_phrase_set = PhraseSet(name=name, phrases= class_items, boost = boost_value)
   return common_phrase_set
