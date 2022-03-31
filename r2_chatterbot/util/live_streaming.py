@@ -5,31 +5,33 @@ import sys
 import os
 
 from google.cloud import speech_v1p1beta1
-from google.cloud.speech_v1p1beta1 import enums
+# from google.cloud.speech_v1p1beta1 import enums
 from google.cloud.speech_v1p1beta1 import types
 from ctypes import *
 from contextlib import contextmanager
 import pyaudio
 from six.moves import queue
+from util.speech_optimization.speech_adaptation import speech_adaptation_object
 
 
 # Handling ALSA Error Messages
-ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
+# ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
 
-def py_error_handler(filename, line, function, err, fmt):
-    pass
+# def py_error_handler(filename, line, function, err, fmt):
+#     pass
 
-c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
+# c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
 
-@contextmanager
-def noalsaerr():
-    asound = cdll.LoadLibrary('libasound.so')
-    asound.snd_lib_error_set_handler(c_error_handler)
-    yield
-    asound.snd_lib_error_set_handler(None)
 
-with noalsaerr():
-    p = pyaudio.PyAudio()
+# @contextmanager
+# def noalsaerr():
+#     asound = cdll.LoadLibrary('libasound.so')
+#     asound.snd_lib_error_set_handler(c_error_handler)
+#     yield
+#     asound.snd_lib_error_set_handler(None)
+
+# with noalsaerr():
+#   p = pyaudio.PyAudio()
 
 """sets the credential path for Speech to Text api key """
 credential_path = "../api_keys/speech_to_text.json"
@@ -38,7 +40,6 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 # Audio recording parameters
 RATE = 24000
 CHUNK = int(RATE / 10)  # 100ms
-
 
 class MicrophoneStream(object):
     """ **Code from Google cloud speech to text documentation**
@@ -53,7 +54,7 @@ class MicrophoneStream(object):
         self.closed = True
 
     def __enter__(self):
-        self._audio_interface = p
+        self._audio_interface = pyaudio.PyAudio()
         self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
             # The API currently only supports 1-channel (mono) audio
@@ -265,11 +266,13 @@ def sub_main(profanityFilterBool):
     client = speech_v1p1beta1.SpeechClient()
     # print(help(types.RecognitionConfig))
     config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        encoding=types.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
         language_code=language_code,
         enable_automatic_punctuation=True,
-        speech_contexts=speech_contexts)
+        # speech_contexts=speech_contexts
+        adaptation=speech_adaptation_object
+        )
 
     streaming_config = types.StreamingRecognitionConfig(
         config=config,

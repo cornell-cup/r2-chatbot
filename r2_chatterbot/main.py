@@ -38,7 +38,7 @@ nltk.download("words")
 
 # for flask setup
 
-USE_AWS = True
+USE_AWS = False
 
 print(os.getcwd())
 credential_path = "api_keys/speech_to_text.json"
@@ -87,8 +87,7 @@ def main():
         print(speech)
         before = time.time()
         response = "Sorry, I don't understand"
-
-        if "quit" in speech.lower() or "stop" in speech.lower():
+        if no_punct(speech.lower().strip(' ')) in ["quit", "stop"]:
             scheduler.close()
             break
 

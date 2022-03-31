@@ -1,6 +1,10 @@
+from tkinter.tix import INTEGER
+from xmlrpc.client import MAXINT
 import utils
 import re
 import nlp_util
+import time
+
 custom = [("pick", "VB")]
 def isObjCommand(text):
     '''
@@ -12,7 +16,7 @@ def isObjCommand(text):
     @return: A boolean. True indicates that the input is an object detection command
     '''
     r_expr = r"""
-    VP: {<VB.*>(<RP>)?(<DT>|<PRP.*>)?(<NN>)+}
+    VP: {<VB.*>(<RP>)?(<DT>|<PRP.*>)?(<NN>|<NNS>)+}
     """
     target_verbs = ["grab", "get", "take", "pick"]
 
@@ -38,7 +42,7 @@ def object_parse(text):
 
     item = ""
     itemExp = r"""
-    RB: {(<NN>)+}
+    RB: {(<NN>|<NNS>)+}
     """
     if isObjCommand(text):
         locItem = nlp_util.match_regex_and_keywords(text, itemExp, custom_tags=custom)
@@ -46,15 +50,68 @@ def object_parse(text):
         nounsList = firstItem[0]
         for noun in nounsList:
             item = item + noun[0] + " "
+    else: return None
     item = item.strip()
     with open("util/coco.txt") as f:
+        closest = 15 # longest string in COCO list
+        targ = ""
+        arr = item.split()
+        len_thres = 5
         for line in f:
-            if item in line:
-                return item
+            line = line.strip()
+            if (len(arr) > 1): # considers only if there are more than 2 words in item
+                for s in arr:
+                    if (line == s): return line
+                    len_dist = abs(len(s) - len(line))
+                    if (len_dist > closest or len_dist > len_thres): continue
+                    dist = lev_dist_dp(s, line)
+                    if (dist < closest):
+                        closest = dist
+                        targ = line
+            if (line == item): return line
+            len_dist = abs(len(item) - len(line))
+            if (len_dist > closest or len_dist > len_thres): continue
+            dist = lev_dist_dp(item, line)
+            if (dist < closest):
+                closest = dist
+                targ = line
+            # may want to take into account separated words (ex: computer keyboard)
+        threshold = 5
+        if (closest < threshold): return targ
     return None
 
+def lev_dist_dp(item, line):
+    '''
+    This function determines the edit/Levenshtein distance between item and line 
+
+    @param item, line - string inputs
+    @return the edit distance between item and line
+    '''
+
+    len1 = len(item)
+    len2 = len(line)
+    # initialize dist_arr for col 0 and row 0 (each from 0 .. len)
+    dist_arr = [[x if y == 0 else y if x == 0 else 0 for x in range(len2+1)] for y in range(len1+1)]
+    for it in range(1, len1+1):
+        for ln in range(1, len2+1):
+            if (item[it-1] == line[ln-1]):
+                dist_arr[it][ln] = dist_arr[it-1][ln-1]
+            else: dist_arr[it][ln] = 1 + min(dist_arr[it][ln-1], dist_arr[it-1][ln], dist_arr[it-1][ln-1])
+    return dist_arr[len1][len2]
+
 if __name__ == "__main__":
-    phrase = "pick up my umbrella"
-    phrase2 = "take 2 steps forward"
-    print(isObjCommand(phrase))
-    print(object_parse(phrase))
+    phrases = ["can you grab the bottle?",
+    "pick up the book", "pick up the cell phone", "grab the glasses", "pick up the umbrella"]
+    for phrase in phrases:
+        before = time.time()
+        isCommand = isObjCommand(phrase)
+        obj = object_parse(phrase)
+        after = time.time()
+        print(isCommand, obj, f"{after - before} s")
+    #phrase = "pick up the toothbrushes please"
+    # phrase2 = "pick up the water bottle"
+    # print(isObjCommand(phrase2))
+    # # print(lev_dist_dp("computer keyboard", "keyboard"))
+    # # print(lev_dist_dp("toothbrushes", "toothbrush"))
+    # # print(lev_dist_dp("please", "plate"))
+    # print(object_parse(phrase2))
