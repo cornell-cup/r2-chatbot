@@ -45,7 +45,8 @@ credential_path = "api_keys/speech_to_text.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 # url = "http://18.216.143.187/"
-url = "http://3.13.116.251/"
+# url = "http://3.13.116.251/"
+url = "http://128.253.46.196:5000/"
 chatbot_qa_route = "chatbot_qa/"
 sentiment_qa_route = "sentiment_analysis/"
 weather_restaurant_route = "weather_restaurant"
