@@ -1,11 +1,12 @@
 '''
 This file contains functions to test a sentence for certain topics
 '''
-
-from util import utils
-# import nlp_util
+import os
+import sys
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
 import re
-from util import nlp_util
+from util import nlp_util, utils
 
 '''
 return format for all functions in this module
