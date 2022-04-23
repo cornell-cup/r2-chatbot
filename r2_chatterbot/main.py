@@ -185,15 +185,27 @@ def main():
                                 if 'yes' in user_response or 'yeah' in user_response:
                                     break
                 else:
-                   response = sentiment.get_sentiment(speech, USE_AWS)
+                    response = sentiment.get_sentiment(speech, USE_AWS)
+
             print('Response: ', response)
+            if response == "That's great!":
+                playsound('sounds/positive_r2/' + random.choice(os.listdir('sounds/positive_r2')), block = False)
+            elif response == "Okay.":
+                playsound('sounds/neutral_r2/' + random.choice(os.listdir('sounds/neutral_r2')), block = False)
+            elif response == "That isn't good.":
+                playsound('sounds/negative_r2/' + random.choice(os.listdir('sounds/negative_r2')), block = False)
+            else:
+                playsound(random.choice([os.path.join('sounds/positive_r2', file) for file in os.listdir('sounds/positive_r2')] 
+                + [os.path.join('sounds/neutral_r2', file) for file in os.listdir('sounds/neutral_r2')] 
+                + [os.path.join('sounds/negative_r2', file) for file in os.listdir('sounds/negative_r2')]), block = False)
+
             after = time.time()
             print("Time: ", after - before)
 
 
 
 if __name__ == "__main__":
-    # playsound('sounds/cicoremix.mp3')
+    playsound('sounds/cicoremix.mp3')
     scheduler = client.Client("Chatbot")
     try:
         scheduler.handshake()
