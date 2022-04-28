@@ -11,7 +11,7 @@ from ctypes import *
 from contextlib import contextmanager
 import pyaudio
 from six.moves import queue
-from util.speech_optimization.speech_adaptation import speech_adaptation_object
+#from util.speech_optimization.speech_adaptation import speech_adaptation_object
 
 
 # Handling ALSA Error Messages

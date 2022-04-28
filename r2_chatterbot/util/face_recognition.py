@@ -14,10 +14,16 @@ def isFaceRecognition(text):
     @param text: The sentence to check
     @return: A boolean. True indicates that the input a facial recognition command
     """
-    keywords_greetings = {"wave ", "hello ", "hi ", "check ", "attendance ", "call me ", "greetings ", "what's up " }
+    
+    if len(text.strip()) == 0 :
+        return True 
+
+    keywords_greetings = {"wave ", "hello ", "hi ", "check ", "attendance ", "call me ", "greetings ", "what's up ", "attendance" }
+    #print(text)
     for item in keywords_greetings:
-        if item in text.lower():
-            print("item returned: ", item)
+        if item in text.lower() : 
+            #print(item)
+            #print("item returned: " + str(item))
             return True
     return False
 
@@ -33,16 +39,16 @@ def faceRecog(text):
     """
     greetings_keywords = {"wave ", "hello ", "hi ", "greetings ", "what's up ","Wave ", "Hello ", "Hi ", "Greetings ", "What's up "}
     if isFaceRecognition(text):
-        deleteFiles()
+        
+        
         if "attendance " in text:
-            live_streaming.append_to_file("attendance.txt", "attendance")
-            print("created new attendance file")
+            return " attendance "
+
         for greeting in greetings_keywords:
-            if greeting in text:
-                live_streaming.append_to_file("greeting.txt", "greeting")
-                print("created new greetings file")
+            return " greeting " 
 
         if("call me ") in text or "Call me " in text:
+            
             name = ""
             nameE = r"""
             nameE: {(<NNP>)+}
@@ -53,19 +59,13 @@ def faceRecog(text):
                 name = name + noun[0] + " "
             live_streaming.append_to_file("friends.txt", name)
             print("created new attendance file with " + name)
-def deleteFiles():
-    if os.path.exists("friends.txt"):
-      os.remove("friends.txt")
-    elif os.path.exists("greeting.txt"):
-      os.remove("greeting.txt")
-    elif os.path.exists("attendance.txt"):
-      os.remove("attendance.txt")
+
 
 if __name__ == "__main__":
-    phrase = "call me Bob"
-    phrase2 = "robot go vroom"
-    print(isFaceRecognition(phrase))
-    faceRecog(phrase)
+   
+    #phrase2 = "robot go vroom"
+    #phrase = " "
+    #faceRecog(phrase)
     # with open("tests/isLoc.txt") as f:
     #     for line in f:
     #         print(line)
