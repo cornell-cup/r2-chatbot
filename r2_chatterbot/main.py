@@ -38,14 +38,15 @@ nltk.download("words")
 
 # for flask setup
 
-USE_AWS = False
+USE_AWS = True
 
 print(os.getcwd())
 credential_path = "api_keys/speech_to_text.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 # url = "http://18.216.143.187/"
-url = "http://3.13.116.251/"
+# url = "http://3.13.116.251/"
+url = "http://128.253.46.196:5000/"
 chatbot_qa_route = "chatbot_qa/"
 sentiment_qa_route = "sentiment_analysis/"
 weather_restaurant_route = "weather_restaurant"
@@ -97,8 +98,9 @@ def main():
             print("Question type: " + question_type)
             if question and question_type != "yes/no question":
                 com_type = "not a command"
-            elif USE_AWS:
-                com_type = requests.get(url + command_type_route, params={"speech": speech}).text
+            # uncomment this once the route is up to date on the base station
+            # elif USE_AWS:
+            #     com_type = requests.get(url + command_type_route, params={"speech": speech}).text
             else:
                 com_type = command_type.getCommandType(speech)
             print("Command type: " + com_type)

@@ -1,0 +1,39 @@
+{
+  "greetings": {
+    "inputs": [],
+    "outputs": [
+      "Hi <>, how do you do?",
+      "Great to see you, <>!",
+      "Hello <>, how can I help you today?"
+    ]
+  },
+  
+  "how_are_you": {
+    "inputs": ["how are you", "what's up"],
+    "outputs": [
+      "Doing great, <>! Thanks for asking.",
+      "Hi <>, I am doing well. How can I help you?"
+    ]
+  },
+
+  "help": {
+    "inputs": [
+      "how can you help me?",
+      "what can you do?"
+    ], 
+    "outputs": [
+      "I can move around, pick up objects, and answer questions. How can I help you?"
+    ]
+  }, 
+
+  "thanks": {
+    "inputs": [
+      "thanks", "thank you"
+    ], 
+    "outputs": [
+      "You're welcome!",
+      "My pleasure!",
+      "Don't mention it."
+    ]
+  }
+}

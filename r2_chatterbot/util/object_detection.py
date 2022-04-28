@@ -1,6 +1,10 @@
 from tkinter.tix import INTEGER
 from xmlrpc.client import MAXINT
-import utils
+import os
+import sys
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+import util.utils as utils
 import re
 import nlp_util
 import time
@@ -52,7 +56,9 @@ def object_parse(text):
             item = item + noun[0] + " "
     else: return None
     item = item.strip()
-    with open("util/coco.txt") as f:
+    dirname = os.path.dirname(__file__)
+    coco_filepath = os.path.join(dirname, "coco.txt")
+    with open(coco_filepath) as f:
         closest = 15 # longest string in COCO list
         targ = ""
         arr = item.split()
