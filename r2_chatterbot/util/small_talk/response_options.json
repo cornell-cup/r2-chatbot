@@ -1,6 +1,6 @@
 {
   "greetings": {
-    "inputs": [],
+    "inputs": ["", "hello"],
     "outputs": [
       "Hi <>, how do you do?",
       "Great to see you, <>!",
@@ -18,8 +18,8 @@
 
   "help": {
     "inputs": [
-      "how can you help me?",
-      "what can you do?"
+      "how can you help me",
+      "what can you do"
     ], 
     "outputs": [
       "I can move around, pick up objects, and answer questions. How can I help you?"
