@@ -9,7 +9,7 @@
   },
   
   "how_are_you": {
-    "inputs": ["how are you", "what's up"],
+    "inputs": ["how are you", "whats up"],
     "outputs": [
       "Doing great, <>! Thanks for asking.",
       "Hi <>, I am doing well. How can I help you?"

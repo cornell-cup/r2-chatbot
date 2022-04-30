@@ -1,10 +1,12 @@
-from util.small_talk.phatics import get_category, get_response_combined
-import utils
-import re
 import nlp_util
 import live_streaming
+import string
 import os
-from small_talk import * 
+import sys
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+from small_talk.phatics import get_category, get_response_combined
+# from small_talk import * 
 
 def isFaceRecognition(text):
     """
@@ -20,7 +22,7 @@ def isFaceRecognition(text):
     if len(text.strip()) == 0 :
         return (True,'greeting') 
 
-    keywords_greetings = {"hello ", "hi ", "check ", "greetings ", "what's up " }
+    keywords_greetings = {"hello", "hi", "check", "greetings", "whats up", "how are you", "thanks", "thank"}
     #print(text)
     text = text.lower()
     for item in keywords_greetings:
@@ -45,7 +47,7 @@ def faceRecog(text):
     @param text: The sentence to check
     @return: A new file with the command name listed.
     """
-    greetings_keywords = {"wave ", "hello ", "hi ", "greetings ", "what's up ","Wave ", "Hello ", "Hi ", "Greetings ", "What's up "}
+    text = text.translate(str.maketrans('', '', string.punctuation))
     known = isFaceRecognition(text)
     if known[0]:
         if known[1] == "attendance":
@@ -53,6 +55,7 @@ def faceRecog(text):
             return " attendance "
 
         if known[1] == "greeting":
+            # name = call chris facial rec to get the person's name
             return get_response_combined(text,"Chris")
 
         if known[1] == "call":
@@ -69,7 +72,10 @@ def faceRecog(text):
 
 
 if __name__ == "__main__":
-   
+    print(faceRecog(""))
+    print(faceRecog("what's up"))
+    print(faceRecog("how are you?"))
+    print(faceRecog("thank you!"))
     #phrase2 = "robot go vroom"
     #phrase = " "
     #faceRecog(phrase)

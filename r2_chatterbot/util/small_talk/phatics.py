@@ -1,7 +1,10 @@
 import json
 import random
+import os
 
-with open("response_options.json", "r") as f:
+dirname = os.path.dirname(__file__)
+filepath = os.path.join(dirname, "response_options.json")
+with open(filepath, "r") as f:
   response_options = json.load(f)
 
 
