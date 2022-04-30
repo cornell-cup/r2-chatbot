@@ -6,7 +6,6 @@ import sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from small_talk.phatics import get_category, get_response_combined
-# from small_talk import * 
 
 def isFaceRecognition(text):
     """
@@ -47,7 +46,7 @@ def faceRecog(text):
     @param text: The sentence to check
     @return: A new file with the command name listed.
     """
-    text = text.translate(str.maketrans('', '', string.punctuation))
+    text = text.translate(str.maketrans('', '', string.punctuation)).strip()
     known = isFaceRecognition(text)
     if known[0]:
         if known[1] == "attendance":
@@ -73,17 +72,6 @@ def faceRecog(text):
 
 if __name__ == "__main__":
     print(faceRecog(""))
-    print(faceRecog("what's up"))
+    print(faceRecog("what's up?"))
     print(faceRecog("how are you?"))
     print(faceRecog("thank you!"))
-    #phrase2 = "robot go vroom"
-    #phrase = " "
-    #faceRecog(phrase)
-    # with open("tests/isLoc.txt") as f:
-    #     for line in f:
-    #         print(line)
-    #         print(isLocCommand(line))
-    #         print(pathPlanning(line))
-    # print(pathPlanning(phrase))
-    # print(isLocCommand(phrase))
-    pass

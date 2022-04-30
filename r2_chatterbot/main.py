@@ -103,8 +103,7 @@ def main():
             com_type = command_type.getCommandType(speech, question, question_type)
             print("Command type: " + com_type)
             if com_type == 'facial recognition':
-                response = "executing facial recognition..."
-                face_recognition.faceRecog(speech)
+                response = face_recognition.faceRecog(speech)
                 # task is to transfer over to facial recognition client program
             elif com_type == 'path planning':
                 response = path_planning.process_loc(speech.lower())
