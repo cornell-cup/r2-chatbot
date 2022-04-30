@@ -96,13 +96,11 @@ def main():
             question, question_type = nlp_util.is_question(speech)
             speech = utils.filter_cico(speech) + " "
             print("Question type: " + question_type)
-            if question and question_type != "yes/no question":
-                com_type = "not a command"
             # uncomment this once the route is up to date on the base station
-            # elif USE_AWS:
-            #     com_type = requests.get(url + command_type_route, params={"speech": speech}).text
-            else:
-                com_type = command_type.getCommandType(speech)
+            # if USE_AWS:
+                # com_type = requests.get(url + command_type_route, params={"speech": speech}).text
+            # else:
+            com_type = command_type.getCommandType(speech, question, question_type)
             print("Command type: " + com_type)
             if com_type == 'facial recognition':
                 response = "executing facial recognition..."
