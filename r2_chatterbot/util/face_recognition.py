@@ -1,8 +1,10 @@
+from util.small_talk.phatics import get_category, get_response_combined
 import utils
 import re
 import nlp_util
 import live_streaming
 import os
+from small_talk import * 
 
 def isFaceRecognition(text):
     """
@@ -16,16 +18,22 @@ def isFaceRecognition(text):
     """
     
     if len(text.strip()) == 0 :
-        return True 
+        return (True,'greeting') 
 
-    keywords_greetings = {"wave ", "hello ", "hi ", "check ", "attendance ", "call me ", "greetings ", "what's up ", "attendance" }
+    keywords_greetings = {"hello ", "hi ", "check ", "greetings ", "what's up " }
     #print(text)
+    text = text.lower()
     for item in keywords_greetings:
-        if item in text.lower() : 
-            #print(item)
-            #print("item returned: " + str(item))
-            return True
-    return False
+        if item in text and item != "attendance" and item != "wave" and item != "call me":
+            return (True,'greeting')
+    if "attendance" in text:
+        return (True,"attendance")
+    elif "call me" in text or "callme" in text:
+        return (True,"call")
+    if "wave" in text:
+        return (True,"wave")
+    
+    return (False,None)
 
 def faceRecog(text):
     """
@@ -38,17 +46,16 @@ def faceRecog(text):
     @return: A new file with the command name listed.
     """
     greetings_keywords = {"wave ", "hello ", "hi ", "greetings ", "what's up ","Wave ", "Hello ", "Hi ", "Greetings ", "What's up "}
-    if isFaceRecognition(text):
-        
-        
-        if "attendance " in text:
+    known = isFaceRecognition(text)
+    if known[0]:
+        if known[1] == "attendance":
+            #implement when chris is done with everything
             return " attendance "
 
-        for greeting in greetings_keywords:
-            return " greeting " 
+        if known[1] == "greeting":
+            return get_response_combined(text,"Chris")
 
-        if("call me ") in text or "Call me " in text:
-            
+        if known[1] == "call":
             name = ""
             nameE = r"""
             nameE: {(<NNP>)+}
