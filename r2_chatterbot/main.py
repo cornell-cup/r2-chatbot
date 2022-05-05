@@ -19,12 +19,14 @@ from util import sentiment
 from util.api import weather
 from util.api import restaurant
 from util import command_type
+from util.sound_engine import SoundEngine
 
 # from topic_classifier import get_topic
 from playsound import playsound
 import re
 import sys
 import os
+import threading
 
 # import corpus_and_adapter
 # from question_answer import get_answer
@@ -76,7 +78,7 @@ def no_punct(string):
     return no_punct
 
 def main():
-
+    sound_engine = SoundEngine(folder = os.path.join(os.getcwd(), 'sounds', 'chirp_parts'))
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -187,6 +189,9 @@ def main():
                 else:
                     response = sentiment.get_sentiment(speech, USE_AWS)
 
+            after = time.time()
+            print("Time: ", after - before)
+
             print('Response: ', response)
             if response == "That's great!":
                 playsound('sounds/positive_r2/' + random.choice(os.listdir('sounds/positive_r2')), block = False)
@@ -195,13 +200,9 @@ def main():
             elif response == "That isn't good.":
                 playsound('sounds/negative_r2/' + random.choice(os.listdir('sounds/negative_r2')), block = False)
             else:
-                playsound(random.choice([os.path.join('sounds/positive_r2', file) for file in os.listdir('sounds/positive_r2')] 
-                + [os.path.join('sounds/neutral_r2', file) for file in os.listdir('sounds/neutral_r2')] 
-                + [os.path.join('sounds/negative_r2', file) for file in os.listdir('sounds/negative_r2')]), block = False)
-
-            after = time.time()
-            print("Time: ", after - before)
-
+                max_len = min(2, len(response))
+                response = ''.join(c for c in response[:max_len] if c.isalnum())
+                threading.Thread(target = sound_engine.play_text, args = [response]).start()
 
 
 if __name__ == "__main__":
