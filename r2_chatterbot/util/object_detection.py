@@ -59,28 +59,33 @@ def object_parse(text):
     dirname = os.path.dirname(__file__)
     coco_filepath = os.path.join(dirname, "coco.txt")
     with open(coco_filepath) as f:
+        objects = set([line.strip() for line in f])
+        if (item in objects):
+            return item
         closest = 15 # longest string in COCO list
         targ = ""
         arr = item.split()
         len_thres = 5
-        for line in f:
-            line = line.strip()
+        for object in objects:
             if (len(arr) > 1): # considers only if there are more than 2 words in item
                 for s in arr:
-                    if (line == s): return line
-                    len_dist = abs(len(s) - len(line))
+                    if (object == s): return object
+                    len_dist = abs(len(s) - len(object))
                     if (len_dist > closest or len_dist > len_thres): continue
-                    dist = lev_dist_dp(s, line)
+                    dist = lev_dist_dp(s, object)
                     if (dist < closest):
                         closest = dist
-                        targ = line
-            if (line == item): return line
-            len_dist = abs(len(item) - len(line))
+                        targ = object
+            object_separated = object.split() # separates the word into 2 words
+            if len(object_separated) > 1: # consider a mult-line word
+                for s in object_separated:
+                    if (item == s): return object
+            len_dist = abs(len(item) - len(object))
             if (len_dist > closest or len_dist > len_thres): continue
-            dist = lev_dist_dp(item, line)
+            dist = lev_dist_dp(item, object)
             if (dist < closest):
                 closest = dist
-                targ = line
+                targ = object
             # may want to take into account separated words (ex: computer keyboard)
         threshold = 5
         if (closest < threshold): return targ
@@ -106,8 +111,14 @@ def lev_dist_dp(item, line):
     return dist_arr[len1][len2]
 
 if __name__ == "__main__":
-    phrases = ["can you grab the bottle?",
-    "pick up the book", "pick up the cell phone", "grab the glasses", "pick up the umbrella"]
+    phrases = ["pick up the teddy bear", 
+    "pick up the bear", 
+    "can you grab the cell phone?", 
+    "can you grab the phone?", 
+    "get the glasses", 
+    "get the eyeglasses", 
+    "get the eye glasses", 
+    "pick up the ball"]
     for phrase in phrases:
         before = time.time()
         isCommand = isObjCommand(phrase)
