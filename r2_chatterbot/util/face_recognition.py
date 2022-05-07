@@ -6,6 +6,7 @@ import sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from small_talk.phatics import get_category, get_response_combined
+from r2_facial_recognition.client import Client
 
 def isFaceRecognition(text):
     """
