@@ -3,6 +3,8 @@ import live_streaming
 import string
 import os
 import sys
+
+from util.small_talk.phatics import get_response
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 from small_talk.phatics import get_category, get_response_combined
@@ -49,14 +51,18 @@ def faceRecog(text):
     """
     text = text.translate(str.maketrans('', '', string.punctuation)).strip()
     known = isFaceRecognition(text)
+    c = Client()
     if known[0]:
         if known[1] == "attendance":
             #implement when chris is done with everything
             return " attendance "
 
         if known[1] == "greeting":
+            people = c.recognize_faces()
+            for p in people["matches"]:
+                print(get_response_combined(text,p[0]))
             # name = call chris facial rec to get the person's name
-            return get_response_combined(text,"Chris")
+        
 
         if known[1] == "call":
             name = ""
