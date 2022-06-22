@@ -19,7 +19,7 @@ joblib==0.14.1
 mathparse==0.1.2
 murmurhash==1.0.2
 nltk==3.6.6
-numpy==1.18.3
+numpy==1.22.0
 Pint==0.11
 plac==0.9.6
 playsound==1.2.2
