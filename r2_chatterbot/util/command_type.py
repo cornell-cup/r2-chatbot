@@ -2,8 +2,8 @@ import face_recognition
 import path_planning
 import object_detection
 
+
 def getCommandType(speech, question, question_type):
-    print(speech)
     if face_recognition.isFaceRecognition(speech):
         response = 'facial recognition'
     elif (not question or question_type == 'yes/no question') and path_planning.isLocCommand(speech):
