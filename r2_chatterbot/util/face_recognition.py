@@ -39,7 +39,7 @@ def isFaceRecognition(text):
         return (True,"wave")
 
     return (False,None)"""
-    print(text)
+    return False
 
 
 def faceRecog(text):
