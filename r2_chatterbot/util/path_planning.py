@@ -28,7 +28,7 @@ LITTLE_BIT_MOVE = 0.3
 def preprocess(text):
     # removes punctuation
     text = text.translate(str.maketrans('', '', string.punctuation))
-    
+    text = text.lower()
     text = text.replace("seats", "feet")
     text = text.replace("seat", "feet")
     text = text.replace(u"°", " degrees")
