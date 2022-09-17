@@ -190,6 +190,7 @@ def main():
             print("Time: ", after - before)
 
             print('Response: ', response)
+            
             if response == "That's great!":
                 playsound('sounds/positive_r2/' + random.choice(os.listdir('sounds/positive_r2')), block = False)
             elif response == "Okay.":
