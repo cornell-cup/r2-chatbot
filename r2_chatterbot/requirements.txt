@@ -15,7 +15,7 @@ google-cloud-speech
 googleapis-common-protos==1.51.0
 grpcio==1.28.1
 idna==2.9
-joblib==0.14.1
+joblib==1.2.0
 mathparse==0.1.2
 murmurhash==1.0.2
 nltk==3.6.6
