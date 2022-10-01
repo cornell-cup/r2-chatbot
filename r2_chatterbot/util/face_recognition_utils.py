@@ -8,7 +8,7 @@ import sys
 from util.small_talk.phatics import get_response
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-# from r2_facial_recognition.client import Client as FacialClient
+from r2_facial_recognition.client import Client as FacialClient
 
 
 def isFaceRecognition(text):
@@ -19,7 +19,7 @@ def isFaceRecognition(text):
     attendance command, such as "take attendance."
 
     @param text: The sentence to check
-    @return: A boolean. True indicates that the input a facial recognition command
+    @return: A boolean. True indicates that the input a facial recognition command"""
 
 
     if len(text.strip()) == 0 :
@@ -38,7 +38,7 @@ def isFaceRecognition(text):
     if "wave" in text:
         return (True,"wave")
 
-    return (False,None)"""
+    return (False,None)
     return False
 
 
@@ -50,7 +50,8 @@ def faceRecog(text):
     file.
 
     @param text: The sentence to check
-    @return: A new file with the command name listed.
+    @return: A new file with the command name listed."""
+    return None
 
     text = text.translate(str.maketrans('', '', string.punctuation)).strip()
     known = isFaceRecognition(text)
@@ -69,14 +70,14 @@ def faceRecog(text):
 
         if known[1] == "call":
             name = ""
-            nameE = r
+            nameE = ""
             #nameE: {(<NNP>)+}
             namePhrase = nlp_util.match_regex_and_keywords(text, nameE)
             nameList = namePhrase[0][0]
             for noun in nameList:
                 name = name + noun[0] + " "
             live_streaming.append_to_file("friends.txt", name)
-            print("created new attendance file with " + name)"""
+            print("created new attendance file with " + name)
 
 
 if __name__ == "__main__":
