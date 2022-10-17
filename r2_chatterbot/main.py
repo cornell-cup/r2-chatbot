@@ -78,8 +78,8 @@ def no_punct(string):
 
 
 def main():
-    sound_engine = SoundEngine(folder=os.path.join(
-        os.getcwd(), 'sounds', 'chirp_parts'))
+    sound_engine = SoundEngine(
+        folder=os.path.join(os.getcwd(), 'sounds', 'chirp_parts'))
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -94,7 +94,9 @@ def main():
             scheduler.close()
             break
 
-        if ("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and ("hey" in speech.lower()):
+        if ("cico" in speech.lower() or "kiko" in speech.lower()
+                or "c1c0" in speech.lower()) and ("hey" in speech.lower()
+                                                  or "hi" in speech.lower()):
             # filter out cico since it messes with location detection
             question, question_type = nlp_util.is_question(speech)
             speech = utils.filter_cico(speech) + " "
@@ -103,8 +105,8 @@ def main():
             # if USE_AWS:
             # com_type = requests.get(url + command_type_route, params={"speech": speech}).text
             # else:
-            com_type = command_type.getCommandType(
-                speech, question, question_type)
+            com_type = command_type.getCommandType(speech, question,
+                                                   question_type)
             print("Command type: " + com_type)
             if com_type == 'facial recognition':
                 response = face_recognition_utils.faceRecog(speech)
@@ -124,10 +126,12 @@ def main():
             else:
                 if question:
                     print("C1C0 is thinking...")
+                    # Need AWS
+                    '''
                     data = keywords.get_topic(speech, parse_location=False)
-                    if "name" in data.keys() and (
-                        data["name"] == "weather" or data["name"] == "restaurant"
-                    ):
+                    if "name" in data.keys() and (data["name"] == "weather"
+                                                  or data["name"]
+                                                  == "restaurant"):
                         if USE_AWS:
                             response = requests.get(
                                 url + weather_restaurant_route,
@@ -138,27 +142,24 @@ def main():
                             else:
                                 response = "Bad request"
                         elif data["name"] == "weather":
-                            keywords.modify_topic_data(
-                                data, parse_location=True)
+                            keywords.modify_topic_data(data,
+                                                       parse_location=True)
                             api_data = weather.lookup_weather_today_city(
-                                data["info"]["location"]["name"]
-                            )
+                                data["info"]["location"]["name"])
                             response = make_response.make_response_api(
                                 data, api_data)
                         elif data["name"] == "restaurant":
-                            keywords.modify_topic_data(
-                                data, parse_location=True)
+                            keywords.modify_topic_data(data,
+                                                       parse_location=True)
                             api_data = restaurant.lookup_restaurant_city(
-                                data["info"]["location"]["name"]
-                            )
+                                data["info"]["location"]["name"])
                             response = make_response.make_response_api(
                                 data, api_data)
                     else:
                         # Q/A section
                         if USE_AWS:
-                            response = requests.get(
-                                url + chatbot_qa_route, params={"speech": speech}
-                            )
+                            response = requests.get(url + chatbot_qa_route,
+                                                    params={"speech": speech})
                             if response.ok:
                                 response = response.text
                                 # print(response)
@@ -180,10 +181,12 @@ def main():
                                 answer = response[i]['answer']
                                 if i == 0:
                                     print(
-                                        f'I think the answer is {answer}. Is this correct?')
+                                        f'I think the answer is {answer}. Is this correct?'
+                                    )
                                 else:
                                     print(
-                                        f'Ok, got it. Is the answer then {answer}?')
+                                        f'Ok, got it. Is the answer then {answer}?'
+                                    )
                                 user_response = live_streaming.main()
                                 user_response = live_streaming.get_string(
                                     user_response)
@@ -191,13 +194,31 @@ def main():
                                 print(user_response)
                                 if 'yes' in user_response or 'yeah' in user_response:
                                     break
+                    '''
+                    response = " I am sure what you have just said is very interesting, but I can't process it right now."
                 else:
                     response = " I am sure what you have just said is very interesting, but I can't process it right now."
-            print('Response: ', response)
             after = time.time()
             print("Time: ", after - before)
-
             print('Response: ', response)
+            if response == "That's great!":
+                playsound('sounds/positive_r2/' +
+                          random.choice(os.listdir('sounds/positive_r2')),
+                          block=False)
+            elif response == "Okay.":
+                playsound('sounds/neutral_r2/' +
+                          random.choice(os.listdir('sounds/neutral_r2')),
+                          block=False)
+            elif response == "That isn't good.":
+                playsound('sounds/negative_r2/' +
+                          random.choice(os.listdir('sounds/negative_r2')),
+                          block=False)
+            else:
+                max_len = min(2, len(response))
+                response = ''.join(c for c in response[:max_len]
+                                   if str(c).isalnum())
+                threading.Thread(target=sound_engine.play_text,
+                                 args=[response]).start()
 
 
 if __name__ == "__main__":

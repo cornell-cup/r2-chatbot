@@ -13,7 +13,6 @@ import pyaudio
 from six.moves import queue
 from util.speech_optimization.speech_adaptation import speech_adaptation_object
 
-
 # Handling ALSA Error Messages
 # ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
 
@@ -21,7 +20,6 @@ from util.speech_optimization.speech_adaptation import speech_adaptation_object
 #     pass
 
 # c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
-
 
 # @contextmanager
 # def noalsaerr():
@@ -32,7 +30,6 @@ from util.speech_optimization.speech_adaptation import speech_adaptation_object
 
 # with noalsaerr():
 #   p = pyaudio.PyAudio()
-
 """sets the credential path for Speech to Text api key """
 credential_path = "../api_keys/speech_to_text.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
@@ -40,6 +37,7 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 # Audio recording parameters
 RATE = 24000
 CHUNK = int(RATE / 10)  # 100ms
+
 
 class MicrophoneStream(object):
     """ **Code from Google cloud speech to text documentation**
@@ -59,8 +57,10 @@ class MicrophoneStream(object):
             format=pyaudio.paInt16,
             # The API currently only supports 1-channel (mono) audio
             # https://goo.gl/z757pE
-            channels=1, rate=self._rate,
-            input=True, frames_per_buffer=self._chunk,
+            channels=1,
+            rate=self._rate,
+            input=True,
+            frames_per_buffer=self._chunk,
             # Run the audio stream asynchronously to fill the buffer object.
             # This is necessary so that the input device's buffer doesn't
             # overflow while the calling thread makes network requests, etc.
@@ -188,7 +188,7 @@ def returnResponseString(responses):
             num_chars_printed = len(transcript)
 
         else:
-            return(transcript + overwrite_chars, confidence)
+            return (transcript + overwrite_chars, confidence)
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
@@ -225,7 +225,8 @@ def append_to_file(filePath, message):
     Used to keep track of the history of what has been said and the confidence
     """
     f = open(filePath, "a")
-    f.write(message+"\n")
+    f.write(message + "\n")
+
 
 # def delete_file():
 #     """
@@ -251,12 +252,20 @@ def sub_main(profanityFilterBool):
         "boost": 0
     }
     movement_words = {
-        "phrases" : ["move", "feet", "forward", "right", "left", "backward", "degrees", "radians", "to the left", "to the right"],
-        "boost": 20.0
+        "phrases": [
+            "move", "feet", "forward", "right", "left", "backward", "degrees",
+            "radians", "to the left", "to the right"
+        ],
+        "boost":
+        20.0
     }
     numbers = {
-        "phrases": ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"],
-        "boost": 5.0
+        "phrases": [
+            "one", "two", "three", "four", "five", "six", "seven", "eight",
+            "nine", "ten"
+        ],
+        "boost":
+        5.0
     }
     relevant_words = {
         "phrases": ["cornell cup robotics", "and", "pick up", "grab"],
@@ -271,12 +280,10 @@ def sub_main(profanityFilterBool):
         language_code=language_code,
         enable_automatic_punctuation=True,
         # speech_contexts=speech_contexts
-        adaptation=speech_adaptation_object
-        )
+        adaptation=speech_adaptation_object)
 
-    streaming_config = types.StreamingRecognitionConfig(
-        config=config,
-        interim_results=True)
+    streaming_config = types.StreamingRecognitionConfig(config=config,
+                                                        interim_results=True)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
 

@@ -1,6 +1,6 @@
 import os
 import re
-from winsound import PlaySound
+# from winsound import PlaySound
 from pygame import mixer
 import time
 from random import randint
@@ -149,7 +149,7 @@ class SoundEngine:
             # Write the response to the output file.
             out.write(response.audio_content)
             print('Audio content written to file "output.mp3"')
-        PlaySound("output.mp3")
+        # PlaySound("output.mp3")
 
 
 def _chirptypes_from_filename(chirp_name):
