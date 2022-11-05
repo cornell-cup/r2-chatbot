@@ -18,7 +18,7 @@ document_store = ElasticsearchDocumentStore(host='localhost', username="", passw
 converter = PDFToTextConverter(remove_numeric_tables=True, valid_languages=["en"])
 converter2 = TextConverter(remove_numeric_tables=True, valid_languages=['en'])
 
-context_dir = "/home/ec2-user/c1c0_aws_flask/r2-chatbot/r2_chatterbot_server/data/chatbot_contexts/"
+context_dir = "/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot_server/data/chatbot_contexts/"
 print(f'Context_dir set to {context_dir}')
 #if not os.path.isfile(context_dir):
 #   import boto3

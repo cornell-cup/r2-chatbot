@@ -1,7 +1,7 @@
 import utils
 import re
 import nlp_util
-import live_streaming
+#import live_streaming
 import os
 
 def isFaceRecognition(text):

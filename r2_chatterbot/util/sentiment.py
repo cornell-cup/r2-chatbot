@@ -1,18 +1,18 @@
-# from transformers import pipeline
+from transformers import pipeline
 import requests
 
-# classifier = pipeline('sentiment-analysis')
+classifier = pipeline('sentiment-analysis')
 # '''
 # Takes in [s: str] and returns either 'POSITIVE', 'NEGATIVE' or 'NEUTRAL'
 # Optionally: [confidence_thresh] to make 'NEUTRAL' more or less sensitive
 # '''
-# def analyze(s: str, confidence_thresh: int = .99) -> str:
-#   classification = classifier(s)
-#   confidence = classification[0]['score'] 
-#   label = classification[0]['label']
-#   if confidence > confidence_thresh:
-#     return label, confidence
-#   return 'NEUTRAL', confidence
+def analyze(s: str, confidence_thresh: int = .99) -> str:
+  classification = classifier(s)
+  confidence = classification[0]['score'] 
+  label = classification[0]['label']
+  if confidence > confidence_thresh:
+    return label, confidence
+  return 'NEUTRAL', confidence
 
 
 url = "http://3.13.116.251/"
@@ -40,4 +40,4 @@ def get_sentiment(speech, USE_AWS):
     return "That isn't good."
 
   return response
-  
+
