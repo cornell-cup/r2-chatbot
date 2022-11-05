@@ -6,8 +6,8 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 import util.utils as utils
 import itertools
-
-
+os.environ['CLASSPATH'] = "/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/dep/stanford-ner/"
+os.environ['JAVAHOME'] = "/home/systemslab/.local/bin/java/jdk-17.0.2"
 
 def parse(line, expression, custom_tags=[]):
     '''
@@ -83,7 +83,7 @@ def search_for_location(line):
     @return: a string of the found location, if none found, returns None
     """
     ner_tagger = nltk.StanfordNERTagger(
-        "%s/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz" % (os.getcwd()))
+        "/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/dep/stanford-ner/classifiers/english.all.3class.distsim.crf.ser.gz")# % (os.getcwd()))
 
     # tags to identify for nltk
     loc_labels = ["GPE", "ORGANIZATION", "PERSON"]

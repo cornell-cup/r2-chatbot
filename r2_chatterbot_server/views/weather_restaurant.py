@@ -2,7 +2,7 @@ from flask import current_app, Blueprint, request
 
 import sys
 #sys.path += ['/home/ec2-user/c1c0_aws_flask/r2-chatbot/r2_chatterbot']#, '/home/ec2-user/c1c0_aws_flask/r2-chatbot/r2_chatterbot/util']
-sys.path.insert(0,'/home/ec2-user/c1c0_aws_flask/r2-chatbot/r2_chatterbot')
+sys.path.insert(0,'/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot')
 
 # import os
 # os.chdir("/home/ec2-user/c1c0_aws_flask/r2-chatbot/r2_chatterbot")

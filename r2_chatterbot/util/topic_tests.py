@@ -54,8 +54,8 @@ def weather(text, parse_location=True):
     #NP: {<DT|JJ|NN.*>+}
 
     #the keywords we want to detect
-    target_words = utils.load_words("data/weather_topic_words.txt")
-    time_words = utils.load_words("data/weather_time_words.txt")
+    target_words = utils.load_words("/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/data/weather_topic_words.txt")
+    time_words = utils.load_words("/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/data/weather_time_words.txt")
 
     chunks, keywords = nlp_util.match_regex_and_keywords(
             text, expression, keywords=target_words)
@@ -103,7 +103,7 @@ def restaurant(text, parse_location=True):
     regex = re.compile('([^\s\w]|_)+')
     text = regex.sub('', text)
 
-    target_words = utils.load_words("data/restaurant_topic_words.txt")
+    target_words = utils.load_words("/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/data/restaurant_topic_words.txt")
 
     for word in target_words:
         if word =="eat":

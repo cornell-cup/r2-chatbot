@@ -1,5 +1,8 @@
 from flask import Flask, request
 from flask_s3 import FlaskS3
+import sys
+
+sys.path.append('/home/systemslab/Desktop/chatbot/r2-chatbot')
 
 s3 = FlaskS3()
 config_filename = 'app.cfg'

@@ -87,11 +87,11 @@ def import_keys():
     global KEY, GEONAMES_USERNAME
 
     # geonames API
-    with open("api_keys/geonames_username.txt") as f:
+    with open("/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/api_keys/geonames_username.txt") as f:
         GEONAMES_USERNAME = f.read().strip()
 
     # openweather API
-    with open("api_keys/open_weather.txt") as f:
+    with open("/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/api_keys/open_weather.txt") as f:
         KEY = KEY + f.read().strip()
 
 
