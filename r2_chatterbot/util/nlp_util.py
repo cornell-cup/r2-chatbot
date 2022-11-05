@@ -1,8 +1,10 @@
 import os
 import re  # regex module
 import nltk
-from util import utils
-# import utils
+import sys
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+import util.utils as utils
 import itertools
 os.environ['CLASSPATH'] = "/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/dep/stanford-ner/"
 os.environ['JAVAHOME'] = "/home/systemslab/.local/bin/java/jdk-17.0.2"
@@ -222,7 +224,7 @@ def match_regex_and_keywords_pp(line, exp, custom_tags=[], keywords=None):
 
 if __name__ == "__main__":
     line = input("Enter some text: ")
-    print(parse(line))
+    print(nltk.pos_tag(nltk.word_tokenize(line)))
     # with open("tests/not_questions.txt") as f:
     #     for line in f:
     #         print(is_question(line))

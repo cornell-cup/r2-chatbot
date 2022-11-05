@@ -28,7 +28,7 @@ LITTLE_BIT_MOVE = 0.3
 def preprocess(text):
     # removes punctuation
     text = text.translate(str.maketrans('', '', string.punctuation))
-    
+    text = text.lower()
     text = text.replace("seats", "feet")
     text = text.replace("seat", "feet")
     text = text.replace(u"°", " degrees")
@@ -77,7 +77,6 @@ def get_locphrase(text):
     #     expr_obstacle = ["Obstacle: {(((<TO|IN>)<DT>)?<D>)}"]
     #     locPhrase, keywords = nlp_util.match_regex_and_keywords_pp(
     #         text, expr_obstacle, custom_tags=custom_tags_obstacle)
-    print(locPhrase)
     return locPhrase, keywords
 
 

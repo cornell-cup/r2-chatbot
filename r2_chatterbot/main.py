@@ -19,12 +19,14 @@ from util import sentiment
 from util.api import weather
 from util.api import restaurant
 from util import command_type
+from util.sound_engine import SoundEngine
 
 # from topic_classifier import get_topic
 from playsound import playsound
 import re
 import sys
 import os
+import threading
 
 # import corpus_and_adapter
 # from question_answer import get_answer
@@ -45,7 +47,8 @@ credential_path = "api_keys/speech_to_text.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 # url = "http://18.216.143.187/"
-url = "http://3.13.116.251/"
+# url = "http://3.13.116.251/"
+url = "http://128.253.46.196:5000/"
 chatbot_qa_route = "chatbot_qa/"
 sentiment_qa_route = "sentiment_analysis/"
 weather_restaurant_route = "weather_restaurant"
@@ -75,7 +78,7 @@ def no_punct(string):
     return no_punct
 
 def main():
-
+    sound_engine = SoundEngine(folder = os.path.join(os.getcwd(), 'sounds', 'chirp_parts'))
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -86,8 +89,7 @@ def main():
         print(speech)
         before = time.time()
         response = "Sorry, I don't understand"
-
-        if "quit" in speech.lower() or "stop" in speech.lower():
+        if no_punct(speech.lower().strip(' ')) in ["quit", "stop"]:
             scheduler.close()
             break
 
@@ -98,8 +100,9 @@ def main():
             print("Question type: " + question_type)
             if question and question_type != "yes/no question":
                 com_type = "not a command"
-            elif USE_AWS:
-                com_type = requests.get(url + command_type_route, params={"speech": speech}).text
+            # uncomment this once the route is up to date on the base station
+            # elif USE_AWS:
+            #     com_type = requests.get(url + command_type_route, params={"speech": speech}).text
             else:
                 com_type = command_type.getCommandType(speech)
             print("Command type: " + com_type)
@@ -184,15 +187,26 @@ def main():
                                 if 'yes' in user_response or 'yeah' in user_response:
                                     break
                 else:
-                   response = sentiment.get_sentiment(speech, USE_AWS)
-            print('Response: ', response)
+                    response = sentiment.get_sentiment(speech, USE_AWS)
+
             after = time.time()
             print("Time: ", after - before)
 
+            print('Response: ', response)
+            if response == "That's great!":
+                playsound('sounds/positive_r2/' + random.choice(os.listdir('sounds/positive_r2')), block = False)
+            elif response == "Okay.":
+                playsound('sounds/neutral_r2/' + random.choice(os.listdir('sounds/neutral_r2')), block = False)
+            elif response == "That isn't good.":
+                playsound('sounds/negative_r2/' + random.choice(os.listdir('sounds/negative_r2')), block = False)
+            else:
+                max_len = min(2, len(response))
+                response = ''.join(c for c in response[:max_len] if c.isalnum())
+                threading.Thread(target = sound_engine.play_text, args = [response]).start()
 
 
 if __name__ == "__main__":
-    # playsound('sounds/cicoremix.mp3')
+    playsound('sounds/cicoremix.mp3')
     scheduler = client.Client("Chatbot")
     try:
         scheduler.handshake()
