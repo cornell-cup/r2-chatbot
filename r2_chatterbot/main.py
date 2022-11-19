@@ -83,10 +83,10 @@ def main():
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
-        answer = live_streaming.main()
-        speech = live_streaming.get_string(answer)
-        confidence = live_streaming.get_confidence(answer)
-        # speech = input()
+        # answer = live_streaming.main()
+        # speech = live_streaming.get_string(answer)
+        # confidence = live_streaming.get_confidence(answer)
+        speech = input()
         print(speech)
         before = time.time()
         response = "Sorry, I don't understand"

@@ -59,7 +59,6 @@ def faceRecog(text):
     # c = FacialClient()
     if known[0]:
         if known[1] == "attendance":
-            #implement when chris is done with everything
             return " attendance "
 
         if known[1] == "greeting":
