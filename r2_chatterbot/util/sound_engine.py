@@ -4,7 +4,9 @@ from winsound import PlaySound
 from pygame import mixer
 import time
 from random import randint
-from google.cloud import texttospeech
+from gtts import gTTS
+import pyttsx3
+
 
 from util.sound_engine_utils import Trie, MORSE_MAP
 # try:
@@ -22,7 +24,6 @@ class SoundEngine:
             mixer.quit()
             mixer.init(**kwargs)
         self.load_chirps(ext=ext)
-        self.client = texttospeech.TextToSpeechClient()
 
     def load_chirps(self, folder=None, ext=".wav", clear_old=True):
         """
@@ -122,34 +123,29 @@ class SoundEngine:
             self.play_morse(morse_)
             time.sleep(0.3)
 
+
+
     def text_to_speech(self, input_text):
+        
 
-        # Set the text input to be synthesized
-        synthesis_input = texttospeech.SynthesisInput(text=input_text)
+        # myobj = gTTS(text=input_text, lang='en', slow=False)
 
-        # Build the voice request, select the language code ("en-US") and the ssml
-        # voice gender ("neutral")
-        voice = texttospeech.VoiceSelectionParams(
-            language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
-        )
+        # # Saving the converted audio in a mp3 file named
+        # # welcome
+        # myobj.save("chatbot.mp3")
 
-        # Select the type of audio file you want returned
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.MP3
-        )
-
-        # Perform the text-to-speech request on the text input with the selected
-        # voice parameters and audio file type
-        response = self.client.synthesize_speech(
-            input=synthesis_input, voice=voice, audio_config=audio_config
-        )
-
-        # The response's audio_content is binary.
-        with open("output.mp3", "wb") as out:
-            # Write the response to the output file.
-            out.write(response.audio_content)
-            print('Audio content written to file "output.mp3"')
-        PlaySound("output.mp3")
+        # # Playing the converted file
+        # os.system("start chatbot.mp3")
+        # engine = pyttsx3.init()
+        # engine.say(input_text)
+        # engine.runAndWait()
+        # import pyttsx3
+        engine = pyttsx3.init()
+        voices = engine.getProperty('voices')
+        engine.setProperty('voice', voices[0].id) 
+        engine.say(input_text)
+        engine.runAndWait()
+        engine.stop()
 
 
 def _chirptypes_from_filename(chirp_name):
