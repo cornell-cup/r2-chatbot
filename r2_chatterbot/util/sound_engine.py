@@ -1,6 +1,6 @@
 import os
 import re
-from winsound import PlaySound
+# from winsound import PlaySound
 from pygame import mixer
 import time
 from random import randint
