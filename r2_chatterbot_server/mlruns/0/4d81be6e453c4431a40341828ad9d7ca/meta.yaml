@@ -1,0 +1,15 @@
+artifact_uri: file:///home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot_server/mlruns/0/4d81be6e453c4431a40341828ad9d7ca/artifacts
+end_time: 1651779835498
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 4d81be6e453c4431a40341828ad9d7ca
+run_uuid: 4d81be6e453c4431a40341828ad9d7ca
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1648334508389
+status: 3
+tags: []
+user_id: systemslab

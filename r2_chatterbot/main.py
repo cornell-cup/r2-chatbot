@@ -68,7 +68,6 @@ else:
 punctuations = """!()-[]{};:'"\,<>./@#$%^&*_~"""
 
 
-
 def no_punct(string):
     no_punct = ""
     for char in string:
@@ -78,8 +77,10 @@ def no_punct(string):
     no_punct = no_punct.strip()
     return no_punct
 
+
 def main():
-    sound_engine = SoundEngine(folder = os.path.join(os.getcwd(), 'sounds', 'chirp_parts'))
+    sound_engine = SoundEngine(folder=os.path.join(
+        os.getcwd(), 'sounds', 'chirp_parts'))
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -104,9 +105,10 @@ def main():
                 print("Question type: " + question_type)
                 # uncomment this once the route is up to date on the base station
                 # if USE_AWS:
-                    # com_type = requests.get(url + command_type_route, params={"speech": speech}).text
+                # com_type = requests.get(url + command_type_route, params={"speech": speech}).text
                 # else:
-                com_type = command_type.getCommandType(speech, question, question_type)
+                com_type = command_type.getCommandType(
+                    speech, question, question_type)
                 print("Command type: " + com_type)
                 if com_type == 'facial recognition':
                     response = face_recognition.faceRecog(speech)
@@ -140,17 +142,21 @@ def main():
                                 else:
                                     response = "Bad request"
                             elif data["name"] == "weather":
-                                keywords.modify_topic_data(data, parse_location=True)
+                                keywords.modify_topic_data(
+                                    data, parse_location=True)
                                 api_data = weather.lookup_weather_today_city(
                                     data["info"]["location"]["name"]
                                 )
-                                response = make_response.make_response_api(data, api_data)
+                                response = make_response.make_response_api(
+                                    data, api_data)
                             elif data["name"] == "restaurant":
-                                keywords.modify_topic_data(data, parse_location=True)
+                                keywords.modify_topic_data(
+                                    data, parse_location=True)
                                 api_data = restaurant.lookup_restaurant_city(
                                     data["info"]["location"]["name"]
                                 )
-                                response = make_response.make_response_api(data, api_data)
+                                response = make_response.make_response_api(
+                                    data, api_data)
                         else:
                             # Q/A section
                             if USE_AWS:
@@ -180,16 +186,18 @@ def main():
                                         print(
                                             f'I think the answer is {answer}. Is this correct?')
                                     else:
-                                        print(f'Ok, got it. Is the answer then {answer}?')
+                                        print(
+                                            f'Ok, got it. Is the answer then {answer}?')
                                     user_response = live_streaming.main()
-                                    user_response = live_streaming.get_string(user_response)
+                                    user_response = live_streaming.get_string(
+                                        user_response)
                                     user_response = user_response.lower()
                                     print(user_response)
                                     if 'yes' in user_response or 'yeah' in user_response:
                                         break
                     else:
-                        response = sentiment.get_sentiment(speech, USE_AWS)
-
+                        response = " I am sure what you have just said is very interesting, but I can't process it right now."
+            print('Response: ', response)
             after = time.time()
             print("Time: ", after - before)
 

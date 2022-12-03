@@ -52,10 +52,12 @@ def import_keys():
     global KEY, GEONAMES_USERNAME
 
     #geonames APIs
+    #with open("/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/api_keys/geonames_username.txt") as f:
     with open("api_keys/geonames_username.txt") as f:
         GEONAMES_USERNAME = f.read().strip()
 
     #open restaurant API
+    #with open("/home/systemslab/Desktop/chatbot/r2-chatbot/r2_chatterbot/api_keys/restaurant_api.txt") as f:
     with open("api_keys/restaurant_api.txt") as f:
         KEY = f.read().strip()
 
