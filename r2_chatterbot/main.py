@@ -2,6 +2,7 @@ import ast
 import socket
 import io
 import json
+import string
 from turtle import left, right
 import requests
 import pandas as pd
@@ -14,7 +15,7 @@ from util import make_response
 # from util import playtrack
 from util import path_planning
 from util import object_detection
-from util import face_recognition
+from util import face_recognition_utils
 from util import utils
 from util import sentiment
 from util.api import weather
@@ -38,6 +39,45 @@ import random
 nltk.download("averaged_perceptron_tagger")
 nltk.download("maxent_ne_chunker")
 nltk.download("words")
+
+# Testign nltk
+from nltk.stem import WordNetLemmatizer
+nltk.download('popular', quiet=True) #downloads packages
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+f=open('answers.txt', 'r', errors = 'ignore')
+raw=f.read()
+
+lemmer = nltk.stem.WordNetLemmatizer()
+
+def LemTokens(tokens):
+    return [lemmer.lemmatize(token) for token in tokens]
+remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
+
+def LemNormalize(text):
+    return LemTokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
+
+def res(speech):
+    sent_tokens = nltk.sent_tokenize(raw)# converts to list of sentences 
+    word_tokens = nltk.word_tokenize(raw)# converts to list of words
+    res = ''
+    sent_tokens.append(speech)
+    TfidfVec = TfidfVectorizer(tokenizer=LemNormalize)
+    tfidf = TfidfVec.fit_transform(sent_tokens)
+    vals = cosine_similarity(tfidf[-1], tfidf)
+    idx=vals.argsort()[0][-2]
+    flat = vals.flatten()
+    flat.sort()
+    req_tfidf = flat[-2]
+    if(req_tfidf==0):
+        res += "I think I need to read more about that..."
+        return res
+    else:
+        res += res + sent_tokens[idx]
+        return res
+
+    
 
 # for flask setup
 
@@ -111,7 +151,7 @@ def main():
                     speech, question, question_type)
                 print("Command type: " + com_type)
                 if com_type == 'facial recognition':
-                    response = face_recognition.faceRecog(speech)
+                    response = face_recognition_utils.faceRecog(speech)
                     # task is to transfer over to facial recognition client program
                 elif com_type == 'path planning':
                     response = path_planning.process_loc(speech.lower())
@@ -126,8 +166,9 @@ def main():
                     else:
                         response = "Sorry, I can't recognize this object."
                 else:
-                    if question:
+                    
                         print("C1C0 is thinking...")
+                        '''
                         data = keywords.get_topic(speech, parse_location=False)
                         if "name" in data.keys() and (
                             data["name"] == "weather" or data["name"] == "restaurant"
@@ -195,13 +236,12 @@ def main():
                                     print(user_response)
                                     if 'yes' in user_response or 'yeah' in user_response:
                                         break
-                    else:
-                        response = " I am sure what you have just said is very interesting, but I can't process it right now."
+                                    '''
+                        response = res(speech)
+                    
             print('Response: ', response)
             after = time.time()
             print("Time: ", after - before)
-
-            print('Response: ', response)
             speech = response
             index = -1
             if str(type(speech))== "<class 'tuple'>":

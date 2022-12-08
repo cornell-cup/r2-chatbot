@@ -5,7 +5,7 @@ from util import make_response
 from util import playtrack
 from util import path_planning
 from util import object_detection
-from util import face_recognition
+from util import face_recognition_utils
 from util import utils
 from util.api import weather
 from util.api import restaurant
@@ -49,8 +49,8 @@ def main():
             # filter out cico since it messes with location detection
             speech = utils.filter_cico(speech)
 
-            if face_recognition.isFaceRecognition(speech):
-                print(face_recognition.faceRecog(speech))
+            if face_recognition_utils.isFaceRecognition(speech):
+                print(face_recognition_utils.faceRecog(speech))
                 # task is to transfer over to facial recognition client program
             elif path_planning.isLocCommand(speech.lower()):
                 print("Move command (itemMove, direction, moveAmmount): ")
