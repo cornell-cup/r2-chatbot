@@ -1,6 +1,12 @@
 # c1c0-chatbot
 
-This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2022.
+This repository contains code for the chatbot project for Cornell Cup Robotics which was developed Fall 2019 - Spring 2023.
+
+### Spring 2023 Team: 
+Bahaa Kotb, Vincent Jiang, Sally Zhang, Noah Rebei 
+
+### Fall 2022 Team: 
+Bahaa Kotb, Vincent Jiang, Sally Zhang, Shivalika Gupta
 
 ### Spring 2022 Team:
 Sahar Sami, Jerry Guo, Bahaa Kotb, Vincent Jiang, Junyu Wang, Anant Shyam
