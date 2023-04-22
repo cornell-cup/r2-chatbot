@@ -1,3 +1,6 @@
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.stem import WordNetLemmatizer
 import ast
 import socket
 import io
@@ -41,46 +44,46 @@ nltk.download("maxent_ne_chunker")
 nltk.download("words")
 
 # Testign nltk
-from nltk.stem import WordNetLemmatizer
-nltk.download('popular', quiet=True) #downloads packages
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+nltk.download('popular', quiet=True)  # downloads packages
 
-f=open('answers.txt', 'r', errors = 'ignore')
-raw=f.read()
+f = open('answers.txt', 'r', errors='ignore')
+raw = f.read()
 
 lemmer = nltk.stem.WordNetLemmatizer()
 
+
 def LemTokens(tokens):
     return [lemmer.lemmatize(token) for token in tokens]
+
+
 remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
+
 
 def LemNormalize(text):
     return LemTokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
 
+
 def res(speech):
-    sent_tokens = nltk.sent_tokenize(raw)# converts to list of sentences 
-    word_tokens = nltk.word_tokenize(raw)# converts to list of words
+    sent_tokens = nltk.sent_tokenize(raw)  # converts to list of sentences
+    word_tokens = nltk.word_tokenize(raw)  # converts to list of words
     res = ''
     sent_tokens.append(speech)
     TfidfVec = TfidfVectorizer(tokenizer=LemNormalize)
     tfidf = TfidfVec.fit_transform(sent_tokens)
     vals = cosine_similarity(tfidf[-1], tfidf)
-    idx=vals.argsort()[0][-2]
+    idx = vals.argsort()[0][-2]
     flat = vals.flatten()
     flat.sort()
     req_tfidf = flat[-2]
-    if(req_tfidf==0):
+    if(req_tfidf == 0):
         res += "I think I need to read more about that..."
         return res
     else:
         res += res + sent_tokens[idx]
         return res
 
-    
 
 # for flask setup
-
 USE_AWS = True
 
 print(os.getcwd())
@@ -156,19 +159,21 @@ def main():
                 elif com_type == 'path planning':
                     response = path_planning.process_loc(speech.lower())
                     # task is to transfer over to path planning on the system
-                    scheduler.communicate("path-planning" + ' ' + str(response))
+                    scheduler.communicate(
+                        "path-planning" + ' ' + str(response))
                 elif com_type == 'object detection':
                     pick_up = object_detection.object_parse(speech.lower())
                     if pick_up:
                         response = "Object to pick up: " + pick_up
                         # task is to transfer over to object detection on the system
-                        scheduler.communicate("object-detection" + ' ' + response)
+                        scheduler.communicate(
+                            "object-detection" + ' ' + response)
                     else:
                         response = "Sorry, I can't recognize this object."
                 else:
-                    
-                        print("C1C0 is thinking...")
-                        '''
+
+                    print("C1C0 is thinking...")
+                    '''
                         data = keywords.get_topic(speech, parse_location=False)
                         if "name" in data.keys() and (
                             data["name"] == "weather" or data["name"] == "restaurant"
@@ -237,47 +242,53 @@ def main():
                                     if 'yes' in user_response or 'yeah' in user_response:
                                         break
                                     '''
-                        response = res(speech)
-                    
-            print('Response: ', response)
+                    response = res(speech)
+
+            print('Response: ', response.capitalize())
             after = time.time()
-            print("Time: ", after - before)
+            # print("Time: ", after - before)
             speech = response
             index = -1
-            if str(type(speech))== "<class 'tuple'>":
+            if str(type(speech)) == "<class 'tuple'>":
                 action = speech[0]
                 if isinstance(action, str):
                     i = action.find(" ")
                     if i == -1:
-                        v = action 
+                        v = action
                     else:
                         v = action[:i]
                     if v == "move":
-                        speech = "moving " + action[i:] + str(speech[1]) + " meters"
+                        speech = "moving " + \
+                            action[i:] + str(speech[1]) + " meters"
                     elif v == "turn":
                         speech = "turning " + str(speech[1]) + " degrees"
                     elif v == "stop":
                         speech = "stoping"
                 else:
-                    speech = "moving " + str(action) + " meters in the x direction and " + str(speech[1]) + " meters in the y direction"
+                    speech = "moving " + str(action) + " meters in the x direction and " + str(
+                        speech[1]) + " meters in the y direction"
             else:
                 index = speech.find(": ")
             if index != -1:
                 obj = speech[index:]
                 speech = "picking up " + obj
 
-            
             sound_engine.text_to_speech(speech)
-            # if response == "That's great!":
-            #     playsound('sounds/positive_r2/' + random.choice(os.listdir('sounds/positive_r2')), block = False)
-            # elif response == "Okay.":
-            #     playsound('sounds/neutral_r2/' + random.choice(os.listdir('sounds/neutral_r2')), block = False)
-            # elif response == "That isn't good.":
-            #     playsound('sounds/negative_r2/' + random.choice(os.listdir('sounds/negative_r2')), block = False)
-            # else:
-            #     max_len = min(2, len(response))
-            #     response = ''.join(c for c in response[:max_len] if c.isalnum())
-            #     threading.Thread(target = sound_engine.play_text, args = [response]).start()
+            if response == "That's great!":
+                playsound('sounds/positive_r2/' +
+                          random.choice(os.listdir('sounds/positive_r2')), block=False)
+            elif response == "Okay.":
+                playsound('sounds/neutral_r2/' +
+                          random.choice(os.listdir('sounds/neutral_r2')), block=False)
+            elif response == "That isn't good.":
+                playsound('sounds/negative_r2/' +
+                          random.choice(os.listdir('sounds/negative_r2')), block=False)
+            else:
+                max_len = min(2, len(response))
+                response = ''.join(
+                    c for c in response[:max_len] if c.isalnum())
+                threading.Thread(target=sound_engine.play_text,
+                                 args=[response]).start()
 
 
 if __name__ == "__main__":

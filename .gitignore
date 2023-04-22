@@ -5,3 +5,5 @@ greeting.txt
 
 __pycache__/*
 
+#env files
+.env
