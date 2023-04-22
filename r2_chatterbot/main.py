@@ -1,9 +1,7 @@
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-from nltk.stem import WordNetLemmatizer
 import ast
 import socket
 import io
+import openai
 import json
 import string
 from turtle import left, right
@@ -14,6 +12,7 @@ from util import live_streaming
 from util import nlp_util
 from util import keywords
 from util import make_response
+
 
 # from util import playtrack
 from util import path_planning
@@ -30,6 +29,7 @@ from util.sound_engine import SoundEngine
 from playsound import playsound
 import re
 import sys
+from dotenv import load_dotenv
 import os
 import threading
 
@@ -46,49 +46,15 @@ nltk.download("words")
 # Testign nltk
 nltk.download('popular', quiet=True)  # downloads packages
 
-f = open('answers.txt', 'r', errors='ignore')
-raw = f.read()
-
-lemmer = nltk.stem.WordNetLemmatizer()
-
-
-def LemTokens(tokens):
-    return [lemmer.lemmatize(token) for token in tokens]
-
-
-remove_punct_dict = dict((ord(punct), None) for punct in string.punctuation)
-
-
-def LemNormalize(text):
-    return LemTokens(nltk.word_tokenize(text.lower().translate(remove_punct_dict)))
-
-
-def res(speech):
-    sent_tokens = nltk.sent_tokenize(raw)  # converts to list of sentences
-    word_tokens = nltk.word_tokenize(raw)  # converts to list of words
-    res = ''
-    sent_tokens.append(speech)
-    TfidfVec = TfidfVectorizer(tokenizer=LemNormalize)
-    tfidf = TfidfVec.fit_transform(sent_tokens)
-    vals = cosine_similarity(tfidf[-1], tfidf)
-    idx = vals.argsort()[0][-2]
-    flat = vals.flatten()
-    flat.sort()
-    req_tfidf = flat[-2]
-    if(req_tfidf == 0):
-        res += "I think I need to read more about that..."
-        return res
-    else:
-        res += res + sent_tokens[idx]
-        return res
-
-
 # for flask setup
 USE_AWS = True
 
 print(os.getcwd())
 credential_path = "api_keys/speech_to_text.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
+load_dotenv()  # Load environment variables from .env file
+# Set openai api key
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # url = "http://18.216.143.187/"
 # url = "http://3.13.116.251/"
@@ -242,7 +208,17 @@ def main():
                                     if 'yes' in user_response or 'yeah' in user_response:
                                         break
                                     '''
-                    response = res(speech)
+                    # Default to openai chatGPT response
+                    completion = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=[
+                            {"role": "user", "content": speech}
+                        ],
+                        temperature=2,
+                        max_tokens=100
+                    )
+                    # Print ChatGPT response
+                    response = completion.choices[0].message.content
 
             print('Response: ', response.capitalize())
             after = time.time()
