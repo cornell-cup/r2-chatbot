@@ -214,8 +214,9 @@ def main():
                         messages=[
                             {"role": "user", "content": speech}
                         ],
-                        temperature=2,
-                        max_tokens=100
+                        temperature=1,
+                        max_tokens=50,
+                        n=2
                     )
                     # Print ChatGPT response
                     response = completion.choices[0].message.content

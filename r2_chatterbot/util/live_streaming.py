@@ -41,6 +41,7 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 RATE = 24000
 CHUNK = int(RATE / 10)  # 100ms
 
+
 class MicrophoneStream(object):
     """ **Code from Google cloud speech to text documentation**
     Opens a recording stream as a generator yielding the audio chunks."""
@@ -97,6 +98,7 @@ class MicrophoneStream(object):
 
             # Now consume whatever other data's still buffered.
             while True:
+
                 try:
                     chunk = self._buff.get(block=False)
                     if chunk is None:
@@ -241,6 +243,7 @@ def sub_main(profanityFilterBool):
     """
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
+
     language_code = 'en-US'  # a BCP-47 language tag
     sp_c_cico = {
         "phrases": ["Hey cico", "Hey Kiko"],
@@ -251,7 +254,7 @@ def sub_main(profanityFilterBool):
         "boost": 0
     }
     movement_words = {
-        "phrases" : ["move", "feet", "forward", "right", "left", "backward", "degrees", "radians", "to the left", "to the right"],
+        "phrases": ["move", "feet", "forward", "right", "left", "backward", "degrees", "radians", "to the left", "to the right"],
         "boost": 20.0
     }
     numbers = {
@@ -272,7 +275,7 @@ def sub_main(profanityFilterBool):
         enable_automatic_punctuation=True,
         # speech_contexts=speech_contexts
         adaptation=speech_adaptation_object
-        )
+    )
 
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
