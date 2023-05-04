@@ -11,7 +11,7 @@ future==0.18.2
 geocoder==1.38.1
 google-api-core==1.17.0
 google-auth==1.14.1
-google-cloud-speech
+google-cloud-speech>=2.14.1
 googleapis-common-protos==1.51.0
 grpcio==1.28.1
 idna==2.9
@@ -47,3 +47,6 @@ thinc==7.0.8
 tqdm==4.45.0
 urllib3==1.26.5
 wasabi==0.6.0
+
+openai
+pandas
