@@ -107,7 +107,7 @@ def main():
         if ("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and ("hey" in speech.lower()):
             # filter out cico since it messes with location detection
             if len(speech) == 9:
-                response = "what can I help you with?"
+                response = "What can I help you with?"
             else:
                 question, question_type = nlp_util.is_question(speech)
                 speech = utils.filter_cico(speech) + " "
@@ -214,14 +214,18 @@ def main():
                         messages=[
                             {"role": "user", "content": speech}
                         ],
-                        temperature=1,
-                        max_tokens=50,
-                        n=2
+                        temperature=0.5,
+                        max_tokens=500,
+                        n=1
                     )
                     # Print ChatGPT response
                     response = completion.choices[0].message.content
+                    default_error_strings = ["As an AI language model,", "I am an AI language model,"]
+                    # Check if default error message is in response
+                    for error_string in [substring for substring in default_error_strings if substring in response]:
+                        response = response.replace(error_string, "")
 
-            print('Response: ', response.capitalize())
+            print(f"Response: {response}\n")
             after = time.time()
             # print("Time: ", after - before)
             speech = response
@@ -263,7 +267,7 @@ def main():
             else:
                 max_len = min(2, len(response))
                 response = ''.join(
-                    c for c in response[:max_len] if c.isalnum())
+                    c for c in response[:max_len] if str(c).isalnum())
                 threading.Thread(target=sound_engine.play_text,
                                  args=[response]).start()
 
