@@ -13,7 +13,7 @@ google-api-core==1.17.0
 google-auth==1.14.1
 google-cloud-speech
 googleapis-common-protos==1.51.0
-grpcio==1.28.1
+grpcio==1.53.0
 idna==2.9
 joblib==0.14.1
 mathparse==0.1.2
