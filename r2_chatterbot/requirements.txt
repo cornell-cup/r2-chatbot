@@ -7,7 +7,7 @@ chatterbot-corpus==1.2.0
 click==7.1.1
 cymem==2.0.3
 decorator==4.4.2
-future==0.18.2
+future==0.18.3
 geocoder==1.38.1
 google-api-core==1.17.0
 google-auth==1.14.1
