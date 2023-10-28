@@ -284,6 +284,12 @@ def sub_main(profanityFilterBool):
     with MicrophoneStream(RATE, CHUNK) as stream:
 
         audio_generator = stream.generator()
+        
+        required_words_lists = [["Hey", "Hi"], ['kiko', "Kiko", "cico", "Cico"]]
+        
+        # initial_audio = next(audio_generator, None)
+        # initial_transcription = transcribe_audio(initial_audio)
+        # if all(any(word in initial_transcription for word in words_list) for words_list in required_words_lists) :
         requests = (types.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator)
 
