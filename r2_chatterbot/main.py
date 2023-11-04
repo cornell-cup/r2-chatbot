@@ -11,7 +11,8 @@ from util import client
 from util import live_streaming
 from util import nlp_util
 from util import keywords
-from util import make_response
+
+# from util import make_response
 
 
 # from util import playtrack
@@ -20,8 +21,9 @@ from util import object_detection
 from util import face_recognition_utils
 from util import utils
 from util import sentiment
-from util.api import weather
-from util.api import restaurant
+
+# from util.api import weather
+# from util.api import restaurant
 from util import command_type
 from util.sound_engine import SoundEngine
 
@@ -44,7 +46,7 @@ nltk.download("maxent_ne_chunker")
 nltk.download("words")
 
 # Testign nltk
-nltk.download('popular', quiet=True)  # downloads packages
+nltk.download("popular", quiet=True)  # downloads packages
 
 # for flask setup
 USE_AWS = True
@@ -88,8 +90,9 @@ def no_punct(string):
 
 
 def main():
-    sound_engine = SoundEngine(folder=os.path.join(
-        os.getcwd(), 'sounds', 'chirp_parts'))
+    sound_engine = SoundEngine(
+        folder=os.path.join(os.getcwd(), "sounds", "chirp_parts")
+    )
     print("Hello! I am C1C0. I can answer questions and execute commands.")
     while True:
         # gets a tuple of phrase and confidence
@@ -100,11 +103,15 @@ def main():
         print(speech)
         before = time.time()
         response = "Sorry, I don't understand"
-        if no_punct(speech.lower().strip(' ')) in ["quit", "stop"]:
+        if no_punct(speech.lower().strip(" ")) in ["quit", "stop"]:
             scheduler.close()
             break
 
-        if ("cico" in speech.lower() or "kiko" in speech.lower() or "c1c0" in speech.lower()) and ("hey" in speech.lower()):
+        if (
+            "cico" in speech.lower()
+            or "kiko" in speech.lower()
+            or "c1c0" in speech.lower()
+        ) and ("hey" in speech.lower()):
             # filter out cico since it messes with location detection
             if len(speech) == 9:
                 response = "What can I help you with?"
@@ -116,30 +123,26 @@ def main():
                 # if USE_AWS:
                 # com_type = requests.get(url + command_type_route, params={"speech": speech}).text
                 # else:
-                com_type = command_type.getCommandType(
-                    speech, question, question_type)
+                com_type = command_type.getCommandType(speech, question, question_type)
                 print("Command type: " + com_type)
-                if com_type == 'facial recognition':
+                if com_type == "facial recognition":
                     response = face_recognition_utils.faceRecog(speech)
                     # task is to transfer over to facial recognition client program
-                elif com_type == 'path planning':
+                elif com_type == "path planning":
                     response = path_planning.process_loc(speech.lower())
                     # task is to transfer over to path planning on the system
-                    scheduler.communicate(
-                        "path-planning" + ' ' + str(response))
-                elif com_type == 'object detection':
+                    scheduler.communicate("path-planning" + " " + str(response))
+                elif com_type == "object detection":
                     pick_up = object_detection.object_parse(speech.lower())
                     if pick_up:
                         response = "Object to pick up: " + pick_up
                         # task is to transfer over to object detection on the system
-                        scheduler.communicate(
-                            "object-detection" + ' ' + response)
+                        scheduler.communicate("object-detection" + " " + response)
                     else:
                         response = "Sorry, I can't recognize this object."
                 else:
-
                     print("C1C0 is thinking...")
-                    '''
+                    """
                         data = keywords.get_topic(speech, parse_location=False)
                         if "name" in data.keys() and (
                             data["name"] == "weather" or data["name"] == "restaurant"
@@ -207,22 +210,27 @@ def main():
                                     print(user_response)
                                     if 'yes' in user_response or 'yeah' in user_response:
                                         break
-                                    '''
+                                    """
                     # Default to openai chatGPT response
                     completion = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo",
-                        messages=[
-                            {"role": "user", "content": speech}
-                        ],
+                        messages=[{"role": "user", "content": speech}],
                         temperature=0.5,
                         max_tokens=500,
-                        n=1
+                        n=1,
                     )
                     # Print ChatGPT response
                     response = completion.choices[0].message.content
-                    default_error_strings = ["As an AI language model,", "I am an AI language model,"]
+                    default_error_strings = [
+                        "As an AI language model,",
+                        "I am an AI language model,",
+                    ]
                     # Check if default error message is in response
-                    for error_string in [substring for substring in default_error_strings if substring in response]:
+                    for error_string in [
+                        substring
+                        for substring in default_error_strings
+                        if substring in response
+                    ]:
                         response = response.replace(error_string, "")
 
             print(f"Response: {response}\n")
@@ -239,15 +247,19 @@ def main():
                     else:
                         v = action[:i]
                     if v == "move":
-                        speech = "moving " + \
-                            action[i:] + str(speech[1]) + " meters"
+                        speech = "moving " + action[i:] + str(speech[1]) + " meters"
                     elif v == "turn":
                         speech = "turning " + str(speech[1]) + " degrees"
                     elif v == "stop":
                         speech = "stoping"
                 else:
-                    speech = "moving " + str(action) + " meters in the x direction and " + str(
-                        speech[1]) + " meters in the y direction"
+                    speech = (
+                        "moving "
+                        + str(action)
+                        + " meters in the x direction and "
+                        + str(speech[1])
+                        + " meters in the y direction"
+                    )
             else:
                 index = speech.find(": ")
             if index != -1:
@@ -256,24 +268,31 @@ def main():
 
             sound_engine.text_to_speech(speech)
             if response == "That's great!":
-                playsound('sounds/positive_r2/' +
-                          random.choice(os.listdir('sounds/positive_r2')), block=False)
+                playsound(
+                    "sounds/positive_r2/"
+                    + random.choice(os.listdir("sounds/positive_r2")),
+                    block=False,
+                )
             elif response == "Okay.":
-                playsound('sounds/neutral_r2/' +
-                          random.choice(os.listdir('sounds/neutral_r2')), block=False)
+                playsound(
+                    "sounds/neutral_r2/"
+                    + random.choice(os.listdir("sounds/neutral_r2")),
+                    block=False,
+                )
             elif response == "That isn't good.":
-                playsound('sounds/negative_r2/' +
-                          random.choice(os.listdir('sounds/negative_r2')), block=False)
+                playsound(
+                    "sounds/negative_r2/"
+                    + random.choice(os.listdir("sounds/negative_r2")),
+                    block=False,
+                )
             else:
                 max_len = min(2, len(response))
-                response = ''.join(
-                    c for c in response[:max_len] if str(c).isalnum())
-                threading.Thread(target=sound_engine.play_text,
-                                 args=[response]).start()
+                response = "".join(c for c in response[:max_len] if str(c).isalnum())
+                threading.Thread(target=sound_engine.play_text, args=[response]).start()
 
 
 if __name__ == "__main__":
-    playsound('sounds/cicoremix.mp3')
+    playsound("sounds/cicoremix.mp3")
     scheduler = client.Client("Chatbot")
     try:
         scheduler.handshake()
