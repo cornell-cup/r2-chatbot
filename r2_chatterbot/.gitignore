@@ -18,10 +18,14 @@ google_cloud_sdk/*
 *.pickle
 dep/*
  
-#for nltk.download
+# for nltk.download
 punkt.zip
 averaged_perceptron_tagger.zip
 
-#db files
+# db files
 db.sqlite3
 database.db
+
+# env and python-version
+.python-version
+env/
