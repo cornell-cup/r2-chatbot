@@ -56,7 +56,8 @@ credential_path = "api_keys/speech_to_text.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 load_dotenv()  # Load environment variables from .env file
 # Set openai api key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+with open("api_keys/openai_api.txt") as f:
+    openai.api_key = f.read().strip()
 
 # url = "http://18.216.143.187/"
 # url = "http://3.13.116.251/"
