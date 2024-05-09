@@ -1,0 +1,7 @@
+openai
+numpy
+python-dotenv
+pyaudio
+pyttsx3
+pyzmq
+speechrecognition
