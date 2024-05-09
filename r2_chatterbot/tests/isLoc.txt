@@ -1,8 +1,0 @@
-C1C0, can you please go forward 10 steps
-move the body forward 10 steps
-turn the precision arm right 10 degrees
-spin the strong arm left 360 degrees
-C1C0 spin left ten degrees
-strong arm move 5 steps forward
-turn the strong arm right 10 degrees
-precision arm turn left 90 degrees

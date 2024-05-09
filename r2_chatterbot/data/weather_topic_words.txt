@@ -1,6 +1,0 @@
-weather
-temperature
-rain
-snow
-cloudy
-windy

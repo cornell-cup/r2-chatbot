@@ -1,9 +1,5 @@
-#dist
-dist/
-*.egg-info/
-greeting.txt
-
-__pycache__/*
-
-#env files
+.DS_Store
 .env
+chatbot_comm.py
+venv/
+__pycache__
