@@ -39,7 +39,8 @@ if __name__ == '__main__':
     # Infinite loop for chatbot
     while True:
         # Receiving message from user
-        msg: str = input('You: ')
+        msg: str = input('\033[94mYou: ')
+        print('\033[0m', end='')
 
         # Quitting chatbot if exit command
         if msg == 'exit' or msg == 'quit': break
@@ -47,4 +48,4 @@ if __name__ == '__main__':
         # Finding and calling handler for message
         label: str = client.categorize(msg, list(mapping.keys()))
         mapping.setdefault(label, lambda msg: error_handler(client, msg))
-        print(mapping[label](msg))
+        print('\033[94m' + str(mapping[label](msg)) + '\033[0m')
