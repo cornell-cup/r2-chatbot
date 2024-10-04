@@ -1,7 +1,7 @@
-openai
+audiomath
 numpy
+openai
 python-dotenv
-pyaudio
 pyttsx3
 pyzmq
 speechrecognition

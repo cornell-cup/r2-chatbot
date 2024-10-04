@@ -5,6 +5,7 @@ run:
 	venv/bin/python chatbot.py
 
 install:
+	venv/bin/pip install pyaudio --no-cache-dir --force-reinstall
 	venv/bin/pip install -r requirements.txt
 
 venv:
