@@ -36,14 +36,13 @@ def speech_to_text():
     recognizer = sr.Recognizer()
 
     with DuckTypedMicrophone() as source:
-        recognizer.non_speaking_duration = 0.5
         print("Please wait. Calibrating microphone...")
-        recognizer.adjust_for_ambient_noise(source, duration=2)
-        print("Please wait. Calibrating microphone...")
+        recognizer.adjust_for_ambient_noise(source, duration=1)
 
         while True:
             print("Please speak something...")
-            audio = recognizer.listen(source)
+            audio = recognizer.listen(source, phrase_time_limit=5)
+            print("Recognizing...")
 
             try:
                 text = recognizer.recognize_google(audio)
