@@ -1,7 +1,7 @@
-audiomath
+fuzzywuzzy[speedup]
 numpy
 openai
 python-dotenv
-pyttsx3
 pyzmq
+sounddevice
 speechrecognition

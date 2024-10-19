@@ -27,7 +27,7 @@ class OpenAPI:
         @return: A vector of floats representing the embedding of the text.
         """
         result: dict[any] = self.api.embeddings.create(model=self.model, input=text)
-        if (DEBUG): print(f'API Usage: {result.usage}')
+        # if (DEBUG): print(f'API Usage: {result.usage}')
         return np.array(result.data[0].embedding)
 
     def similarity(self: any, vec1: np.ndarray, vec2: np.ndarray) -> float:
@@ -53,4 +53,4 @@ class OpenAPI:
         temb: np.ndarray   = self.embedding(text)
         lemb: np.ndarray   = [self.embedding(label) for label in labels]
         scores: np.ndarray = np.array([self.similarity(temb, label) for label in lemb])
-        return labels[np.argmax(scores)]
+        return labels[np.argmax(scores)], np.max(scores)
